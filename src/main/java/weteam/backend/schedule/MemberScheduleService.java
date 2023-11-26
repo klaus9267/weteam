@@ -27,20 +27,25 @@ public class MemberScheduleService {
     public void create(MemberScheduleDto request, Long memberId) {
         Member member = memberService.loadById(memberId);
         MemberSchedule memberSchedule = MemberScheduleMapper.instance.toEntity(request, member);
+
         memberScheduleRepository.save(memberSchedule);
     }
 
     public  List<MemberSchedule> findByMonth(int year, int month, Long memberId) {
         Member member = memberService.loadById(memberId);
+
         LocalDateTime startDate = LocalDate.of(year, month, 1).atStartOfDay();
         LocalDateTime endDate = startDate.plusMonths(1).minusMinutes(1);
+
         return memberScheduleCustomRepository.findByMonth(startDate, endDate, memberId);
     }
 
-    public List<MemberSchedule> findByDay(int year, int month, int day, Long memberId) {
+    public List<MemberSchedule> findByDay(LocalDate date, Long memberId) {
         Member member = memberService.loadById(memberId);
-        LocalDateTime startDate = LocalDate.of(year, month, day).atStartOfDay();
+
+        LocalDateTime startDate = date.atStartOfDay();
         LocalDateTime endDate = startDate.plusDays(1).minusMinutes(1);
+
         return memberScheduleCustomRepository.findByDate(startDate, endDate, memberId);
     }
 
@@ -53,20 +58,24 @@ public class MemberScheduleService {
         if (!memberSchedule.getMember().getId().equals(memberId)) {
             throw new RuntimeException("다른 사용자의 스케줄");
         }
+
         return memberSchedule;
     }
 
     public void update(MemberScheduleDto request, Long id, Long memberId) {
         Member member = memberService.loadById(memberId);
         MemberSchedule memberSchedule = MemberScheduleMapper.instance.toEntity(request, member);
+
         if (!memberSchedule.getMember().getId().equals(memberId)) {
             throw new RuntimeException("다른 사용자의 스케줄");
         }
+
         memberScheduleRepository.save(memberSchedule);
     }
 
     public void updateIsDone(Long id, Long memberId) {
         MemberSchedule memberSchedule = loadById(id, memberId);
+
         memberSchedule.setDone(!memberSchedule.isDone());
         memberScheduleRepository.save(memberSchedule);
     }
