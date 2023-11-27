@@ -24,9 +24,9 @@
       
      - name: web docker build and push
        run: |
-         docker login -u ${{ secret.DOCKER_EMAIL }} -p ${{ secret.DOCKER_PASSWORD }}
-         docker build -t ${{ secret.DOCKER_ID }}/weteam .
-         docker push ${{ secret.DOCKER_ID }}/weteam
+         docker login -u ${{ secrets.DOCKER_EMAIL }} -p ${{ secrets.DOCKER_PASSWORD }}
+         docker build -t ${{ secrets.DOCKER_ID }}/weteam .
+         docker push ${{ secrets.DOCKER_ID }}/weteam
 
      ## docker compose up
      - name: executing remote ssh commands using password
@@ -38,5 +38,5 @@
          script: |
            sudo docker rm -f $(docker ps -qa)
            sudo docker pull ${{ secrets.DOCKER_ID }}/weteam
-           docker run -d -p 9090:8080 ${{ secret.DOCKER_ID }}/weteam
+           docker run -d -p 9090:8080 ${{ secrets.DOCKER_ID }}/weteam
            docker image prune -f
