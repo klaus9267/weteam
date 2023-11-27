@@ -6,12 +6,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
-import weteam.backend.group_project.domain.GroupProject;
+import weteam.backend.project.domain.Project;
 import weteam.backend.member.domain.Member;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @NoArgsConstructor
@@ -34,5 +32,5 @@ public class ScoreLog {
     private Member scorerMemberId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private GroupProject groupProjectList;
+    private Project projectList;
 }

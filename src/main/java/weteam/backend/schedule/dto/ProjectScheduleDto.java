@@ -1,4 +1,4 @@
 package weteam.backend.schedule.dto;
 
-public class GroupScheduleDto {
+public class ProjectScheduleDto {
 }

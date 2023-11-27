@@ -1,4 +1,4 @@
-package weteam.backend.group_project.domain;
+package weteam.backend.project.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -13,7 +13,7 @@ import java.time.LocalDate;
 @Builder
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-public class GroupProject extends BaseEntity {
+public class Project extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -24,12 +24,7 @@ public class GroupProject extends BaseEntity {
     @Column(nullable = false)
     private LocalDate startedAt;
 
-    @Column(nullable = false)
     private LocalDate endedAt;
-
-    @Column(nullable = false)
     private boolean isDone;
-
-    @Column(nullable = false)
     private String url;
 }

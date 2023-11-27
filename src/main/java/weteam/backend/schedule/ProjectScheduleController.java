@@ -11,5 +11,5 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/schedules/groups")
 @RequiredArgsConstructor
 @Tag(name = "Schedule", description = "Group schedules API / jwt 필수")
-public class GroupScheduleController {
+public class ProjectScheduleController {
 }

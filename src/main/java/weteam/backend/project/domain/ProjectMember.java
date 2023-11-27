@@ -1,4 +1,4 @@
-package weteam.backend.group_project.domain;
+package weteam.backend.project.domain;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -12,17 +12,16 @@ import weteam.backend.member.domain.Member;
 @AllArgsConstructor
 @Data
 @Builder
-public class GroupMember {
+public class ProjectMember {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
     private String role;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private GroupProject groupProject;
+    private Project project;
 }

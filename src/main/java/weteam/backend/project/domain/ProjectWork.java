@@ -1,4 +1,4 @@
-package weteam.backend.group_project.domain;
+package weteam.backend.project.domain;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -14,7 +14,7 @@ import java.util.Date;
 @AllArgsConstructor
 @Data
 @Builder
-public class GroupWork {
+public class ProjectWork {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
