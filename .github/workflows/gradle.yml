@@ -21,7 +21,7 @@
          distribution: 'temurin'
 
      - name: chmod
-       run: sudo chmod 400 ./gradlew
+       run: sudo chmod +x ./gradlew
 
      - name: Build with Gradle
        run: ./gradlew bootJar
