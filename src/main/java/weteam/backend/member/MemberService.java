@@ -30,15 +30,14 @@ public class MemberService {
     }
 
     public Member findMyInfoWithUseHashtag(Long id) {
-        Member memberList = memberCustomRepository.findMyInfoWithUseHashtag(id);
-        return memberList;
+        return memberCustomRepository.findMyInfoWithUseHashtag(id);
     }
 
     public Member loadById(Long id) {
         return findById(id).orElseThrow(() -> new RuntimeException("없는 사용자"));
     }
 
-    public void updateOrganization(Long id,String organization) {
+    public void updateOrganization(Long id, String organization) {
         Member member = loadById(id);
         member.setOrganization(organization);
         memberRepository.save(member);

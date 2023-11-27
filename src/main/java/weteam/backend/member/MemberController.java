@@ -67,4 +67,21 @@ public class MemberController {
                                                 .build();
         return ResponseEntity.ok(message);
     }
+
+    @PatchMapping("/{organization}")
+    @PreAuthorize("hasAnyRole('USER')")
+    @Operation(summary = "사용자 소속 변경", responses = {
+            @ApiResponse(responseCode = "200", useReturnTypeSchema = true)
+    })
+    public ResponseEntity<Message<MemberDto.Res>> updateOrganization(
+            @PathVariable("organization") String organization) {
+        Long memberId = SecurityUtil.getCurrentMemberId();
+        memberService.updateOrganization(memberId, organization);
+        Message<MemberDto.Res> message = Message.<MemberDto.Res>builder()
+                                                .result(true)
+                                                .httpStatus(HttpStatus.OK)
+                                                .message("사용자 소속 변경 성공")
+                                                .build();
+        return ResponseEntity.ok(message);
+    }
 }
