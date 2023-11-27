@@ -19,9 +19,13 @@
        with:
          java-version: '17'
          distribution: 'temurin'
+
+     - name: chmod
+       run: sudo chmod 400 ./gradlew
+
      - name: Build with Gradle
        run: ./gradlew bootJar
-      
+
      - name: web docker build and push
        run: |
          docker login -u ${{ secrets.DOCKER_EMAIL }} -p ${{ secrets.DOCKER_PASSWORD }}
