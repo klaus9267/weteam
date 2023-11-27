@@ -33,3 +33,9 @@ springdoc:
     operations-sorter: method
     tags-sorter: alpha
   use-fqn: true
+
+docker:
+  id: klaus9267
+  email: klaus9267@gmail.com
+  password: doctor978!
+

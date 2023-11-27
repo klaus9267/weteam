@@ -36,7 +36,7 @@ public class MemberScheduleController {
 
     @GetMapping("/{year}/{month}")
     @PreAuthorize("hasAnyRole('USER')")
-    @Operation(summary = "월별 스케줄 조회", responses = {
+    @Operation(summary = "내 월별 스케줄 조회", responses = {
             @ApiResponse(responseCode = "200",useReturnTypeSchema = true)
     })
     public ResponseEntity<List<MemberScheduleDto.Res>> findByMonth(@PathVariable("year") int year,
@@ -50,9 +50,9 @@ public class MemberScheduleController {
         return ResponseEntity.ok(resList);
     }
 
-    @GetMapping("/{date}")
+    @GetMapping("/date/{date}")
     @PreAuthorize("hasAnyRole('USER')")
-    @Operation(summary = "일별 스케줄 조회", responses = {
+    @Operation(summary = "내 일별 스케줄 조회", responses = {
             @ApiResponse(responseCode = "200",useReturnTypeSchema = true)
     })
     public ResponseEntity<List<MemberScheduleDto.Res>> findByMonth(@PathVariable("date") LocalDate date,
@@ -64,18 +64,18 @@ public class MemberScheduleController {
         return ResponseEntity.ok(resList);
     }
 
-    @GetMapping("/{id}")
-    @PreAuthorize("hasAnyRole('USER')")
-    @Operation(summary = "id에 맞는 스케줄 조회", responses = {
-            @ApiResponse(responseCode = "200", useReturnTypeSchema = true)
-    })
-    public ResponseEntity<MemberScheduleDto.Res> loadById(@PathVariable("id") Long id, Principal principal) {
-        Long memberId = Long.valueOf(principal.getName());
-
-        MemberSchedule memberScheduleList = memberScheduleService.loadById(id, memberId);
-        MemberScheduleDto.Res res = MemberScheduleMapper.instance.toRes(memberScheduleList);
-        return ResponseEntity.ok(res);
-    }
+//    @GetMapping("/{id}")
+//    @PreAuthorize("hasAnyRole('USER')")
+//    @Operation(summary = "id에 맞는 스케줄 조회", responses = {
+//            @ApiResponse(responseCode = "200", useReturnTypeSchema = true)
+//    })
+//    public ResponseEntity<MemberScheduleDto.Res> loadById(@PathVariable("id") Long id, Principal principal) {
+//        Long memberId = Long.valueOf(principal.getName());
+//
+//        MemberSchedule memberScheduleList = memberScheduleService.loadById(id, memberId);
+//        MemberScheduleDto.Res res = MemberScheduleMapper.instance.toRes(memberScheduleList);
+//        return ResponseEntity.ok(res);
+//    }
 
     @PatchMapping("/{id}")
     @PreAuthorize("hasAnyRole('USER')")
