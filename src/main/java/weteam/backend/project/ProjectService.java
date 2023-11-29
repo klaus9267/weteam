@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import weteam.backend.project.domain.ProjectMember;
 import weteam.backend.project.domain.Project;
+import weteam.backend.project.dto.ProjectDto;
+import weteam.backend.project.mapper.ProjectMapper;
 import weteam.backend.project.repository.ProjectMemberRepository;
 import weteam.backend.project.repository.ProjectRepository;
 import weteam.backend.member.MemberService;
@@ -19,10 +21,12 @@ public class ProjectService {
     private final ProjectRepository projectRepository;
     private final ProjectMemberRepository projectMemberRepository;
     private final MemberService memberService;
+    private final ProjectMemberService projectMemberService;
 
-    public void createProject(Long memberId,Project request) {
+    public ProjectDto.Res createProject(Long memberId, Project request) {
         Project project = projectRepository.save(request);
         setProjectMember(memberId, project);
+        return ProjectMapper.instance.toRes(project);
     }
 
     public void setProjectMember(Long memberId, Project project) {
@@ -40,5 +44,11 @@ public class ProjectService {
 
     public Project loadById(Long id) {
         return findById(id).orElseThrow(() -> new RuntimeException("없는 팀플"));
+    }
+
+    public void acceptInvite(Long projectId, Long memberId) {
+        Project project = loadById(projectId);
+        Member member = memberService.loadById(memberId);
+        projectMemberService.addMember(member, project);
     }
 }

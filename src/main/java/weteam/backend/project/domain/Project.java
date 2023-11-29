@@ -26,5 +26,4 @@ public class Project extends BaseEntity {
 
     private LocalDate endedAt;
     private boolean isDone;
-    private String url;
 }

@@ -1,6 +1,7 @@
 package weteam.backend.project.mapper;
 
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
 import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
@@ -13,4 +14,8 @@ public interface ProjectMapper {
     ProjectMapper instance = Mappers.getMapper(ProjectMapper.class);
 
     Project toEntity(ProjectDto.Create request);
+
+    @Mapping(target = "headCount", source = "headCount")
+    ProjectDto.Res toRes(Project project, int headCount);
+    ProjectDto.Res toRes(Project project);
 }
