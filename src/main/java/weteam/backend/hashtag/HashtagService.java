@@ -1,15 +1,15 @@
-package weteam.backend.hash_tag;
+package weteam.backend.hashtag;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import weteam.backend.hash_tag.domain.Hashtag;
-import weteam.backend.hash_tag.domain.MemberHashtag;
-import weteam.backend.hash_tag.dto.HashtagDto;
-import weteam.backend.hash_tag.mapper.HashtagMapper;
-import weteam.backend.hash_tag.repository.HashtagRepository;
-import weteam.backend.hash_tag.repository.MemberHashtagCustomRepository;
-import weteam.backend.hash_tag.repository.MemberHashtagRepository;
+import weteam.backend.hashtag.domain.Hashtag;
+import weteam.backend.hashtag.domain.MemberHashtag;
+import weteam.backend.hashtag.dto.HashtagDto;
+import weteam.backend.hashtag.mapper.HashtagMapper;
+import weteam.backend.hashtag.repository.HashtagRepository;
+import weteam.backend.hashtag.repository.MemberHashtagCustomRepository;
+import weteam.backend.hashtag.repository.MemberHashtagRepository;
 import weteam.backend.member.MemberService;
 import weteam.backend.member.domain.Member;
 
@@ -27,7 +27,7 @@ public class HashtagService {
 
     public void create(HashtagDto request, Long memberId) {
         Optional<Hashtag> data = hashTagRepository.findByName(request.getName());
-        Member member = memberService.loadById(memberId);
+        Member member = memberService.findById(memberId);
 
         if (data.isEmpty()) {
             Hashtag hashtag = HashtagMapper.instance.toEntity(request);

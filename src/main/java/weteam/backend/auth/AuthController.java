@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -31,19 +32,19 @@ public class AuthController {
     private final JwtUtil jwtUtil;
 
     @PostMapping("/join")
-    @Operation(summary = "회원가입", responses = {
+    @Operation(summary = "회원가입")
+    @ApiResponses(value = {
             @ApiResponse(responseCode = "200", useReturnTypeSchema = true),
             @ApiResponse(responseCode = "400",
                          content = @Content(schema = @Schema(type = "string", example = "사용자 uid 중복")))
     })
-    public ResponseEntity<Message<?>> join(@RequestBody @Valid AuthDto.Join request) {
+    public Message<?> join(@RequestBody @Valid AuthDto.Join request) {
         authService.join(request);
-        Message<?> message = Message.builder()
-                                 .result(true)
-                                 .httpStatus(HttpStatus.OK)
-                                 .message("회원가입 성공")
-                                 .build();
-        return ResponseEntity.ok(message);
+        return Message.builder()
+                      .result(true)
+                      .httpStatus(HttpStatus.OK)
+                      .message("회원가입 성공")
+                      .build();
     }
 
     @PostMapping("/login")

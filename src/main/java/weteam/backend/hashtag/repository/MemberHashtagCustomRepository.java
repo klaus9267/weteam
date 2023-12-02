@@ -1,6 +1,6 @@
-package weteam.backend.hash_tag.repository;
+package weteam.backend.hashtag.repository;
 
-import weteam.backend.hash_tag.domain.MemberHashtag;
+import weteam.backend.hashtag.domain.MemberHashtag;
 
 import java.util.List;
 

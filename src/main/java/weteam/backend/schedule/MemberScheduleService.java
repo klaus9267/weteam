@@ -25,14 +25,14 @@ public class MemberScheduleService {
     private final MemberService memberService;
 
     public void create(MemberScheduleDto request, Long memberId) {
-        Member member = memberService.loadById(memberId);
+        Member member = memberService.findById(memberId);
         MemberSchedule memberSchedule = MemberScheduleMapper.instance.toEntity(request, member);
 
         memberScheduleRepository.save(memberSchedule);
     }
 
     public  List<MemberSchedule> findByMonth(int year, int month, Long memberId) {
-        Member member = memberService.loadById(memberId);
+        Member member = memberService.findById(memberId);
 
         LocalDateTime startDate = LocalDate.of(year, month, 1).atStartOfDay();
         LocalDateTime endDate = startDate.plusMonths(1).minusMinutes(1);
@@ -41,7 +41,7 @@ public class MemberScheduleService {
     }
 
     public List<MemberSchedule> findByDay(LocalDate date, Long memberId) {
-        Member member = memberService.loadById(memberId);
+        Member member = memberService.findById(memberId);
 
         LocalDateTime startDate = date.atStartOfDay();
         LocalDateTime endDate = startDate.plusDays(1).minusMinutes(1);
@@ -63,7 +63,7 @@ public class MemberScheduleService {
     }
 
     public void update(MemberScheduleDto request, Long id, Long memberId) {
-        Member member = memberService.loadById(memberId);
+        Member member = memberService.findById(memberId);
         MemberSchedule memberSchedule = MemberScheduleMapper.instance.toEntity(request, member);
 
         if (!memberSchedule.getMember().getId().equals(memberId)) {

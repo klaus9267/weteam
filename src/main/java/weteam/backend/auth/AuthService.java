@@ -1,6 +1,7 @@
 package weteam.backend.auth;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,18 +28,13 @@ public class AuthService {
     }
 
     public void join(AuthDto.Join request) {
-        Member entity = MemberMapper.instance.extractMember(request);
-        Member member = memberService.create(entity);
-
-        //Todo : test method
-        Optional<Auth> data = authRepository.findByUid(request.getUid());
-        if (data.isPresent()) {
+        if (authRepository.findByUid(request.getUid()).isPresent()) {
             throw new RuntimeException("사용자 uid 중복");
         }
-
+        Member entity = MemberMapper.instance.extractMember(request);
+        Member member = memberService.create(entity);
         String hashedPassword = passwordEncoder.encode(request.getPassword());
         Auth auth = AuthMapper.instance.toEntity(request, hashedPassword, member);
-
         authRepository.save(auth);
     }
 

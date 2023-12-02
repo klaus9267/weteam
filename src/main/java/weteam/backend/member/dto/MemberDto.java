@@ -1,11 +1,9 @@
 package weteam.backend.member.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Getter;
-import weteam.backend.hash_tag.dto.HashtagDto;
+import weteam.backend.hashtag.dto.HashtagDto;
 
 import java.util.ArrayList;
 import java.util.List;

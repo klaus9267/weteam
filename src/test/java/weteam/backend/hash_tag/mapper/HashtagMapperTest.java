@@ -2,12 +2,11 @@ package weteam.backend.hash_tag.mapper;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-import weteam.backend.hash_tag.domain.Hashtag;
-import weteam.backend.hash_tag.domain.MemberHashtag;
-import weteam.backend.hash_tag.dto.HashtagDto;
+import weteam.backend.hashtag.domain.Hashtag;
+import weteam.backend.hashtag.domain.MemberHashtag;
+import weteam.backend.hashtag.dto.HashtagDto;
+import weteam.backend.hashtag.mapper.HashtagMapper;
 import weteam.backend.member.domain.Member;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class HashtagMapperTest {

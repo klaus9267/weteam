@@ -5,8 +5,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import weteam.backend.member.domain.Member;
 
-import static weteam.backend.hash_tag.domain.QHashtag.hashtag;
-import static weteam.backend.hash_tag.domain.QMemberHashtag.memberHashtag;
+import static weteam.backend.hashtag.domain.QHashtag.hashtag;
+import static weteam.backend.hashtag.domain.QMemberHashtag.memberHashtag;
 import static weteam.backend.member.domain.QMember.member;
 
 @Repository
@@ -15,7 +15,7 @@ public class MemberCustomRepositoryImpl implements MemberCustomRepository {
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
-    public Member findMyInfoWithUseHashtag(Long memberId) {
+    public Member findProfile(Long memberId) {
         return jpaQueryFactory.selectFrom(member)
                                      .leftJoin(member.memberHashtagList, memberHashtag).fetchJoin()
                                      .leftJoin(memberHashtag.hashtag, hashtag).fetchJoin()

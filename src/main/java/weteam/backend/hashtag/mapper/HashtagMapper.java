@@ -1,10 +1,10 @@
-package weteam.backend.hash_tag.mapper;
+package weteam.backend.hashtag.mapper;
 
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
-import weteam.backend.hash_tag.domain.Hashtag;
-import weteam.backend.hash_tag.domain.MemberHashtag;
-import weteam.backend.hash_tag.dto.HashtagDto;
+import weteam.backend.hashtag.domain.Hashtag;
+import weteam.backend.hashtag.domain.MemberHashtag;
+import weteam.backend.hashtag.dto.HashtagDto;
 
 import java.util.List;
 

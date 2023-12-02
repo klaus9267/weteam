@@ -1,14 +1,13 @@
-package weteam.backend.hash_tag.repository;
+package weteam.backend.hashtag.repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
-import weteam.backend.hash_tag.domain.Hashtag;
-import weteam.backend.hash_tag.domain.MemberHashtag;
+import weteam.backend.hashtag.domain.MemberHashtag;
 
 import java.util.List;
 
-import static weteam.backend.hash_tag.domain.QMemberHashtag.memberHashtag;
+import static weteam.backend.hashtag.domain.QMemberHashtag.memberHashtag;
 
 @Repository
 @RequiredArgsConstructor

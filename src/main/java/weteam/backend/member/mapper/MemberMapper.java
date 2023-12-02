@@ -3,8 +3,8 @@ package weteam.backend.member.mapper;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 import weteam.backend.auth.dto.AuthDto;
-import weteam.backend.hash_tag.domain.MemberHashtag;
-import weteam.backend.hash_tag.dto.HashtagDto;
+import weteam.backend.hashtag.domain.MemberHashtag;
+import weteam.backend.hashtag.dto.HashtagDto;
 import weteam.backend.member.domain.Member;
 import weteam.backend.member.dto.MemberDto;
 

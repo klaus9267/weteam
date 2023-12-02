@@ -1,4 +1,4 @@
-package weteam.backend.hash_tag.dto;
+package weteam.backend.hashtag.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Max;

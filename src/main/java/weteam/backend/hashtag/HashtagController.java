@@ -1,9 +1,6 @@
-package weteam.backend.hash_tag;
+package weteam.backend.hashtag;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.ArraySchema;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -14,10 +11,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import weteam.backend.config.dto.Message;
-import weteam.backend.hash_tag.domain.MemberHashtag;
-import weteam.backend.hash_tag.dto.HashtagDto;
-import weteam.backend.hash_tag.mapper.HashtagMapper;
-import weteam.backend.member.dto.MemberDto;
+import weteam.backend.hashtag.domain.MemberHashtag;
+import weteam.backend.hashtag.dto.HashtagDto;
+import weteam.backend.hashtag.mapper.HashtagMapper;
 import weteam.backend.security.util.JwtUtil;
 import weteam.backend.security.util.SecurityUtil;
 

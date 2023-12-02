@@ -1,8 +1,7 @@
-package weteam.backend.hash_tag.domain;
+package weteam.backend.hashtag.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.ColumnDefault;
 import weteam.backend.member.domain.Member;
 
 @Entity

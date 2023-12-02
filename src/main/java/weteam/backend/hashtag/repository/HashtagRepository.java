@@ -1,7 +1,7 @@
-package weteam.backend.hash_tag.repository;
+package weteam.backend.hashtag.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import weteam.backend.hash_tag.domain.Hashtag;
+import weteam.backend.hashtag.domain.Hashtag;
 
 import java.util.Optional;
 

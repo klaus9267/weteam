@@ -30,7 +30,7 @@ public class ProjectService {
     }
 
     public void setProjectMember(Long memberId, Project project) {
-        Member member = memberService.loadById(memberId);
+        Member member = memberService.findById(memberId);
         ProjectMember projectMember = ProjectMember.builder()
                                                    .project(project)
                                                    .member(member)
@@ -48,7 +48,7 @@ public class ProjectService {
 
     public void acceptInvite(Long projectId, Long memberId) {
         Project project = loadById(projectId);
-        Member member = memberService.loadById(memberId);
+        Member member = memberService.findById(memberId);
         projectMemberService.addMember(member, project);
     }
 }

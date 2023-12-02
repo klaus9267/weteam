@@ -7,7 +7,6 @@ import weteam.backend.member.domain.Member;
 import weteam.backend.member.repository.MemberCustomRepository;
 import weteam.backend.member.repository.MemberRepository;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -25,20 +24,16 @@ public class MemberService {
         return memberRepository.findByNickname(nickname);
     }
 
-    public Optional<Member> findById(Long id) {
-        return memberRepository.findById(id);
+    public Member findProfile(Long id) {
+        return memberCustomRepository.findProfile(id);
     }
 
-    public Member findMyInfoWithUseHashtag(Long id) {
-        return memberCustomRepository.findMyInfoWithUseHashtag(id);
-    }
-
-    public Member loadById(Long id) {
-        return findById(id).orElseThrow(() -> new RuntimeException("없는 사용자"));
+    public Member findById(Long id) {
+        return memberRepository.findById(id).orElseThrow(() -> new RuntimeException("없는 사용자"));
     }
 
     public void updateOrganization(Long id, String organization) {
-        Member member = loadById(id);
+        Member member = findById(id);
         member.setOrganization(organization);
         memberRepository.save(member);
     }
