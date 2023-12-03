@@ -31,16 +31,10 @@ public class HashtagController {
     @PostMapping("")
     @PreAuthorize("hasAnyRole('USER')")
     @Operation(summary = "해시태그 생성")
-    public ResponseEntity<Message<?>> create(@RequestBody @Valid HashtagDto request) {
+    public Message<String> create(@RequestBody @Valid HashtagDto request) {
         Long memberId = SecurityUtil.getCurrentMemberId();
         hashTagService.create(request, memberId);
-
-        Message<?> message = Message.builder()
-                                    .result(true)
-                                    .httpStatus(HttpStatus.OK)
-                                    .message("해시태그 생성 성공")
-                                    .build();
-        return ResponseEntity.ok(message);
+        return new Message<>("해시태그 생성 성공");
     }
 
     @GetMapping("/{type}")
@@ -48,63 +42,38 @@ public class HashtagController {
     @Operation(summary = "해시태그 조회",
                responses = {@ApiResponse(responseCode = "200", useReturnTypeSchema = true)
                })
-    public ResponseEntity<Message<List<HashtagDto.Res>>> findByMemberIdWithType(@PathVariable("type") int type) {
+    public Message<List<HashtagDto.Res>> findByMemberIdWithType(@PathVariable("type") int type) {
         Long memberId = SecurityUtil.getCurrentMemberId();
         List<MemberHashtag> memberHashtagList = hashTagService.findByMemberIdWithType(memberId, type);
         List<HashtagDto.Res> resList = HashtagMapper.instance.toResList(memberHashtagList);
-
-        Message<List< HashtagDto.Res>> message = Message.<List<HashtagDto.Res>>builder()
-                                                       .result(true)
-                                                       .httpStatus(HttpStatus.OK)
-                                                       .message("다른 사용자 정보 조회 성공")
-                                                       .data(resList)
-                                                       .build();
-        return ResponseEntity.ok(message);
+        return new Message<>(resList);
     }
 
 
     @PatchMapping("/{memberHashtagId}")
     @PreAuthorize("hasAnyRole('USER')")
     @Operation(summary = "해시태그 활성화/비활성화")
-    public ResponseEntity<Message<?>> updateUse(@PathVariable("memberHashtagId") Long memberHashtagId) {
+    public Message<String> updateUse(@PathVariable("memberHashtagId") Long memberHashtagId) {
         Long memberId = SecurityUtil.getCurrentMemberId();
         hashTagService.updateUse(memberHashtagId, memberId);
-
-        Message<?> message = Message.builder()
-                                    .result(true)
-                                    .httpStatus(HttpStatus.OK)
-                                    .message("해시태그 활성화/비활성화 성공")
-                                    .build();
-        return ResponseEntity.ok(message);
+        return new Message<>("해시태그 활성화/비활성화 성공");
     }
 
     @DeleteMapping("/{memberHashtagId}")
     @PreAuthorize("hasAnyRole('USER')")
     @Operation(summary = "해시태그 삭제")
-    public ResponseEntity<Message<?>> delete(@PathVariable("memberHashtagId") Long memberHashtagId) {
+    public Message<String> delete(@PathVariable("memberHashtagId") Long memberHashtagId) {
         Long memberId = SecurityUtil.getCurrentMemberId();
         hashTagService.delete(memberHashtagId, memberId);
-
-        Message<?> message = Message.builder()
-                                    .result(true)
-                                    .httpStatus(HttpStatus.OK)
-                                    .message("해시태그 삭제 성공")
-                                    .build();
-        return ResponseEntity.ok(message);
+        return new Message<>("해시태그 삭제 성공");
     }
 
     @DeleteMapping("/all")
     @PreAuthorize("hasAnyRole('USER')")
     @Operation(summary = "해시태그 전체 삭제")
-    public ResponseEntity<Message<?>> deleteAl() {
+    public Message<String> deleteAl() {
         Long memberId = SecurityUtil.getCurrentMemberId();
         hashTagService.deleteAllByMemberId(memberId);
-
-        Message<?> message = Message.builder()
-                                    .result(true)
-                                    .httpStatus(HttpStatus.OK)
-                                    .message("해시태그 전체 삭제 성공")
-                                    .build();
-        return ResponseEntity.ok(message);
+        return new Message<>("해시태그 전체 삭제 성공");
     }
 }

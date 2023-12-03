@@ -5,9 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import weteam.backend.schedule.domain.MemberSchedule;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 
 import static weteam.backend.schedule.domain.QMemberSchedule.memberSchedule;

@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.Size;
 import lombok.*;
+import weteam.backend.schedule.domain.MemberSchedule;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -28,7 +29,6 @@ public class MemberScheduleDto {
     @Schema(description = "알람 / null 가능", nullable = true, example = "2023.11.21 11:11:11")
     private LocalDateTime alarm;
 
-    //TODO: validation annotaion으로 만들기 (null / 1~5)
     @Schema(description = "반복  ", nullable = true, example = "2023.11.21 11:11:11")
     private int repeatType;
 
@@ -40,10 +40,10 @@ public class MemberScheduleDto {
 
     @Getter
     @Builder
+    @AllArgsConstructor
     public static class Res{
         @Schema(description = "개인 스케줄 id", example = "1")
         private Long id;
-//        private Long memberId;
 
         @Schema(description = "개인 스케줄 제목", example = "애국가 4절 외우기")
         private String title;

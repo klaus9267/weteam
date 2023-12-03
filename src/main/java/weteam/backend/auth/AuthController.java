@@ -38,13 +38,9 @@ public class AuthController {
             @ApiResponse(responseCode = "400",
                          content = @Content(schema = @Schema(type = "string", example = "사용자 uid 중복")))
     })
-    public Message<?> join(@RequestBody @Valid AuthDto.Join request) {
+    public Message<String> join(@RequestBody @Valid AuthDto.Join request) {
         authService.join(request);
-        return Message.builder()
-                      .result(true)
-                      .httpStatus(HttpStatus.OK)
-                      .message("회원가입 성공")
-                      .build();
+        return new Message<>("회원가입 성공");
     }
 
     @PostMapping("/login")
@@ -56,7 +52,6 @@ public class AuthController {
 
     })
     public ResponseEntity<String> login(@RequestBody @Valid AuthDto.Login request) {
-
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(request.getUid(), request.getPassword());
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
@@ -70,15 +65,9 @@ public class AuthController {
             @ApiResponse(responseCode = "400",
                          content = @Content(schema = @Schema(type = "string", example = "중복된 아이디")))
     })
-    public ResponseEntity<Message<?>> verifyUid(@PathVariable("uid") String uid) {
-
+    public Message<String> verifyUid(@PathVariable("uid") String uid) {
         authService.verifyUid(uid);
-        Message<?> message = Message.builder()
-                                    .result(true)
-                                    .httpStatus(HttpStatus.OK)
-                                    .message("사용 가능한 아이디")
-                                    .build();
-        return ResponseEntity.ok(message);
+        return new Message<>("사용 가능한 아이디");
     }
 
     @GetMapping("/verify/nickname/{nickname}")
@@ -87,13 +76,8 @@ public class AuthController {
             @ApiResponse(responseCode = "400",
                          content = @Content(schema = @Schema(type = "string", example = "중복된 닉네임")))
     })
-    public ResponseEntity<Message<?>> verifyNickname(@PathVariable("nickname") String nickname) {
+    public Message<String> verifyNickname(@PathVariable("nickname") String nickname) {
         authService.verifyNickname(nickname);
-        Message<?> message = Message.builder()
-                                    .result(true)
-                                    .httpStatus(HttpStatus.OK)
-                                    .message("사용 가능한 닉네임")
-                                    .build();
-        return ResponseEntity.ok(message);
+        return new Message<>("사용 가능한 닉네임");
     }
 }

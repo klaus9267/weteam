@@ -1,12 +1,10 @@
 package weteam.backend.schedule.domain;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import weteam.backend.member.domain.Member;
+import weteam.backend.schedule.dto.MemberScheduleDto;
 
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -14,6 +12,7 @@ import java.util.Date;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
+@RequiredArgsConstructor
 @Data
 @Builder
 public class MemberSchedule {
@@ -26,17 +25,11 @@ public class MemberSchedule {
 
     @Column(nullable = false)
     private LocalDateTime startedAt;
-
     private LocalDateTime endedAt;
-
-    private String place;
-
     private LocalDateTime alarm;
-
     private Integer repeatType;
-
+    private String place;
     private String memo;
-
     private String color;
 
     @ColumnDefault("false")
@@ -45,6 +38,7 @@ public class MemberSchedule {
     @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    private Category category;
+    public MemberScheduleDto.Res toDto() {
+        return new MemberScheduleDto.Res(id, title, startedAt, endedAt, place, alarm, repeatType, memo, color);
+    }
 }

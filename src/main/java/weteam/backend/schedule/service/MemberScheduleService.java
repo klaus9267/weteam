@@ -1,10 +1,11 @@
-package weteam.backend.schedule;
+package weteam.backend.schedule.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import weteam.backend.member.MemberService;
 import weteam.backend.member.domain.Member;
+import weteam.backend.member.mapper.MemberMapper;
 import weteam.backend.schedule.domain.MemberSchedule;
 import weteam.backend.schedule.dto.MemberScheduleDto;
 import weteam.backend.schedule.mapper.MemberScheduleMapper;
@@ -24,11 +25,11 @@ public class MemberScheduleService {
     private final MemberScheduleCustomRepository memberScheduleCustomRepository;
     private final MemberService memberService;
 
-    public void create(MemberScheduleDto request, Long memberId) {
+    public MemberScheduleDto.Res create(MemberScheduleDto request, Long memberId) {
         Member member = memberService.findById(memberId);
-        MemberSchedule memberSchedule = MemberScheduleMapper.instance.toEntity(request, member);
-
-        memberScheduleRepository.save(memberSchedule);
+        MemberSchedule entity = MemberScheduleMapper.instance.toEntity(request, member);
+        MemberSchedule memberSchedule = memberScheduleRepository.save(entity);
+        return MemberScheduleMapper.instance.toRes(memberSchedule);
     }
 
     public  List<MemberSchedule> findByMonth(int year, int month, Long memberId) {
@@ -62,20 +63,18 @@ public class MemberScheduleService {
         return memberSchedule;
     }
 
-    public void update(MemberScheduleDto request, Long id, Long memberId) {
+    public MemberScheduleDto.Res update(MemberScheduleDto request, Long id, Long memberId) {
         Member member = memberService.findById(memberId);
-        MemberSchedule memberSchedule = MemberScheduleMapper.instance.toEntity(request, member);
-
-        if (!memberSchedule.getMember().getId().equals(memberId)) {
+        MemberSchedule entity = MemberScheduleMapper.instance.toEntity(request, member);
+        if (!entity.getMember().getId().equals(memberId)) {
             throw new RuntimeException("다른 사용자의 스케줄");
         }
-
-        memberScheduleRepository.save(memberSchedule);
+        MemberSchedule memberSchedule= memberScheduleRepository.save(entity);
+        return MemberScheduleMapper.instance.toRes(memberSchedule);
     }
 
     public void updateIsDone(Long id, Long memberId) {
         MemberSchedule memberSchedule = loadById(id, memberId);
-
         memberSchedule.setDone(!memberSchedule.isDone());
         memberScheduleRepository.save(memberSchedule);
     }

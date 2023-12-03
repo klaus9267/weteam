@@ -5,13 +5,14 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import weteam.backend.config.dto.Message;
 import weteam.backend.schedule.domain.MemberSchedule;
 import weteam.backend.schedule.dto.MemberScheduleDto;
 import weteam.backend.schedule.mapper.MemberScheduleMapper;
+import weteam.backend.schedule.service.MemberScheduleService;
 
 import java.security.Principal;
 import java.time.LocalDate;
@@ -28,10 +29,10 @@ public class MemberScheduleController {
     @PostMapping("")
     @PreAuthorize("hasAnyRole('USER')")
     @Operation(summary = "개인스케줄 생성")
-    public void create(@RequestBody @Valid MemberScheduleDto request, Principal principal) {
+    public Message<MemberScheduleDto.Res> create(@RequestBody @Valid MemberScheduleDto request, Principal principal) {
         Long memberId = Long.valueOf(principal.getName());
-
-        memberScheduleService.create(request, memberId);
+        MemberScheduleDto.Res res = memberScheduleService.create(request, memberId);
+        return new Message<>(res);
     }
 
     @GetMapping("/{year}/{month}")
@@ -39,15 +40,13 @@ public class MemberScheduleController {
     @Operation(summary = "내 월별 스케줄 조회", responses = {
             @ApiResponse(responseCode = "200",useReturnTypeSchema = true)
     })
-    public ResponseEntity<List<MemberScheduleDto.Res>> findByMonth(@PathVariable("year") int year,
+    public Message<List<MemberScheduleDto.Res>>  findByMonth(@PathVariable("year") int year,
                                                                    @PathVariable("month") int month,
                                                                    Principal principal) {
-
         Long memberId = Long.valueOf(principal.getName());
-
         List<MemberSchedule> memberScheduleList = memberScheduleService.findByMonth(year, month, memberId);
         List<MemberScheduleDto.Res> resList = MemberScheduleMapper.instance.toResList(memberScheduleList);
-        return ResponseEntity.ok(resList);
+        return new Message<>(resList);
     }
 
     @GetMapping("/date/{date}")
@@ -55,13 +54,12 @@ public class MemberScheduleController {
     @Operation(summary = "내 일별 스케줄 조회", responses = {
             @ApiResponse(responseCode = "200",useReturnTypeSchema = true)
     })
-    public ResponseEntity<List<MemberScheduleDto.Res>> findByMonth(@PathVariable("date") LocalDate date,
+    public Message<List<MemberScheduleDto.Res>> findByMonth(@PathVariable("date") LocalDate date,
                                                                    Principal principal) {
         Long memberId = Long.valueOf(principal.getName());
-
         List<MemberSchedule> memberScheduleList = memberScheduleService.findByDay(date, memberId);
         List<MemberScheduleDto.Res> resList = MemberScheduleMapper.instance.toResList(memberScheduleList);
-        return ResponseEntity.ok(resList);
+        return new Message<>(resList);
     }
 
 //    @GetMapping("/{id}")

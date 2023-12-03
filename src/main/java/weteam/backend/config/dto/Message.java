@@ -22,4 +22,22 @@ public class Message<T>{
 
     @Schema(description = "데이터")
     private T data ;
+
+    public Message(HttpStatus httpStatus, T data) {
+        this.result = true;
+        this.httpStatus = httpStatus;
+        this.data = data;
+    }
+
+    public Message(T data) {
+        this.result = true;
+        this.httpStatus = HttpStatus.OK;
+        this.data = data;
+    }
+
+    public Message(String message) {
+        this.result = true;
+        this.httpStatus = HttpStatus.OK;
+        this.message = message;
+    }
 }

@@ -28,15 +28,11 @@ public class ProjectController {
     @Operation(summary = "팀플 생성", responses = {
             @ApiResponse(responseCode = "200", useReturnTypeSchema = true)
     })
-    public Message<?> createProject(@RequestBody @Valid ProjectDto.Create request) {
+    public Message<ProjectDto.Res> createProject(@RequestBody @Valid ProjectDto.Create request) {
         Long memberId = SecurityUtil.getCurrentMemberId();
         Project entity = ProjectMapper.instance.toEntity(request);
         ProjectDto.Res res= projectService.createProject(memberId, entity);
-        return Message.builder()
-                      .result(true)
-                      .httpStatus(HttpStatus.OK)
-                      .message("팀플 생성 성공")
-                      .build();
+        return new Message<>(HttpStatus.CREATED, res);
     }
 
     @GetMapping("/invite/{projectId}")
