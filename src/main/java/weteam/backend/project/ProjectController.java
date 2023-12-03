@@ -28,29 +28,24 @@ public class ProjectController {
     @Operation(summary = "팀플 생성", responses = {
             @ApiResponse(responseCode = "200", useReturnTypeSchema = true)
     })
-    public ResponseEntity<Message<?>> createProject(@RequestBody @Valid ProjectDto.Create request) {
+    public Message<?> createProject(@RequestBody @Valid ProjectDto.Create request) {
         Long memberId = SecurityUtil.getCurrentMemberId();
         Project entity = ProjectMapper.instance.toEntity(request);
-
         ProjectDto.Res res= projectService.createProject(memberId, entity);
-
-        Message<?> message = Message.builder()
-                                    .result(true)
-                                    .httpStatus(HttpStatus.OK)
-                                    .message("팀플 생성 성공")
-                                    .build();
-        return ResponseEntity.ok(message);
+        return Message.builder()
+                      .result(true)
+                      .httpStatus(HttpStatus.OK)
+                      .message("팀플 생성 성공")
+                      .build();
     }
 
     @GetMapping("/invite/{projectId}")
-    public ResponseEntity<Message<?>> acceptInvite(@PathVariable("projectId") Long projectId) {
+    public Message<?> acceptInvite(@PathVariable("projectId") Long projectId) {
         Long memberId = SecurityUtil.getCurrentMemberId();
-
-        Message<?> message = Message.builder()
-                                    .result(true)
-                                    .httpStatus(HttpStatus.OK)
-                                    .message("팀플 초대 성공")
-                                    .build();
-        return ResponseEntity.ok(message);
+        return Message.builder()
+                      .result(true)
+                      .httpStatus(HttpStatus.OK)
+                      .message("팀플 초대 성공")
+                      .build();
     }
 }
