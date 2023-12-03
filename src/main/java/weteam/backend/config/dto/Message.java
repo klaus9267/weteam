@@ -1,14 +1,17 @@
 package weteam.backend.config.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
+@AllArgsConstructor
 @Builder
 public class Message<T>{
     @Schema(description = "요청 결과", nullable = false, example = "true")
