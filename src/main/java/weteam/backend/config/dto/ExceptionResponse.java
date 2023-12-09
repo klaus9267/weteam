@@ -9,8 +9,7 @@ import org.springframework.http.HttpStatus;
 @AllArgsConstructor
 @Data
 @Builder
-public class ErrorResponse {
+public class ExceptionResponse {
     private String field;
-    private HttpStatus httpStatus;
-    private String defaultMessage;
+    private String message;
 }

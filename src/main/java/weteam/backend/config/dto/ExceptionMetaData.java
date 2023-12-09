@@ -1,0 +1,20 @@
+package weteam.backend.config.dto;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import org.springframework.http.HttpStatus;
+
+import java.util.List;
+
+@AllArgsConstructor
+@Data
+@Builder
+public class ExceptionMetaData<T> {
+    private HttpStatus httpStatus;
+    private T data;
+
+    public ExceptionMetaData(T data) {
+        this.data = data;
+    }
+}
