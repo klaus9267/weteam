@@ -42,8 +42,7 @@ public class AuthController {
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(request.getUid(), request.getPassword());
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
-        String jwt = jwtUtil.generateToken(authentication);
-        return ResponseEntity.ok(jwt);
+        return ResponseEntity.ok(jwtUtil.generateToken(authentication));
     }
 
     @GetMapping("/verify/uid/{uid}")
