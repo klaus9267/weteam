@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import weteam.backend.member.MemberService;
 import weteam.backend.member.domain.Member;
-import weteam.backend.member.mapper.MemberMapper;
 import weteam.backend.schedule.domain.MemberSchedule;
 import weteam.backend.schedule.dto.MemberScheduleDto;
 import weteam.backend.schedule.mapper.MemberScheduleMapper;
@@ -32,22 +31,24 @@ public class MemberScheduleService {
         return MemberScheduleMapper.instance.toRes(memberSchedule);
     }
 
-    public  List<MemberSchedule> findByMonth(int year, int month, Long memberId) {
+    public  List<MemberScheduleDto.Res> findByMonth(int year, int month, Long memberId) {
         Member member = memberService.findById(memberId);
 
         LocalDateTime startDate = LocalDate.of(year, month, 1).atStartOfDay();
         LocalDateTime endDate = startDate.plusMonths(1).minusMinutes(1);
 
-        return memberScheduleCustomRepository.findByMonth(startDate, endDate, memberId);
+        List<MemberSchedule> schedules = memberScheduleCustomRepository.findByMonth(startDate, endDate, memberId);
+        return MemberScheduleMapper.instance.toResList(schedules);
     }
 
-    public List<MemberSchedule> findByDay(LocalDate date, Long memberId) {
+    public List<MemberScheduleDto.Res> findByDay(LocalDate date, Long memberId) {
         Member member = memberService.findById(memberId);
 
         LocalDateTime startDate = date.atStartOfDay();
         LocalDateTime endDate = startDate.plusDays(1).minusMinutes(1);
 
-        return memberScheduleCustomRepository.findByDate(startDate, endDate, memberId);
+        List<MemberSchedule> schedules = memberScheduleCustomRepository.findByDate(startDate, endDate, memberId);
+        return MemberScheduleMapper.instance.toResList(schedules);
     }
 
     public Optional<MemberSchedule> findById(Long id) {
