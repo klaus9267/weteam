@@ -22,7 +22,7 @@ import java.util.List;
 @Validated
 @RequestMapping("/api/schedules/members")
 @RequiredArgsConstructor
-@Tag(name = "Member Schedule", description = "member schedules API / jwt 필수")
+@Tag(name = "Member Schedule", description = "jwt 필수")
 public class MemberScheduleController {
     private final MemberScheduleService memberScheduleService;
 
@@ -37,12 +37,11 @@ public class MemberScheduleController {
 
     @GetMapping("/{year}/{month}")
     @PreAuthorize("hasAnyRole('USER')")
-    @Operation(summary = "내 월별 스케줄 조회", responses = {
-            @ApiResponse(responseCode = "200",useReturnTypeSchema = true)
-    })
-    public Message<List<MemberScheduleDto.Res>>  findByMonth(@PathVariable("year") int year,
-                                                                   @PathVariable("month") int month,
-                                                                   Principal principal) {
+    @Operation(summary = "내 월별 스케줄 조회")
+    @ApiResponse(responseCode = "200", useReturnTypeSchema = true)
+    public Message<List<MemberScheduleDto.Res>> findByMonth(@PathVariable("year") int year,
+                                                            @PathVariable("month") int month,
+                                                            Principal principal) {
         Long memberId = Long.valueOf(principal.getName());
         List<MemberSchedule> memberScheduleList = memberScheduleService.findByMonth(year, month, memberId);
         List<MemberScheduleDto.Res> resList = MemberScheduleMapper.instance.toResList(memberScheduleList);
@@ -51,11 +50,10 @@ public class MemberScheduleController {
 
     @GetMapping("/date/{date}")
     @PreAuthorize("hasAnyRole('USER')")
-    @Operation(summary = "내 일별 스케줄 조회", responses = {
-            @ApiResponse(responseCode = "200",useReturnTypeSchema = true)
-    })
+    @Operation(summary = "내 일별 스케줄 조회")
+    @ApiResponse(responseCode = "200", useReturnTypeSchema = true)
     public Message<List<MemberScheduleDto.Res>> findByMonth(@PathVariable("date") LocalDate date,
-                                                                   Principal principal) {
+                                                            Principal principal) {
         Long memberId = Long.valueOf(principal.getName());
         List<MemberSchedule> memberScheduleList = memberScheduleService.findByDay(date, memberId);
         List<MemberScheduleDto.Res> resList = MemberScheduleMapper.instance.toResList(memberScheduleList);

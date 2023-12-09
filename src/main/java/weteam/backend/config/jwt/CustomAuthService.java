@@ -1,4 +1,4 @@
-package weteam.backend.security;
+package weteam.backend.config.jwt;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -7,7 +7,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import weteam.backend.auth.repository.AuthRepository;
-import weteam.backend.security.domain.CustomUser;
+import weteam.backend.auth.domain.CustomUser;
 
 @Service
 @Transactional

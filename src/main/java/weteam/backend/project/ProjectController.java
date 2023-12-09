@@ -4,17 +4,15 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import weteam.backend.config.dto.Message;
 import weteam.backend.project.domain.Project;
 import weteam.backend.project.dto.ProjectDto;
 import weteam.backend.project.mapper.ProjectMapper;
-import weteam.backend.security.util.SecurityUtil;
+import weteam.backend.config.jwt.util.SecurityUtil;
 
 @RestController
 @RequestMapping("/api/projects")

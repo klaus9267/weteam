@@ -1,4 +1,4 @@
-package weteam.backend.security.util;
+package weteam.backend.config.jwt.util;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
@@ -14,7 +14,6 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-import weteam.backend.security.domain.CustomUser;
 
 import java.security.Key;
 import java.util.Arrays;

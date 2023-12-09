@@ -1,4 +1,4 @@
-package weteam.backend.security.config;
+package weteam.backend.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -10,8 +10,8 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import weteam.backend.security.filter.JwtAuthenticationFilter;
-import weteam.backend.security.util.JwtUtil;
+import weteam.backend.config.jwt.filter.JwtAuthenticationFilter;
+import weteam.backend.config.jwt.util.JwtUtil;
 
 @Configuration
 @EnableWebSecurity

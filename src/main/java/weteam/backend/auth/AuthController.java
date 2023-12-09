@@ -8,7 +8,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -17,8 +16,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import weteam.backend.auth.dto.AuthDto;
 import weteam.backend.config.dto.Message;
-import weteam.backend.security.CustomAuthService;
-import weteam.backend.security.util.JwtUtil;
+import weteam.backend.config.jwt.CustomAuthService;
+import weteam.backend.config.jwt.util.JwtUtil;
 
 @RestController
 @Validated

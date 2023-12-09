@@ -5,8 +5,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -14,8 +12,8 @@ import weteam.backend.config.dto.Message;
 import weteam.backend.hashtag.domain.MemberHashtag;
 import weteam.backend.hashtag.dto.HashtagDto;
 import weteam.backend.hashtag.mapper.HashtagMapper;
-import weteam.backend.security.util.JwtUtil;
-import weteam.backend.security.util.SecurityUtil;
+import weteam.backend.config.jwt.util.JwtUtil;
+import weteam.backend.config.jwt.util.SecurityUtil;
 
 import java.util.List;
 
