@@ -1,4 +1,4 @@
-package weteam.backend.config.jwt.util;
+package weteam.backend.security;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

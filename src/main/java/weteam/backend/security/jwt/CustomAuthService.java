@@ -1,4 +1,4 @@
-package weteam.backend.config.jwt;
+package weteam.backend.security.jwt;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -6,6 +6,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.webjars.NotFoundException;
 import weteam.backend.auth.repository.AuthRepository;
 import weteam.backend.auth.domain.CustomUser;
 
@@ -17,8 +18,6 @@ public class CustomAuthService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String uid) throws UsernameNotFoundException {
-        return authRepository.findByUid(uid)
-                             .map(CustomUser::new)
-                             .orElseThrow(() -> new RuntimeException("없는 사용자"));
+        return authRepository.findByUid(uid).map(CustomUser::new).orElseThrow(() -> new NotFoundException("없는 사용자"));
     }
 }

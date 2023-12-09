@@ -1,12 +1,13 @@
 package weteam.backend.hashtag;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import weteam.backend.config.message.ExceptionMessage;
 import weteam.backend.hashtag.domain.Hashtag;
 import weteam.backend.hashtag.domain.MemberHashtag;
 import weteam.backend.hashtag.dto.HashtagDto;
-import weteam.backend.hashtag.mapper.HashtagMapper;
 import weteam.backend.hashtag.repository.HashtagRepository;
 import weteam.backend.hashtag.repository.MemberHashtagCustomRepository;
 import weteam.backend.hashtag.repository.MemberHashtagRepository;
@@ -25,28 +26,22 @@ public class HashtagService {
     private final MemberHashtagCustomRepository memberHashtagCustomRepository;
     private final MemberService memberService;
 
-    public void create(HashtagDto request, Long memberId) {
-        Optional<Hashtag> data = hashTagRepository.findByName(request.getName());
+    public HashtagDto.Res create(HashtagDto hashtagDto, Long memberId) {
+        Optional<Hashtag> data = hashTagRepository.findByName(hashtagDto.getName());
         Member member = memberService.findById(memberId);
 
         if (data.isEmpty()) {
-            Hashtag hashtag = HashtagMapper.instance.toEntity(request);
-            MemberHashtag memberHashtag = MemberHashtag.builder()
-                                                       .hashtag(hashtag)
-                                                       .member(member)
-                                                       .build();
+            Hashtag hashtag = HashtagMapper.instance.toEntity(hashtagDto);
+            MemberHashtag memberHashtag = MemberHashtag.builder().hashtag(hashtag).member(member).build();
             hashTagRepository.save(hashtag);
-            memberHashtagRepository.save(memberHashtag);
+            return HashtagMapper.instance.toRes(memberHashtagRepository.save(memberHashtag));
         } else {
             Hashtag hashtag = data.get();
             if (memberHashtagRepository.findByHashtag(hashtag).isEmpty()) {
-                MemberHashtag memberHashtag = MemberHashtag.builder()
-                                                           .hashtag(hashtag)
-                                                           .member(member)
-                                                           .build();
-                memberHashtagRepository.save(memberHashtag);
+                MemberHashtag memberHashtag = MemberHashtag.builder().hashtag(hashtag).member(member).build();
+                return HashtagMapper.instance.toRes(memberHashtagRepository.save(memberHashtag));
             } else {
-                throw new RuntimeException("이미 작성된 해시태그입니다.");
+                throw new DuplicateKeyException(ExceptionMessage.DUPLICATE.getMessage());
             }
         }
     }
@@ -58,7 +53,7 @@ public class HashtagService {
     public void updateUse(Long memberHashtagId, Long memberId) {
         MemberHashtag memberHashtag = checkHashtag(memberHashtagId, memberId);
         memberHashtag.setUse(!memberHashtag.isUse());
-        memberHashtagRepository.save(memberHashtag);
+        HashtagMapper.instance.toRes(memberHashtagRepository.save(memberHashtag));
     }
 
     public void delete(Long memberHashtagId, Long memberId) {
@@ -71,8 +66,7 @@ public class HashtagService {
     }
 
     public MemberHashtag checkHashtag(Long memberHashtagId, Long memberId) {
-        MemberHashtag memberHashtag = memberHashtagRepository.findById(memberHashtagId)
-                                                             .orElseThrow(() -> new RuntimeException("없는 해시태그입니다."));
+        MemberHashtag memberHashtag = memberHashtagRepository.findById(memberHashtagId).orElseThrow(() -> new RuntimeException("없는 해시태그입니다."));
         if (!memberHashtag.getMember().getId().equals(memberId)) {
             throw new RuntimeException("다른 사람의 해시태크입니다.");
         }

@@ -1,4 +1,4 @@
-package weteam.backend.config.jwt.util;
+package weteam.backend.security.jwt;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
@@ -37,6 +37,7 @@ public class JwtUtil {
                                            .collect(Collectors.joining(","));
 
         long now = (new Date()).getTime();
+//        Date accessTokenExpiresIn = new Date(now);
         Date accessTokenExpiresIn = new Date(now + 60 * 24 * 1000);
         return Jwts.builder()
                    .setSubject(authentication.getName())
@@ -69,22 +70,22 @@ public class JwtUtil {
             return true;
         } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
             log.info("Invalid JWT Token", e);
+            throw new JwtException("잘못된 토큰");
         } catch (ExpiredJwtException e) {
             log.info("Expired JWT Token", e);
+            throw new JwtException("만료된 토큰");
         } catch (UnsupportedJwtException e) {
             log.info("Unsupported JWT Token", e);
+            throw new JwtException("지원하지 않는 토큰");
         } catch (IllegalArgumentException e) {
             log.info("JWT claims string is empty.", e);
+
         }
         return false;
     }
 
     public Claims parseClaims(String accessToken) {
-        try {
-            return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(accessToken).getBody();
-        } catch (ExpiredJwtException e) {
-            return e.getClaims();
-        }
+        return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(accessToken).getBody();
     }
     public String resolveToken(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");

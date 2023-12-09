@@ -1,4 +1,4 @@
-package weteam.backend.hashtag.mapper;
+package weteam.backend.hashtag;
 
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;

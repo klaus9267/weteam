@@ -5,15 +5,14 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import weteam.backend.config.dto.Message;
+import weteam.backend.config.dto.ApiMetaData;
 import weteam.backend.hashtag.domain.MemberHashtag;
 import weteam.backend.hashtag.dto.HashtagDto;
-import weteam.backend.hashtag.mapper.HashtagMapper;
-import weteam.backend.config.jwt.util.JwtUtil;
-import weteam.backend.config.jwt.util.SecurityUtil;
+import weteam.backend.security.jwt.JwtUtil;
+import weteam.backend.security.SecurityUtil;
 
 import java.util.List;
 
@@ -27,51 +26,49 @@ public class HashtagController {
     private final JwtUtil jwtUtil;
 
     @PostMapping("")
-    @PreAuthorize("hasAnyRole('USER')")
+//    @PreAuthorize("hasAnyRole('USER')")
     @Operation(summary = "해시태그 생성")
-    public Message<String> create(@RequestBody @Valid HashtagDto request) {
+    public ApiMetaData<String> create(@RequestBody @Valid HashtagDto request) {
         Long memberId = SecurityUtil.getCurrentMemberId();
         hashTagService.create(request, memberId);
-        return new Message<>("해시태그 생성 성공");
+        return new ApiMetaData<>("해시태그 생성 성공");
     }
 
     @GetMapping("/{type}")
-    @PreAuthorize("hasAnyRole('USER')")
-    @Operation(summary = "해시태그 조회",
-               responses = {@ApiResponse(responseCode = "200", useReturnTypeSchema = true)
-               })
-    public Message<List<HashtagDto.Res>> findByMemberIdWithType(@PathVariable("type") int type) {
+//    @PreAuthorize("hasAnyRole('USER')")
+    @Operation(summary = "해시태그 조회")
+    @ApiResponse(responseCode = "200", useReturnTypeSchema = true)
+    public ApiMetaData<List<HashtagDto.Res>> findByMemberIdWithType(@PathVariable("type") int type) {
         Long memberId = SecurityUtil.getCurrentMemberId();
         List<MemberHashtag> memberHashtagList = hashTagService.findByMemberIdWithType(memberId, type);
-        List<HashtagDto.Res> resList = HashtagMapper.instance.toResList(memberHashtagList);
-        return new Message<>(resList);
+        return new ApiMetaData<>(HashtagMapper.instance.toResList(memberHashtagList));
     }
 
 
     @PatchMapping("/{memberHashtagId}")
-    @PreAuthorize("hasAnyRole('USER')")
+//    @PreAuthorize("hasAnyRole('USER')")
     @Operation(summary = "해시태그 활성화/비활성화")
-    public Message<String> updateUse(@PathVariable("memberHashtagId") Long memberHashtagId) {
+    public ApiMetaData<String> updateUse(@PathVariable("memberHashtagId") Long memberHashtagId) {
         Long memberId = SecurityUtil.getCurrentMemberId();
         hashTagService.updateUse(memberHashtagId, memberId);
-        return new Message<>("해시태그 활성화/비활성화 성공");
+        return new ApiMetaData<>("해시태그 활성화/비활성화 성공");
     }
 
     @DeleteMapping("/{memberHashtagId}")
-    @PreAuthorize("hasAnyRole('USER')")
+//    @PreAuthorize("hasAnyRole('USER')")
     @Operation(summary = "해시태그 삭제")
-    public Message<String> delete(@PathVariable("memberHashtagId") Long memberHashtagId) {
+    public ApiMetaData<String> delete(@PathVariable("memberHashtagId") Long memberHashtagId) {
         Long memberId = SecurityUtil.getCurrentMemberId();
         hashTagService.delete(memberHashtagId, memberId);
-        return new Message<>("해시태그 삭제 성공");
+        return new ApiMetaData<>(HttpStatus.NO_CONTENT);
     }
 
     @DeleteMapping("/all")
-    @PreAuthorize("hasAnyRole('USER')")
+//    @PreAuthorize("hasAnyRole('USER')")
     @Operation(summary = "해시태그 전체 삭제")
-    public Message<String> deleteAl() {
+    public ApiMetaData<?> deleteAl() {
         Long memberId = SecurityUtil.getCurrentMemberId();
         hashTagService.deleteAllByMemberId(memberId);
-        return new Message<>("해시태그 전체 삭제 성공");
+        return new ApiMetaData<>(HttpStatus.NO_CONTENT);
     }
 }

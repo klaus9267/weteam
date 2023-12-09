@@ -3,7 +3,7 @@
 //import io.swagger.v3.oas.annotations.Operation;
 //import io.swagger.v3.oas.annotations.media.Content;
 //import io.swagger.v3.oas.annotations.media.Schema;
-//import io.swagger.v3.oas.annotations.responses.Message;
+//import io.swagger.v3.oas.annotations.responses.ApiMetaData;
 //import io.swagger.v3.oas.annotations.tags.Tag;
 //import jakarta.validation.Valid;
 //import lombok.RequiredArgsConstructor;
@@ -38,7 +38,7 @@
 //    @PreAuthorize("hasAnyRole('USER')")
 //    @Operation(summary = "사용자의 키테고리 전체 조회",
 //               responses = {
-//                       @Message(responseCode = "200",
+//                       @ApiMetaData(responseCode = "200",
 //                                    content = @Content(schema = @Schema(implementation = CategoryDto.ResList.class)))
 //               })
 //    public ResponseEntity<List<CategoryDto.LoginRes>> findAllByMemberId(Principal principal) {
