@@ -10,9 +10,10 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import weteam.backend.security.jwt.filter.JwtExceptionFilter;
 import weteam.backend.security.jwt.handler.JwtAccessDeniedHandler;
 import weteam.backend.security.jwt.handler.JwtAuthenticationEntryPoint;
-import weteam.backend.security.jwt.JwtAuthenticationFilter;
+import weteam.backend.security.jwt.filter.JwtAuthenticationFilter;
 import weteam.backend.security.jwt.JwtUtil;
 
 @Configuration
@@ -43,7 +44,8 @@ public class SecurityConfig {
                         .requestMatchers("/api").hasAnyRole("USER", "ADMIN")
                         .anyRequest().authenticated()
                 )
-                .addFilterBefore(new JwtAuthenticationFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(new JwtAuthenticationFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JwtExceptionFilter(), JwtAuthenticationFilter.class);
         return http.build();
     }
 

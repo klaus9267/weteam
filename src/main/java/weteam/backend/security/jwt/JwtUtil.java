@@ -5,6 +5,7 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
+import org.springdoc.api.ErrorMessage;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -14,6 +15,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
+import weteam.backend.config.message.ExceptionMessage;
 
 import java.security.Key;
 import java.util.Arrays;
@@ -37,7 +39,7 @@ public class JwtUtil {
                                            .collect(Collectors.joining(","));
 
         long now = (new Date()).getTime();
-//        Date accessTokenExpiresIn = new Date(now);
+        //        Date accessTokenExpiresIn = new Date(now);
         Date accessTokenExpiresIn = new Date(now + 60 * 24 * 1000);
         return Jwts.builder()
                    .setSubject(authentication.getName())
@@ -69,24 +71,24 @@ public class JwtUtil {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
             return true;
         } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
-            log.info("Invalid JWT Token", e);
-            throw new JwtException("잘못된 토큰");
+            log.info("잘못된 JWT 서명입니다.");
+            throw new JwtException(ExceptionMessage.WRONG_SIGNATURE.getMessage());
         } catch (ExpiredJwtException e) {
-            log.info("Expired JWT Token", e);
-            throw new JwtException("만료된 토큰");
+            log.info("만료된 JWT 토큰입니다.");
+            throw new JwtException(ExceptionMessage.EXPIRED_TOKEN.getMessage());
         } catch (UnsupportedJwtException e) {
-            log.info("Unsupported JWT Token", e);
-            throw new JwtException("지원하지 않는 토큰");
+            log.info("지원되지 않는 JWT 토큰입니다.");
+            throw new JwtException(ExceptionMessage.UNSUPPORTED_TOKEN.getMessage());
         } catch (IllegalArgumentException e) {
-            log.info("JWT claims string is empty.", e);
-
+            log.info("JWT 토큰이 잘못되었습니다.");
+            throw new JwtException(ExceptionMessage.WRONG_TOKEN.getMessage());
         }
-        return false;
     }
 
     public Claims parseClaims(String accessToken) {
         return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(accessToken).getBody();
     }
+
     public String resolveToken(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer")) {
