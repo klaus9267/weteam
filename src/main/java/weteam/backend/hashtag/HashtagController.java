@@ -27,8 +27,8 @@ public class HashtagController {
 
     @PostMapping
     @Operation(summary = "해시태그 생성")
-    public ApiMetaData<String> save(@RequestBody @Valid HashtagDto request) {
-        Long memberId = SecurityUtil.getCurrentMemberId();
+    public ApiMetaData<String> save(@RequestBody @Valid final HashtagDto request) {
+        final Long memberId = SecurityUtil.getCurrentMemberId();
         hashTagService.save(request, memberId);
         return new ApiMetaData<>("해시태그 생성 성공");
     }
@@ -36,25 +36,25 @@ public class HashtagController {
     @GetMapping("/{type}")
     @Operation(summary = "해시태그 조회")
     @ApiResponse(responseCode = "200", useReturnTypeSchema = true)
-    public ApiMetaData<List<HashtagDto.Res>> findByMemberIdWithType(@PathVariable("type") int type) {
-        Long memberId = SecurityUtil.getCurrentMemberId();
-        List<MemberHashtag> memberHashtagList = hashTagService.findByMemberIdWithType(memberId, type);
+    public ApiMetaData<List<HashtagDto.Res>> findByMemberIdWithType(@PathVariable("type") final int type) {
+        final Long memberId = SecurityUtil.getCurrentMemberId();
+        final List<MemberHashtag> memberHashtagList = hashTagService.findByMemberIdWithType(memberId, type);
         return new ApiMetaData<>(HashtagMapper.instance.toResList(memberHashtagList));
     }
 
 
     @PatchMapping("/{memberHashtagId}")
     @Operation(summary = "해시태그 활성화/비활성화")
-    public ApiMetaData<String> updateUse(@PathVariable("memberHashtagId") Long memberHashtagId) {
-        Long memberId = SecurityUtil.getCurrentMemberId();
+    public ApiMetaData<String> updateUse(@PathVariable("memberHashtagId") final Long memberHashtagId) {
+        final Long memberId = SecurityUtil.getCurrentMemberId();
         hashTagService.updateUse(memberHashtagId, memberId);
         return new ApiMetaData<>("해시태그 활성화/비활성화 성공");
     }
 
     @DeleteMapping("/{memberHashtagId}")
     @Operation(summary = "해시태그 삭제")
-    public ApiMetaData<String> delete(@PathVariable("memberHashtagId") Long memberHashtagId) {
-        Long memberId = SecurityUtil.getCurrentMemberId();
+    public ApiMetaData<String> delete(@PathVariable("memberHashtagId") final Long memberHashtagId) {
+        final Long memberId = SecurityUtil.getCurrentMemberId();
         hashTagService.delete(memberHashtagId, memberId);
         return new ApiMetaData<>(HttpStatus.NO_CONTENT);
     }
@@ -62,7 +62,7 @@ public class HashtagController {
     @DeleteMapping("/all")
     @Operation(summary = "해시태그 전체 삭제")
     public ApiMetaData<?> deleteAll() {
-        Long memberId = SecurityUtil.getCurrentMemberId();
+        final Long memberId = SecurityUtil.getCurrentMemberId();
         hashTagService.deleteAllByMemberId(memberId);
         return new ApiMetaData<>(HttpStatus.NO_CONTENT);
     }

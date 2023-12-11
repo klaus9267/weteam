@@ -28,7 +28,7 @@ public class HashtagService {
     private final MemberHashtagCustomRepository memberHashtagCustomRepository;
     private final MemberService memberService;
 
-    public HashtagDto.Res save(HashtagDto hashtagDto, Long memberId) {
+    public HashtagDto.Res save(final HashtagDto hashtagDto, final Long memberId) {
         Optional<Hashtag> data = hashTagRepository.findByName(hashtagDto.getName());
         Member member = memberService.findById(memberId);
 
@@ -48,26 +48,26 @@ public class HashtagService {
         }
     }
 
-    public List<MemberHashtag> findByMemberIdWithType(Long memberId, int type) {
+    public List<MemberHashtag> findByMemberIdWithType(final Long memberId, final int type) {
         return memberHashtagCustomRepository.findByMemberIdWithType(memberId, type);
     }
 
-    public void updateUse(Long memberHashtagId, Long memberId) {
+    public void updateUse(final Long memberHashtagId, final Long memberId) {
         MemberHashtag memberHashtag = checkHashtag(memberHashtagId, memberId);
         memberHashtag.setUse(!memberHashtag.isUse());
         HashtagMapper.instance.toRes(memberHashtagRepository.save(memberHashtag));
     }
 
-    public void delete(Long memberHashtagId, Long memberId) {
+    public void delete(final Long memberHashtagId, final Long memberId) {
         MemberHashtag memberHashtag = checkHashtag(memberHashtagId, memberId);
         memberHashtagRepository.delete(memberHashtag);
     }
 
-    public void deleteAllByMemberId(Long memberId) {
+    public void deleteAllByMemberId(final Long memberId) {
         memberHashtagRepository.deleteAllByMemberId(memberId);
     }
 
-    public MemberHashtag checkHashtag(Long memberHashtagId, Long memberId) {
+    public MemberHashtag checkHashtag(final Long memberHashtagId, final Long memberId) {
         MemberHashtag memberHashtag = memberHashtagRepository.findById(memberHashtagId).orElseThrow(() -> new NotFoundException(ExceptionMessage.NOT_FOUND.getMessage()));
         if (!memberHashtag.getMember().getId().equals(memberId)) {
             throw new BadRequestException("다른 사람의 해시태크입니다.");
