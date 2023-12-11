@@ -25,17 +25,15 @@ public class HashtagController {
     private final HashtagService hashTagService;
     private final JwtUtil jwtUtil;
 
-    @PostMapping("")
-//    @PreAuthorize("hasAnyRole('USER')")
+    @PostMapping
     @Operation(summary = "해시태그 생성")
-    public ApiMetaData<String> create(@RequestBody @Valid HashtagDto request) {
+    public ApiMetaData<String> save(@RequestBody @Valid HashtagDto request) {
         Long memberId = SecurityUtil.getCurrentMemberId();
-        hashTagService.create(request, memberId);
+        hashTagService.save(request, memberId);
         return new ApiMetaData<>("해시태그 생성 성공");
     }
 
     @GetMapping("/{type}")
-//    @PreAuthorize("hasAnyRole('USER')")
     @Operation(summary = "해시태그 조회")
     @ApiResponse(responseCode = "200", useReturnTypeSchema = true)
     public ApiMetaData<List<HashtagDto.Res>> findByMemberIdWithType(@PathVariable("type") int type) {
@@ -46,7 +44,6 @@ public class HashtagController {
 
 
     @PatchMapping("/{memberHashtagId}")
-//    @PreAuthorize("hasAnyRole('USER')")
     @Operation(summary = "해시태그 활성화/비활성화")
     public ApiMetaData<String> updateUse(@PathVariable("memberHashtagId") Long memberHashtagId) {
         Long memberId = SecurityUtil.getCurrentMemberId();
@@ -55,7 +52,6 @@ public class HashtagController {
     }
 
     @DeleteMapping("/{memberHashtagId}")
-//    @PreAuthorize("hasAnyRole('USER')")
     @Operation(summary = "해시태그 삭제")
     public ApiMetaData<String> delete(@PathVariable("memberHashtagId") Long memberHashtagId) {
         Long memberId = SecurityUtil.getCurrentMemberId();
@@ -64,9 +60,8 @@ public class HashtagController {
     }
 
     @DeleteMapping("/all")
-//    @PreAuthorize("hasAnyRole('USER')")
     @Operation(summary = "해시태그 전체 삭제")
-    public ApiMetaData<?> deleteAl() {
+    public ApiMetaData<?> deleteAll() {
         Long memberId = SecurityUtil.getCurrentMemberId();
         hashTagService.deleteAllByMemberId(memberId);
         return new ApiMetaData<>(HttpStatus.NO_CONTENT);

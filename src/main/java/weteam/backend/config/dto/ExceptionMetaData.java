@@ -12,9 +12,6 @@ import java.util.List;
 @Builder
 public class ExceptionMetaData<T> {
     private HttpStatus httpStatus;
+    private String message;
     private T data;
-
-    public ExceptionMetaData(T data) {
-        this.data = data;
-    }
 }

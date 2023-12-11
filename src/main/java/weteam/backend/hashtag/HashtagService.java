@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.webjars.NotFoundException;
+import weteam.backend.config.handler.exception.BadRequestException;
 import weteam.backend.config.message.ExceptionMessage;
 import weteam.backend.hashtag.domain.Hashtag;
 import weteam.backend.hashtag.domain.MemberHashtag;
@@ -26,7 +28,7 @@ public class HashtagService {
     private final MemberHashtagCustomRepository memberHashtagCustomRepository;
     private final MemberService memberService;
 
-    public HashtagDto.Res create(HashtagDto hashtagDto, Long memberId) {
+    public HashtagDto.Res save(HashtagDto hashtagDto, Long memberId) {
         Optional<Hashtag> data = hashTagRepository.findByName(hashtagDto.getName());
         Member member = memberService.findById(memberId);
 
@@ -66,9 +68,9 @@ public class HashtagService {
     }
 
     public MemberHashtag checkHashtag(Long memberHashtagId, Long memberId) {
-        MemberHashtag memberHashtag = memberHashtagRepository.findById(memberHashtagId).orElseThrow(() -> new RuntimeException("없는 해시태그입니다."));
+        MemberHashtag memberHashtag = memberHashtagRepository.findById(memberHashtagId).orElseThrow(() -> new NotFoundException(ExceptionMessage.NOT_FOUND.getMessage()));
         if (!memberHashtag.getMember().getId().equals(memberId)) {
-            throw new RuntimeException("다른 사람의 해시태크입니다.");
+            throw new BadRequestException("다른 사람의 해시태크입니다.");
         }
         return memberHashtag;
     }
