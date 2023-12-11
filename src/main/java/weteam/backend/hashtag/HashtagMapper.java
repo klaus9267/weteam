@@ -1,38 +1,21 @@
 package weteam.backend.hashtag;
 
-import org.mapstruct.*;
-import org.mapstruct.factory.Mappers;
 import weteam.backend.hashtag.domain.Hashtag;
+import weteam.backend.hashtag.domain.HashtagType;
 import weteam.backend.hashtag.domain.MemberHashtag;
-import weteam.backend.hashtag.dto.HashtagDto;
+import weteam.backend.hashtag.dto.AddHashtagDto;
+import weteam.backend.member.domain.Member;
 
-import java.util.List;
+public class HashtagMapper {
+    public static Hashtag toHashtag(AddHashtagDto hashtagDto) {
+        return Hashtag.builder().name(hashtagDto.getName()).type(HashtagType.valueOf(hashtagDto.getType())).build();
+    }
 
-@Mapper(componentModel = MappingConstants.ComponentModel.SPRING,
-        unmappedTargetPolicy = ReportingPolicy.IGNORE,
-        injectionStrategy = InjectionStrategy.CONSTRUCTOR)
-public interface HashtagMapper {
-    HashtagMapper instance = Mappers.getMapper(HashtagMapper.class);
+    public static MemberHashtag toMemberHashtag(AddHashtagDto hashtagDto, Member member) {
+        return MemberHashtag.builder().color(hashtagDto.getColor()).member(member).hashtag(toHashtag(hashtagDto)).build();
+    }
 
-
-    Hashtag toEntity(HashtagDto request);
-
-    @Named("E2D")
-    @Mapping(target = "name", source = "memberHashtag.hashtag.name")
-    @Mapping(target = "type", source = "memberHashtag.hashtag.type")
-    HashtagDto.Res toRes(MemberHashtag memberHashtag);
-
-    @Named("E2DL")
-    @IterableMapping(qualifiedByName = "E2D")
-    List<HashtagDto.Res> toResList(List<MemberHashtag> memberHashtagList);
-
-    default String setType(int type) {
-        return switch (type) {
-            case 1 -> "희망업무";
-            case 2 -> "mbti";
-            case 3 -> "특기";
-            case 4 -> "성격";
-            default -> "기타";
-        };
+    public static MemberHashtag toMemberHashtag(Hashtag hashtag, Member member, String color) {
+        return MemberHashtag.builder().color(color).member(member).hashtag(hashtag).build();
     }
 }

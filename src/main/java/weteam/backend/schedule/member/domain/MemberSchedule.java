@@ -1,13 +1,11 @@
-package weteam.backend.schedule.domain;
+package weteam.backend.schedule.member.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import weteam.backend.member.domain.Member;
-import weteam.backend.schedule.dto.MemberScheduleDto;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Entity
 @NoArgsConstructor
@@ -36,8 +34,4 @@ public class MemberSchedule {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
-
-    public MemberScheduleDto.Res toDto() {
-        return new MemberScheduleDto.Res(id, title, startedAt, endedAt, place, alarm, repeatType, memo, color);
-    }
 }

@@ -1,16 +1,14 @@
-package weteam.backend.schedule.repository;
+package weteam.backend.schedule.member.repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 import org.springframework.stereotype.Repository;
-import weteam.backend.hashtag.domain.MemberHashtag;
-import weteam.backend.schedule.domain.MemberSchedule;
+import weteam.backend.schedule.member.domain.MemberSchedule;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static weteam.backend.schedule.domain.QMemberSchedule.memberSchedule;
+import static weteam.backend.schedule.member.domain.QMemberSchedule.memberSchedule;
 
 @Repository
 public class MemberScheduleRepositorySupport extends QuerydslRepositorySupport {

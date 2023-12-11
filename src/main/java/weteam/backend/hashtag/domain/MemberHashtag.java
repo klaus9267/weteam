@@ -1,7 +1,10 @@
 package weteam.backend.hashtag.domain;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import weteam.backend.member.domain.Member;
 
 @Entity
@@ -19,9 +22,14 @@ public class MemberHashtag {
 
     private String color;
 
-    @ManyToOne(fetch =  FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
 
-    @ManyToOne(fetch =  FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Hashtag hashtag;
+
+    public MemberHashtag(Hashtag hashtag, Member member) {
+        this.member = member;
+        this.hashtag = hashtag;
+    }
 }

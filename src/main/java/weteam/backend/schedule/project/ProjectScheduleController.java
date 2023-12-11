@@ -1,4 +1,4 @@
-package weteam.backend.schedule;
+package weteam.backend.schedule.project;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;

@@ -9,7 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import weteam.backend.config.dto.ApiMetaData;
-import weteam.backend.hashtag.domain.MemberHashtag;
+import weteam.backend.hashtag.dto.AddHashtagDto;
 import weteam.backend.hashtag.dto.HashtagDto;
 import weteam.backend.security.jwt.JwtUtil;
 import weteam.backend.security.SecurityUtil;
@@ -27,19 +27,18 @@ public class HashtagController {
 
     @PostMapping
     @Operation(summary = "해시태그 생성")
-    public ApiMetaData<String> save(@RequestBody @Valid final HashtagDto request) {
+    public ApiMetaData<String> create(@RequestBody @Valid final AddHashtagDto request) {
         final Long memberId = SecurityUtil.getCurrentMemberId();
-        hashTagService.save(request, memberId);
+        hashTagService.create(request, memberId);
         return new ApiMetaData<>("해시태그 생성 성공");
     }
 
     @GetMapping("/{type}")
     @Operation(summary = "해시태그 조회")
     @ApiResponse(responseCode = "200", useReturnTypeSchema = true)
-    public ApiMetaData<List<HashtagDto.Res>> findByMemberIdWithType(@PathVariable("type") final int type) {
+    public ApiMetaData<List<HashtagDto>> findByMemberIdWithType(@PathVariable("type") final String type) {
         final Long memberId = SecurityUtil.getCurrentMemberId();
-        final List<MemberHashtag> memberHashtagList = hashTagService.findByMemberIdWithType(memberId, type);
-        return new ApiMetaData<>(HashtagMapper.instance.toResList(memberHashtagList));
+        return new ApiMetaData<>(hashTagService.findByMemberIdWithType(memberId, type));
     }
 
 

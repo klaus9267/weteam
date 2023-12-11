@@ -1,4 +1,4 @@
-package weteam.backend.schedule.service;
+package weteam.backend.schedule.project;
 
 public class ProjectScheduleService {
 }

@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 import weteam.backend.config.dto.ApiMetaData;
 import weteam.backend.member.domain.Member;
 import weteam.backend.member.dto.MemberDto;
-import weteam.backend.member.mapper.MemberMapper;
 import weteam.backend.security.SecurityUtil;
 
 @RestController
@@ -23,20 +22,20 @@ public class MemberController {
     @GetMapping("/{id}")
     @Operation(summary = "다른 사용자 조회")
     @ApiResponse(responseCode = "200", useReturnTypeSchema = true)
-    public ApiMetaData<MemberDto.Res> findById(@PathVariable("id") Long id) {
+    public ApiMetaData<MemberDto> findById(@PathVariable("id") Long id) {
         Member member = memberService.findProfile(id);
-        MemberDto.Res res = MemberMapper.instance.toRes(member);
-        return new ApiMetaData<>(res);
+//        MemberDto res = MemberMapper.instance.toRes(member);
+        return new ApiMetaData<>((String) null);
     }
 
     @GetMapping("")
     @Operation(summary = "내 정보 조회")
     @ApiResponse(responseCode = "200", useReturnTypeSchema = true)
-    public ApiMetaData<MemberDto.Res> findMyInfo() {
+    public ApiMetaData<MemberDto> findMyInfo() {
         Long memberId = SecurityUtil.getCurrentMemberId();
         Member member = memberService.findProfile(memberId);
-        MemberDto.Res res = MemberMapper.instance.toRes(member);
-        return new ApiMetaData<>(res);
+//        MemberDto res = MemberMapper.instance.toRes(member);
+        return new ApiMetaData<>((String) null);
     }
 
     @PatchMapping("/{organization}")

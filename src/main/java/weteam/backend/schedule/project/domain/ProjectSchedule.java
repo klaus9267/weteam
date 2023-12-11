@@ -1,4 +1,4 @@
-package weteam.backend.schedule.domain;
+package weteam.backend.schedule.project.domain;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

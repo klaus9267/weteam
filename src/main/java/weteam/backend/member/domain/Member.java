@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import weteam.backend.config.BaseEntity;
 import weteam.backend.hashtag.domain.MemberHashtag;
+import weteam.backend.schedule.member.domain.MemberSchedule;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,4 +29,8 @@ public class Member extends BaseEntity{
     @OneToMany(mappedBy = "member")
     @ToString.Exclude
     private  List<MemberHashtag> memberHashtagList = new ArrayList<>();
+
+    public Member(Long id) {
+        this.id = id;
+    }
 }

@@ -30,4 +30,10 @@ public class Auth {
     @OneToOne(fetch = FetchType.LAZY)
     @MapsId
     private Member member;
+
+    public Auth(Member member, String password, String uid) {
+        this.member = member;
+        this.password = password;
+        this.uid = uid;
+    }
 }

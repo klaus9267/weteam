@@ -1,19 +1,16 @@
 package weteam.backend.auth;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import weteam.backend.auth.domain.Auth;
-import weteam.backend.auth.dto.AuthDto;
-import weteam.backend.auth.mapper.AuthMapper;
+import weteam.backend.auth.dto.JoinDto;
 import weteam.backend.auth.repository.AuthRepository;
 import weteam.backend.config.message.ExceptionMessage;
 import weteam.backend.member.MemberService;
 import weteam.backend.member.domain.Member;
-import weteam.backend.member.mapper.MemberMapper;
 
 import java.util.Optional;
 
@@ -29,13 +26,13 @@ public class AuthService {
         return authRepository.findById(id);
     }
 
-    public void join(AuthDto.Join request) {
-        if (authRepository.findByUid(request.getUid()).isPresent()) {
+    public void join(JoinDto joinDto) {
+        if (authRepository.findByUid(joinDto.getUid()).isPresent()) {
             throw new DuplicateKeyException(ExceptionMessage.DUPLICATE.getMessage());
         }
-        Member member = memberService.create(MemberMapper.instance.extractMember(request));
-        String hashedPassword = passwordEncoder.encode(request.getPassword());
-        authRepository.save(AuthMapper.instance.toEntity(request, hashedPassword, member));
+        Member member = memberService.create(joinDto.toMember());
+        String hashedPassword = passwordEncoder.encode(joinDto.getPassword());
+        authRepository.save(new Auth(member, hashedPassword, joinDto.getUid()));
     }
 
     public void verifyUid(String uid) {

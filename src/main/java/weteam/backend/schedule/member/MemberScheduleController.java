@@ -1,4 +1,4 @@
-package weteam.backend.schedule;
+package weteam.backend.schedule.member;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -9,8 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import weteam.backend.config.dto.ApiMetaData;
-import weteam.backend.schedule.dto.MemberScheduleDto;
-import weteam.backend.schedule.service.MemberScheduleService;
+import weteam.backend.schedule.member.dto.MemberScheduleDto;
+import weteam.backend.schedule.member.dto.RequestMemberScheduleDto;
 import weteam.backend.security.SecurityUtil;
 
 import java.time.LocalDate;
@@ -27,7 +27,7 @@ public class MemberScheduleController {
     @PostMapping("")
     @Operation(summary = "개인스케줄 생성")
     @ApiResponse(responseCode = "200", useReturnTypeSchema = true)
-    public ApiMetaData<MemberScheduleDto.Res> create(@RequestBody @Valid MemberScheduleDto scheduleDto) {
+    public ApiMetaData<MemberScheduleDto> create(@RequestBody @Valid RequestMemberScheduleDto scheduleDto) {
         Long memberId = SecurityUtil.getCurrentMemberId();
         return new ApiMetaData<>(memberScheduleService.create(scheduleDto, memberId));
     }
@@ -35,7 +35,7 @@ public class MemberScheduleController {
     @GetMapping("/{year}/{month}")
     @Operation(summary = "내 월별 스케줄 조회")
     @ApiResponse(responseCode = "200", useReturnTypeSchema = true)
-    public ApiMetaData<List<MemberScheduleDto.Res>> findByMonth(@PathVariable("year") int year, @PathVariable("month") int month) {
+    public ApiMetaData<List<MemberScheduleDto>> findByMonth(@PathVariable("year") int year, @PathVariable("month") int month) {
         Long memberId = SecurityUtil.getCurrentMemberId();
         return new ApiMetaData<>(memberScheduleService.findByMonth(year, month, memberId));
     }
@@ -43,16 +43,17 @@ public class MemberScheduleController {
     @GetMapping("/date/{date}")
     @Operation(summary = "내 일별 스케줄 조회")
     @ApiResponse(responseCode = "200", useReturnTypeSchema = true)
-    public ApiMetaData<List<MemberScheduleDto.Res>> findByMonth(@PathVariable("date") LocalDate date) {
+    public ApiMetaData<List<MemberScheduleDto>> findByMonth(@PathVariable("date") LocalDate date) {
         Long memberId = SecurityUtil.getCurrentMemberId();
         return new ApiMetaData<>(memberScheduleService.findByDay(date, memberId));
     }
 
-    @PatchMapping("/{id}")
+    @PatchMapping("/{scheduleId}")
     @Operation(summary = "스케줄 수정")
-    public ApiMetaData<?> update(@PathVariable("id") Long id, @RequestBody @Valid MemberScheduleDto scheduleDto) {
-        memberScheduleService.update(scheduleDto, id, SecurityUtil.getCurrentMemberId());
-        return new ApiMetaData<>(HttpStatus.OK);
+    @ApiResponse(responseCode = "200", useReturnTypeSchema = true)
+    public ApiMetaData<MemberScheduleDto> update(@PathVariable("scheduleId") Long scheduleId, @RequestBody @Valid RequestMemberScheduleDto requestMemberScheduleDto) {
+        MemberScheduleDto scheduleDto = memberScheduleService.update(requestMemberScheduleDto, scheduleId, SecurityUtil.getCurrentMemberId());
+        return new ApiMetaData<>(scheduleDto);
     }
 
     @PatchMapping("/{id}/done")
