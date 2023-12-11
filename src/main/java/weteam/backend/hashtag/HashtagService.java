@@ -11,7 +11,7 @@ import weteam.backend.hashtag.domain.Hashtag;
 import weteam.backend.hashtag.domain.MemberHashtag;
 import weteam.backend.hashtag.dto.HashtagDto;
 import weteam.backend.hashtag.repository.HashtagRepository;
-import weteam.backend.hashtag.repository.MemberHashtagCustomRepository;
+import weteam.backend.hashtag.repository.MemberHashtagRepositorySupport;
 import weteam.backend.hashtag.repository.MemberHashtagRepository;
 import weteam.backend.member.MemberService;
 import weteam.backend.member.domain.Member;
@@ -25,7 +25,7 @@ import java.util.Optional;
 public class HashtagService {
     private final HashtagRepository hashTagRepository;
     private final MemberHashtagRepository memberHashtagRepository;
-    private final MemberHashtagCustomRepository memberHashtagCustomRepository;
+    private final MemberHashtagRepositorySupport memberHashtagRepositorySupport;
     private final MemberService memberService;
 
     public HashtagDto.Res save(final HashtagDto hashtagDto, final Long memberId) {
@@ -49,7 +49,7 @@ public class HashtagService {
     }
 
     public List<MemberHashtag> findByMemberIdWithType(final Long memberId, final int type) {
-        return memberHashtagCustomRepository.findByMemberIdWithType(memberId, type);
+        return memberHashtagRepositorySupport.findByMemberIdWithType(memberId, type);
     }
 
     public void updateUse(final Long memberHashtagId, final Long memberId) {
