@@ -8,8 +8,8 @@ import weteam.backend.member.domain.Member;
 import weteam.backend.schedule.domain.MemberSchedule;
 import weteam.backend.schedule.dto.MemberScheduleDto;
 import weteam.backend.schedule.mapper.MemberScheduleMapper;
-import weteam.backend.schedule.repository.MemberScheduleCustomRepository;
 import weteam.backend.schedule.repository.MemberScheduleRepository;
+import weteam.backend.schedule.repository.MemberScheduleRepositorySupport;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -21,7 +21,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class MemberScheduleService {
     private final MemberScheduleRepository memberScheduleRepository;
-    private final MemberScheduleCustomRepository memberScheduleCustomRepository;
+    private final MemberScheduleRepositorySupport memberScheduleRepositorySupport;
     private final MemberService memberService;
 
     public MemberScheduleDto.Res create(MemberScheduleDto request, Long memberId) {
@@ -37,7 +37,7 @@ public class MemberScheduleService {
         LocalDateTime startDate = LocalDate.of(year, month, 1).atStartOfDay();
         LocalDateTime endDate = startDate.plusMonths(1).minusMinutes(1);
 
-        List<MemberSchedule> schedules = memberScheduleCustomRepository.findByMonth(startDate, endDate, memberId);
+        List<MemberSchedule> schedules = memberScheduleRepositorySupport.findByMonth(startDate, endDate, memberId);
         return MemberScheduleMapper.instance.toResList(schedules);
     }
 
@@ -47,7 +47,7 @@ public class MemberScheduleService {
         LocalDateTime startDate = date.atStartOfDay();
         LocalDateTime endDate = startDate.plusDays(1).minusMinutes(1);
 
-        List<MemberSchedule> schedules = memberScheduleCustomRepository.findByDate(startDate, endDate, memberId);
+        List<MemberSchedule> schedules = memberScheduleRepositorySupport.findByDate(startDate, endDate, memberId);
         return MemberScheduleMapper.instance.toResList(schedules);
     }
 

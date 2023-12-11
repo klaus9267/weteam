@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import weteam.backend.member.domain.Member;
-import weteam.backend.member.repository.MemberCustomRepository;
 import weteam.backend.member.repository.MemberRepository;
+import weteam.backend.member.repository.MemberRepositorySupport;
 
 import java.util.Optional;
 
@@ -14,7 +14,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class MemberService {
     private final MemberRepository memberRepository;
-    private final MemberCustomRepository memberCustomRepository;
+    private final MemberRepositorySupport memberRepositorySupport;
 
     public Member create(Member member) {
         return memberRepository.save(member);
@@ -25,7 +25,7 @@ public class MemberService {
     }
 
     public Member findProfile(Long id) {
-        return memberCustomRepository.findProfile(id);
+        return memberRepositorySupport.findProfile(id);
     }
 
     public Member findById(Long id) {
