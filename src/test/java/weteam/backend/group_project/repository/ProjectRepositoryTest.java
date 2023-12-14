@@ -3,9 +3,9 @@ package weteam.backend.group_project.repository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import weteam.backend.project.domain.ProjectWork;
-import weteam.backend.project.repository.ProjectRepository;
-import weteam.backend.project.repository.ProjectWorkRepository;
+import weteam.backend.domain.project.domain.ProjectWork;
+import weteam.backend.domain.project.repository.ProjectRepository;
+import weteam.backend.domain.project.repository.ProjectWorkRepository;
 
 import static org.assertj.core.util.DateUtil.now;
 
