@@ -2,7 +2,7 @@ package weteam.backend.domain.member.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
-import weteam.backend.application.BaseEntity;
+import weteam.backend.application.common.BaseEntity;
 import weteam.backend.domain.hashtag.domain.MemberHashtag;
 
 import java.util.ArrayList;

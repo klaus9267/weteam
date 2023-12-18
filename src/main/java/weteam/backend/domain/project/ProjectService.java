@@ -3,16 +3,18 @@ package weteam.backend.domain.project;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.webjars.NotFoundException;
+import weteam.backend.application.message.ExceptionMessage;
 import weteam.backend.domain.member.MemberService;
 import weteam.backend.domain.member.domain.Member;
 import weteam.backend.domain.project.domain.Project;
 import weteam.backend.domain.project.domain.ProjectMember;
 import weteam.backend.domain.project.dto.ProjectDto;
-import weteam.backend.domain.project.mapper.ProjectMapper;
+import weteam.backend.domain.project.dto.ProjectMemberDto;
 import weteam.backend.domain.project.repository.ProjectMemberRepository;
 import weteam.backend.domain.project.repository.ProjectRepository;
 
-import java.util.Optional;
+import java.util.List;
 
 @Service
 @Transactional
@@ -23,10 +25,10 @@ public class ProjectService {
     private final MemberService memberService;
     private final ProjectMemberService projectMemberService;
 
-    public ProjectDto.Res createProject(Long memberId, Project request) {
+    public ProjectDto create(Long memberId, Project request) {
         Project project = projectRepository.save(request);
         setProjectMember(memberId, project);
-        return ProjectMapper.instance.toRes(project);
+        return ProjectDto.from(project, 1);
     }
 
     public void setProjectMember(Long memberId, Project project) {
@@ -38,16 +40,20 @@ public class ProjectService {
         projectMemberRepository.save(projectMember);
     }
 
-    public Optional<Project> findById(Long id) {
-        return projectRepository.findById(id);
+    public Project findById(Long id) {
+        return projectRepository.findById(id).orElseThrow(() -> new NotFoundException(ExceptionMessage.NOT_FOUND.getMessage()));
     }
 
-    public Project loadById(Long id) {
-        return findById(id).orElseThrow(() -> new RuntimeException("없는 팀플"));
+    public List<ProjectMemberDto> findMemberListByProject(Long projectId) {
+        List<ProjectMember> projectMemberList = projectMemberRepository.findByProjectId(projectId);
+        if (projectMemberList.isEmpty()) {
+            throw new NotFoundException(ExceptionMessage.NOT_FOUND.getMessage());
+        }
+        return ProjectMemberDto.from(projectMemberList);
     }
 
     public void acceptInvite(Long projectId, Long memberId) {
-        Project project = loadById(projectId);
+        Project project = this.findById(projectId);
         Member member = memberService.findById(memberId);
         projectMemberService.addMember(member, project);
     }

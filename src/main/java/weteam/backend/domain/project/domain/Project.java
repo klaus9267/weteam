@@ -2,7 +2,7 @@ package weteam.backend.domain.project.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
-import weteam.backend.application.BaseEntity;
+import weteam.backend.application.common.BaseEntity;
 
 import java.time.LocalDate;
 

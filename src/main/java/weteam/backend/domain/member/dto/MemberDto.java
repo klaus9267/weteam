@@ -22,6 +22,7 @@ public record MemberDto(
                         .nickname(member.getNickname())
                         .username(member.getUsername())
                         .organization(member.getOrganization())
+                        .hashtagList(HashtagDto.from(member.getMemberHashtagList()))
                         .build();
     }
 }

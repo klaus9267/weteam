@@ -3,6 +3,8 @@ package weteam.backend.domain.member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.webjars.NotFoundException;
+import weteam.backend.application.message.ExceptionMessage;
 import weteam.backend.domain.member.domain.Member;
 import weteam.backend.domain.member.repository.MemberRepository;
 import weteam.backend.domain.member.repository.MemberRepositorySupport;
@@ -25,17 +27,20 @@ public class MemberService {
     }
 
     public Member findProfile(Long id) {
-        return memberRepositorySupport.findProfile(id);
+        Member member = memberRepositorySupport.findProfile(id);
+        if (member == null) {
+            throw new NotFoundException(ExceptionMessage.NOT_FOUND.getMessage());
+        }
+        return member;
     }
 
     public Member findById(Long id) {
-        return memberRepository.findById(id).orElseThrow(() -> new RuntimeException("없는 사용자"));
+        return memberRepository.findById(id).orElseThrow(() -> new NotFoundException(ExceptionMessage.NOT_FOUND.getMessage()));
     }
 
     public void updateOrganization(Long id, String organization) {
-        Member member = findById(id);
+        Member member = this.findById(id);
         member.setOrganization(organization);
-        memberRepository.save(member);
     }
 }
 
