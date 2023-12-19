@@ -1,4 +1,4 @@
-package weteam.backend.domain.schedule.member.domain;
+package weteam.backend.domain.schedule.member;
 
 import jakarta.persistence.*;
 import lombok.*;

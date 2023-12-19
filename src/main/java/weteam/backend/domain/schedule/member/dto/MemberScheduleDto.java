@@ -1,7 +1,7 @@
 package weteam.backend.domain.schedule.member.dto;
 
 import lombok.Builder;
-import weteam.backend.domain.schedule.member.domain.MemberSchedule;
+import weteam.backend.domain.schedule.member.MemberSchedule;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -18,6 +18,7 @@ public record MemberScheduleDto(
         int repeatType,
         String memo,
         String color) {
+
     public static MemberScheduleDto from(MemberSchedule memberSchedule) {
         return MemberScheduleDto.builder()
                                 .id(memberSchedule.getId())

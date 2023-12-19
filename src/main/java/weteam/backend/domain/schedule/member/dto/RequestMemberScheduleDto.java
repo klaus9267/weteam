@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import weteam.backend.domain.member.domain.Member;
-import weteam.backend.domain.schedule.member.domain.MemberSchedule;
+import weteam.backend.domain.schedule.member.MemberSchedule;
 
 import java.time.LocalDateTime;
 
@@ -46,7 +46,7 @@ public class RequestMemberScheduleDto {
                              .repeatType(this.repeatType)
                              .memo(this.memo)
                              .color(this.color)
-                             .member(new Member(memberId))
+                             .member(Member.builder().id(memberId).build())
                              .build();
     }
 }

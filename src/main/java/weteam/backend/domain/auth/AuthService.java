@@ -27,12 +27,12 @@ public class AuthService {
     }
 
     public void join(JoinDto joinDto) {
-        if (authRepository.findByUid(joinDto.getUid()).isPresent()) {
+        if (authRepository.findByUid(joinDto.uid()).isPresent()) {
             throw new DuplicateKeyException(ExceptionMessage.DUPLICATE.getMessage());
         }
-        Member member = memberService.create(joinDto.toMember());
-        String hashedPassword = passwordEncoder.encode(joinDto.getPassword());
-        authRepository.save(new Auth(member, hashedPassword, joinDto.getUid()));
+        Member member = memberService.create(Member.from(joinDto));
+        String hashedPassword = passwordEncoder.encode(joinDto.password());
+        authRepository.save(new Auth(member, hashedPassword, joinDto.uid()));
     }
 
     public void verifyUid(String uid) {

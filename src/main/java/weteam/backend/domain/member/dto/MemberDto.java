@@ -9,7 +9,6 @@ import java.util.List;
 
 
 @Builder
-@AllArgsConstructor
 public record MemberDto(
         Long id,
         String nickname,

@@ -3,6 +3,7 @@ package weteam.backend.domain.member.domain;
 import jakarta.persistence.*;
 import lombok.*;
 import weteam.backend.application.common.BaseEntity;
+import weteam.backend.domain.auth.dto.JoinDto;
 import weteam.backend.domain.hashtag.domain.MemberHashtag;
 
 import java.util.ArrayList;
@@ -29,7 +30,7 @@ public class Member extends BaseEntity{
     @ToString.Exclude
     private  List<MemberHashtag> memberHashtagList = new ArrayList<>();
 
-    public Member(Long id) {
-        this.id = id;
+    public static Member from(JoinDto joinDto) {
+        return Member.builder().username(joinDto.username()).nickname(joinDto.nickname()).build();
     }
 }

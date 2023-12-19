@@ -39,10 +39,9 @@ public class MemberController {
 
     @PatchMapping("{organization}")
     @Operation(summary = "사용자 소속 변경", description = "응답 없음")
-    @ApiResponse(responseCode = "200", useReturnTypeSchema = true)
-    public ApiMetaData<String> updateOrganization(@PathVariable("organization") String organization) {
+    @ResponseStatus(HttpStatus.OK)
+    public void updateOrganization(@PathVariable("organization") String organization) {
         Long memberId = SecurityUtil.getCurrentMemberId();
         memberService.updateOrganization(memberId, organization);
-        return new ApiMetaData<>(HttpStatus.OK);
     }
 }

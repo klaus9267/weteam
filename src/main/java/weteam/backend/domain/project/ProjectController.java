@@ -23,11 +23,11 @@ public class ProjectController {
     private final ProjectService projectService;
 
     @PostMapping
-    @Operation(summary = "팀플 생성")
-    @ApiResponse(responseCode = "201", useReturnTypeSchema = true)
-    public ApiMetaData<ProjectDto> create(@RequestBody @Valid RequestProjectDto projectDto) {
+    @Operation(summary = "팀플 생성", description = "응답 없음")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void create(@RequestBody @Valid RequestProjectDto projectDto) {
         Long memberId = SecurityUtil.getCurrentMemberId();
-        return new ApiMetaData<>(HttpStatus.CREATED, projectService.create(memberId, projectDto.toEntity()));
+        projectService.create(memberId, projectDto.toEntity());
     }
 
     @GetMapping("{projectId}")
@@ -39,11 +39,10 @@ public class ProjectController {
     }
 
     @PatchMapping("{projectId}")
-    @Operation(summary = "초대 수락")
-    @ApiResponse(responseCode = "200", useReturnTypeSchema = true)
-    public ApiMetaData<?> acceptInvite(@PathVariable("projectId") Long projectId) {
+    @Operation(summary = "초대 수락", description = "응답 없음")
+    @ResponseStatus(HttpStatus.OK)
+    public void acceptInvite(@PathVariable("projectId") Long projectId) {
         Long memberId = SecurityUtil.getCurrentMemberId();
         projectService.acceptInvite(projectId, memberId);
-        return new ApiMetaData<>(HttpStatus.OK);
     }
 }

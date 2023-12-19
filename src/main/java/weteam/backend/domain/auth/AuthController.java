@@ -12,9 +12,8 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import weteam.backend.domain.auth.dto.JoinDto;
-import weteam.backend.application.common.ApiMetaData;
 import weteam.backend.application.security.jwt.JwtUtil;
+import weteam.backend.domain.auth.dto.JoinDto;
 
 @RestController
 @Validated
@@ -29,10 +28,9 @@ public class AuthController {
 
     @PostMapping("/join")
     @Operation(summary = "회원가입", description = "응답 없음")
-    @ApiResponse(responseCode = "201", useReturnTypeSchema = true)
-    public ApiMetaData<?> join(@RequestBody @Valid JoinDto joinDto) {
+    @ResponseStatus(HttpStatus.CREATED)
+    public void join(@RequestBody @Valid JoinDto joinDto) {
         authService.join(joinDto);
-        return new ApiMetaData<>(HttpStatus.CREATED);
     }
 
     @PostMapping("/login")
@@ -40,24 +38,22 @@ public class AuthController {
     @ApiResponse(responseCode = "200", useReturnTypeSchema = true)
     public ResponseEntity<String> login(@RequestBody @Valid JoinDto joinDto) {
         UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(joinDto.getUid(), joinDto.getPassword());
+                new UsernamePasswordAuthenticationToken(joinDto.uid(), joinDto.password());
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
         return ResponseEntity.ok(jwtUtil.generateToken(authentication));
     }
 
     @GetMapping("/verify/uid/{uid}")
     @Operation(summary = "아이디 중복확인", description = "응답 없음")
-    @ApiResponse(responseCode = "200", useReturnTypeSchema = true)
-    public ApiMetaData<?> verifyUid(@PathVariable("uid") String uid) {
+    @ResponseStatus(HttpStatus.OK)
+    public void verifyUid(@PathVariable("uid") String uid) {
         authService.verifyUid(uid);
-        return new ApiMetaData<>(HttpStatus.OK);
     }
 
     @GetMapping("/verify/nickname/{nickname}")
     @Operation(summary = "닉네임 중복확인", description = "응답 없음")
-    @ApiResponse(responseCode = "200", useReturnTypeSchema = true)
-    public ApiMetaData<?> verifyNickname(@PathVariable("nickname") String nickname) {
+    @ResponseStatus(HttpStatus.OK)
+    public void verifyNickname(@PathVariable("nickname") String nickname) {
         authService.verifyNickname(nickname);
-        return new ApiMetaData<>(HttpStatus.OK);
     }
 }

@@ -6,7 +6,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.webjars.NotFoundException;
 import weteam.backend.application.message.ExceptionMessage;
 import weteam.backend.domain.member.MemberService;
-import weteam.backend.domain.schedule.member.domain.MemberSchedule;
 import weteam.backend.domain.schedule.member.dto.MemberScheduleDto;
 import weteam.backend.domain.schedule.member.dto.RequestMemberScheduleDto;
 import weteam.backend.domain.schedule.member.repository.MemberScheduleRepository;

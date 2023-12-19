@@ -26,11 +26,11 @@ public class HashtagController {
     private final JwtUtil jwtUtil;
 
     @PostMapping
-    @Operation(summary = "해시태그 생성")
-    public ApiMetaData<String> create(@RequestBody @Valid final AddHashtagDto request) {
+    @Operation(summary = "해시태그 생성", description = "응답 없음")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void create(@RequestBody @Valid final AddHashtagDto request) {
         final Long memberId = SecurityUtil.getCurrentMemberId();
         hashTagService.create(request, memberId);
-        return new ApiMetaData<>("해시태그 생성 성공");
     }
 
     @GetMapping("/{type}")
@@ -43,26 +43,26 @@ public class HashtagController {
 
 
     @PatchMapping("/{memberHashtagId}")
-    @Operation(summary = "해시태그 활성화/비활성화")
-    public ApiMetaData<String> updateUse(@PathVariable("memberHashtagId") final Long memberHashtagId) {
+    @Operation(summary = "해시태그 활성화/비활성화", description = "응답 없음")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void updateUse(@PathVariable("memberHashtagId") final Long memberHashtagId) {
         final Long memberId = SecurityUtil.getCurrentMemberId();
         hashTagService.updateUse(memberHashtagId, memberId);
-        return new ApiMetaData<>("해시태그 활성화/비활성화 성공");
     }
 
     @DeleteMapping("/{memberHashtagId}")
-    @Operation(summary = "해시태그 삭제")
-    public ApiMetaData<String> delete(@PathVariable("memberHashtagId") final Long memberHashtagId) {
+    @Operation(summary = "해시태그 삭제", description = "응답 없음")
+    @ResponseStatus(HttpStatus.OK)
+    public void delete(@PathVariable("memberHashtagId") final Long memberHashtagId) {
         final Long memberId = SecurityUtil.getCurrentMemberId();
         hashTagService.delete(memberHashtagId, memberId);
-        return new ApiMetaData<>(HttpStatus.NO_CONTENT);
     }
 
     @DeleteMapping("/all")
-    @Operation(summary = "해시태그 전체 삭제")
-    public ApiMetaData<?> deleteAll() {
+    @Operation(summary = "해시태그 전체 삭제", description = "응답 없음")
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteAll() {
         final Long memberId = SecurityUtil.getCurrentMemberId();
         hashTagService.deleteAllByMemberId(memberId);
-        return new ApiMetaData<>(HttpStatus.NO_CONTENT);
     }
 }

@@ -11,9 +11,9 @@
 //import org.springframework.security.access.prepost.PreAuthorize;
 //import org.springframework.validation.annotation.Validated;
 //import org.springframework.web.bind.annotation.*;
-//import weteam.backend.domain.domain.category.Category;
-//import weteam.backend.domain.dto.category.CategoryDto;
-//import weteam.backend.domain.mapper.category.CategoryMapper;
+//import weteam.backend.entity.entity.category.Category;
+//import weteam.backend.entity.dto.category.CategoryDto;
+//import weteam.backend.entity.mapper.category.CategoryMapper;
 //
 //import java.security.Principal;
 //import java.util.List;

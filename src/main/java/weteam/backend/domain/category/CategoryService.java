@@ -3,11 +3,11 @@
 //import lombok.RequiredArgsConstructor;
 //import org.springframework.stereotype.Service;
 //import org.springframework.transaction.annotation.Transactional;
-//import weteam.backend.domain.domain.category.Category;
-//import weteam.backend.domain.dto.category.CategoryDto;
-//import weteam.backend.domain.mapper.category.CategoryMapper;
-//import weteam.backend.domain.repository.category.CategoryRepository;
-//import weteam.backend.domain.domain.member.Member;
+//import weteam.backend.entity.entity.category.Category;
+//import weteam.backend.entity.dto.category.CategoryDto;
+//import weteam.backend.entity.mapper.category.CategoryMapper;
+//import weteam.backend.entity.repository.category.CategoryRepository;
+//import weteam.backend.entity.entity.member.Member;
 //
 //import java.util.List;
 //import java.util.Objects;
