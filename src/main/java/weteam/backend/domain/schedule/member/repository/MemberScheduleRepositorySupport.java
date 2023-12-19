@@ -8,7 +8,7 @@ import weteam.backend.domain.schedule.member.MemberSchedule;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static weteam.backend.domain.schedule.member.entity.QMemberSchedule.memberSchedule;
+import static weteam.backend.domain.schedule.member.QMemberSchedule.memberSchedule;
 
 
 @Repository

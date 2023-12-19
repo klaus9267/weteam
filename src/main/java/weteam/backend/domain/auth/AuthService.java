@@ -5,12 +5,12 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import weteam.backend.domain.auth.domain.Auth;
+import weteam.backend.domain.auth.entity.Auth;
 import weteam.backend.domain.auth.dto.JoinDto;
 import weteam.backend.domain.auth.repository.AuthRepository;
 import weteam.backend.application.message.ExceptionMessage;
 import weteam.backend.domain.member.MemberService;
-import weteam.backend.domain.member.domain.Member;
+import weteam.backend.domain.member.entity.Member;
 
 import java.util.Optional;
 

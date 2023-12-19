@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import weteam.backend.application.common.ApiMetaData;
-import weteam.backend.domain.member.domain.Member;
+import weteam.backend.domain.member.entity.Member;
 import weteam.backend.domain.member.dto.MemberDto;
 import weteam.backend.application.security.SecurityUtil;
 

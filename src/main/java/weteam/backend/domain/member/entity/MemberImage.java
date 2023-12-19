@@ -1,4 +1,4 @@
-package weteam.backend.domain.member.domain;
+package weteam.backend.domain.member.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

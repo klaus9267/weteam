@@ -3,7 +3,7 @@ package weteam.backend.domain.schedule.member;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
-import weteam.backend.domain.member.domain.Member;
+import weteam.backend.domain.member.entity.Member;
 
 import java.time.LocalDateTime;
 

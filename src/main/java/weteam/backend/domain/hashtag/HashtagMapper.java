@@ -1,7 +1,7 @@
 package weteam.backend.domain.hashtag;
 
 import weteam.backend.domain.hashtag.domain.MemberHashtag;
-import weteam.backend.domain.member.domain.Member;
+import weteam.backend.domain.member.entity.Member;
 import weteam.backend.domain.hashtag.domain.Hashtag;
 import weteam.backend.domain.hashtag.domain.HashtagType;
 import weteam.backend.domain.hashtag.dto.AddHashtagDto;

@@ -3,7 +3,7 @@ package weteam.backend.domain.project.dto;
 import lombok.Builder;
 import lombok.Getter;
 import weteam.backend.domain.member.dto.MemberDto;
-import weteam.backend.domain.project.domain.ProjectMember;
+import weteam.backend.domain.project.entity.ProjectMember;
 
 import java.util.List;
 import java.util.stream.Collectors;

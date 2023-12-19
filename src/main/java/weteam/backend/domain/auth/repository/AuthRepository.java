@@ -1,7 +1,7 @@
 package weteam.backend.domain.auth.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import weteam.backend.domain.auth.domain.Auth;
+import weteam.backend.domain.auth.entity.Auth;
 
 import java.util.Optional;
 

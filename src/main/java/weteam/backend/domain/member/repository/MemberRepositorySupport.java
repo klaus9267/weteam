@@ -3,11 +3,11 @@ package weteam.backend.domain.member.repository;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 import org.springframework.stereotype.Repository;
-import weteam.backend.domain.member.domain.Member;
+import weteam.backend.domain.member.entity.Member;
 
 import static weteam.backend.domain.hashtag.domain.QHashtag.hashtag;
 import static weteam.backend.domain.hashtag.domain.QMemberHashtag.memberHashtag;
-import static weteam.backend.domain.member.domain.QMember.member;
+import static weteam.backend.domain.member.entity.QMember.member;
 
 
 @Repository

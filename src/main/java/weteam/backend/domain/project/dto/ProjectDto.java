@@ -2,7 +2,7 @@ package weteam.backend.domain.project.dto;
 
 import lombok.Builder;
 import lombok.Data;
-import weteam.backend.domain.project.domain.Project;
+import weteam.backend.domain.project.entity.Project;
 
 @Data
 @Builder

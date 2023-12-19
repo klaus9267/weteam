@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.webjars.NotFoundException;
 import weteam.backend.application.message.ExceptionMessage;
-import weteam.backend.domain.member.domain.Member;
+import weteam.backend.domain.member.entity.Member;
 import weteam.backend.domain.member.repository.MemberRepository;
 import weteam.backend.domain.member.repository.MemberRepositorySupport;
 

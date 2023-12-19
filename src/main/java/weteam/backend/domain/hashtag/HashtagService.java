@@ -11,7 +11,7 @@ import weteam.backend.domain.hashtag.domain.MemberHashtag;
 import weteam.backend.domain.hashtag.repository.MemberHashtagRepository;
 import weteam.backend.domain.hashtag.repository.MemberHashtagRepositorySupport;
 import weteam.backend.domain.member.MemberService;
-import weteam.backend.domain.member.domain.Member;
+import weteam.backend.domain.member.entity.Member;
 import weteam.backend.domain.hashtag.domain.Hashtag;
 import weteam.backend.domain.hashtag.dto.AddHashtagDto;
 import weteam.backend.domain.hashtag.dto.HashtagDto;

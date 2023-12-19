@@ -1,8 +1,7 @@
 package weteam.backend.domain.member.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
-import weteam.backend.domain.member.domain.Member;
+import weteam.backend.domain.member.entity.Member;
 import weteam.backend.domain.hashtag.dto.HashtagDto;
 
 import java.util.List;

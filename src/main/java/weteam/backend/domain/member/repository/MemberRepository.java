@@ -1,7 +1,7 @@
 package weteam.backend.domain.member.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import weteam.backend.domain.member.domain.Member;
+import weteam.backend.domain.member.entity.Member;
 
 import java.util.Optional;
 

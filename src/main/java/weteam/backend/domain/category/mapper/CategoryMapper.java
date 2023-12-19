@@ -4,7 +4,7 @@ import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 import weteam.backend.domain.category.domain.Category;
 import weteam.backend.domain.category.dto.CategoryDto;
-import weteam.backend.domain.member.domain.Member;
+import weteam.backend.domain.member.entity.Member;
 
 import java.util.List;
 

@@ -1,9 +1,9 @@
-package weteam.backend.domain.auth.domain;
+package weteam.backend.domain.auth.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
-import weteam.backend.domain.member.domain.Member;
+import weteam.backend.domain.member.entity.Member;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -3,7 +3,7 @@ package weteam.backend.domain.schedule.member.dto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Size;
 import lombok.*;
-import weteam.backend.domain.member.domain.Member;
+import weteam.backend.domain.member.entity.Member;
 import weteam.backend.domain.schedule.member.MemberSchedule;
 
 import java.time.LocalDateTime;

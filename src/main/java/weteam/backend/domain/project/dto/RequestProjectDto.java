@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
-import weteam.backend.domain.project.domain.Project;
+import weteam.backend.domain.project.entity.Project;
 
 import java.time.LocalDate;
 

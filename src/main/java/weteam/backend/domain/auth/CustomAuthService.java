@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.webjars.NotFoundException;
 import weteam.backend.domain.auth.repository.AuthRepository;
-import weteam.backend.domain.auth.domain.CustomUser;
+import weteam.backend.domain.auth.entity.CustomUser;
 
 @Service
 @Transactional

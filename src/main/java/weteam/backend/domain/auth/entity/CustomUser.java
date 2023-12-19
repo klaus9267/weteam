@@ -1,4 +1,4 @@
-package weteam.backend.domain.auth.domain;
+package weteam.backend.domain.auth.entity;
 
 import lombok.Getter;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

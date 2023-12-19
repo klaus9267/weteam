@@ -6,8 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
-import weteam.backend.domain.member.domain.Member;
-import weteam.backend.domain.project.domain.Project;
+import weteam.backend.domain.member.entity.Member;
+import weteam.backend.domain.project.entity.Project;
 
 import java.time.LocalDateTime;
 
