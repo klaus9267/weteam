@@ -3,7 +3,7 @@ package weteam.backend.domain.member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.webjars.NotFoundException;
+import weteam.backend.application.handler.exception.NotFoundException;
 import weteam.backend.application.message.ExceptionMessage;
 import weteam.backend.domain.member.entity.Member;
 import weteam.backend.domain.member.repository.MemberRepository;
@@ -29,13 +29,13 @@ public class MemberService {
     public Member findProfile(Long id) {
         Member member = memberRepositorySupport.findProfile(id);
         if (member == null) {
-            throw new NotFoundException(ExceptionMessage.NOT_FOUND.getMessage());
+            throw new NotFoundException(ExceptionMessage.NOT_FOUND);
         }
         return member;
     }
 
     public Member findById(Long id) {
-        return memberRepository.findById(id).orElseThrow(() -> new NotFoundException(ExceptionMessage.NOT_FOUND.getMessage()));
+        return memberRepository.findById(id).orElseThrow(() -> new NotFoundException(ExceptionMessage.NOT_FOUND));
     }
 
     public void updateOrganization(Long id, String organization) {

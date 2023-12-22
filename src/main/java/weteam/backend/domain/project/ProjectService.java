@@ -3,14 +3,14 @@ package weteam.backend.domain.project;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.webjars.NotFoundException;
+import weteam.backend.application.handler.exception.NotFoundException;
 import weteam.backend.application.message.ExceptionMessage;
 import weteam.backend.domain.member.MemberService;
 import weteam.backend.domain.member.entity.Member;
-import weteam.backend.domain.project.entity.Project;
-import weteam.backend.domain.project.entity.ProjectMember;
 import weteam.backend.domain.project.dto.ProjectDto;
 import weteam.backend.domain.project.dto.ProjectMemberDto;
+import weteam.backend.domain.project.entity.Project;
+import weteam.backend.domain.project.entity.ProjectMember;
 import weteam.backend.domain.project.repository.ProjectMemberRepository;
 import weteam.backend.domain.project.repository.ProjectRepository;
 
@@ -41,13 +41,13 @@ public class ProjectService {
     }
 
     public Project findById(Long id) {
-        return projectRepository.findById(id).orElseThrow(() -> new NotFoundException(ExceptionMessage.NOT_FOUND.getMessage()));
+        return projectRepository.findById(id).orElseThrow(() -> new NotFoundException(ExceptionMessage.NOT_FOUND));
     }
 
     public List<ProjectMemberDto> findMemberListByProject(Long projectId) {
         List<ProjectMember> projectMemberList = projectMemberRepository.findByProjectId(projectId);
         if (projectMemberList.isEmpty()) {
-            throw new NotFoundException(ExceptionMessage.NOT_FOUND.getMessage());
+            throw new NotFoundException(ExceptionMessage.NOT_FOUND);
         }
         return ProjectMemberDto.from(projectMemberList);
     }

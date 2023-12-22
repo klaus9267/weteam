@@ -1,4 +1,4 @@
-package weteam.backend.domain.schedule.member;
+package weteam.backend.domain.schedule;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -12,15 +12,11 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Data
 @Builder
-public class MemberSchedule {
+public class Schedule {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(nullable = false)
     private String title;
-
-    @Column(nullable = false)
     private LocalDateTime startedAt;
     private LocalDateTime endedAt;
     private LocalDateTime alarm;

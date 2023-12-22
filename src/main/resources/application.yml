@@ -1,20 +1,13 @@
-spring:
-  datasource:
-    driver-class-name: org.mariadb.jdbc.Driver
-    url: jdbc:mariadb://weteam.cx7t8a9fbboo.ap-northeast-2.rds.amazonaws.com:3306/weteam?serverTimezone=Asia/Seoul
-    username: admin
-    password: doctor978!
-  jpa:
 
-    # Table 생성 시 ddl-auto 변경d
-    hibernate:
-      ddl-auto: validate
+spring:
+  profiles:
+    active: db, server
+  jpa:
     defer-datasource-initialization: true
     properties:
       hibernate:
         show_sql: true
         format_sql: true
-  #    res반환 시 사용되는 json을 객체 형식으로 정렬
   jackson:
     serialization:
       indent-output: true
@@ -28,14 +21,7 @@ jwt:
 springdoc:
   default-consumes-media-type: application/json
   swagger-ui:
-    try-it-out-enabled: false
-    path: /swagger
     operations-sorter: method
     tags-sorter: alpha
   use-fqn: true
-
-docker:
-  id: klaus9267
-  email: klaus9267@gmail.com
-  password: doctor978!
 

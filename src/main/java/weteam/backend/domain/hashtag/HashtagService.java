@@ -72,9 +72,6 @@ public class HashtagService {
 
     public MemberHashtag checkHashtag(final Long memberHashtagId, final Long memberId) {
         MemberHashtag memberHashtag = memberHashtagRepository.findById(memberHashtagId).orElseThrow(() -> new NotFoundException(ExceptionMessage.NOT_FOUND.getMessage()));
-        if (!memberHashtag.getMember().getId().equals(memberId)) {
-            throw new BadRequestException("다른 사람의 해시태크입니다.");
-        }
         return memberHashtag;
     }
 }

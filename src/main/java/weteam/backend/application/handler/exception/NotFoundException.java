@@ -2,8 +2,8 @@ package weteam.backend.application.handler.exception;
 
 import weteam.backend.application.message.ExceptionMessage;
 
-public class BadRequestException extends RuntimeException{
-    public BadRequestException(ExceptionMessage message) {
+public class NotFoundException extends RuntimeException{
+    public NotFoundException(ExceptionMessage message){
         super(message.getMessage());
     }
 }

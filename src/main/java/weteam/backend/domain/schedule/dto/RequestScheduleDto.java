@@ -1,16 +1,16 @@
-package weteam.backend.domain.schedule.member.dto;
+package weteam.backend.domain.schedule.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import weteam.backend.domain.member.entity.Member;
-import weteam.backend.domain.schedule.member.MemberSchedule;
+import weteam.backend.domain.schedule.Schedule;
 
 import java.time.LocalDateTime;
 
 @Getter
 @Builder
-public class RequestMemberScheduleDto {
+public class RequestScheduleDto {
     @Size(min = 1, max = 50)
     @Schema(description = "개인스케줄 제목", nullable = false, example = "교수님이랑 밥먹기")
     private String title;
@@ -36,17 +36,17 @@ public class RequestMemberScheduleDto {
     @Schema(description = "스케줄 색상 설정", nullable = true, example = "오렌지 이스 더 뉴 블랙")
     private String color;
 
-    public MemberSchedule toEntity(Long memberId) {
-        return MemberSchedule.builder()
-                             .title(this.title)
-                             .startedAt(this.startedAt)
-                             .endedAt(this.endedAt)
-                             .place(this.place)
-                             .alarm(this.alarm)
-                             .repeatType(this.repeatType)
-                             .memo(this.memo)
-                             .color(this.color)
-                             .member(Member.builder().id(memberId).build())
-                             .build();
+    public Schedule toEntity(Long memberId) {
+        return Schedule.builder()
+                       .title(this.title)
+                       .startedAt(this.startedAt)
+                       .endedAt(this.endedAt)
+                       .place(this.place)
+                       .alarm(this.alarm)
+                       .repeatType(this.repeatType)
+                       .memo(this.memo)
+                       .color(this.color)
+                       .member(Member.builder().id(memberId).build())
+                       .build();
     }
 }
