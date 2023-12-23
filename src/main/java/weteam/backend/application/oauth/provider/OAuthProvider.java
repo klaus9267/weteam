@@ -1,4 +1,4 @@
-package weteam.backend.application.oauth;
+package weteam.backend.application.oauth.provider;
 
 import java.util.Map;
 
