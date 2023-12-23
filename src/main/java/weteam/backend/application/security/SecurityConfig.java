@@ -26,16 +26,11 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
+        return http
                 .httpBasic().disable()
                 .csrf().disable()
                 .formLogin().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-
-                .and()
-                .exceptionHandling()
-                .accessDeniedHandler(jwtAccessDeniedHandler)
-                .authenticationEntryPoint(jwtAuthenticationEntryPoint)
 
                 .and()
                 .authorizeHttpRequests(authorize -> authorize
@@ -44,10 +39,36 @@ public class SecurityConfig {
                         .requestMatchers("/api").hasAnyRole("USER", "ADMIN")
                         .anyRequest().authenticated()
                 )
-                .addFilterBefore(new JwtAuthenticationFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(new JwtExceptionFilter(), JwtAuthenticationFilter.class);
-        return http.build();
+
+                .oauth2Login(oauth2 -> oauth2.userInfoEndpoint(endPoint -> endPoint.userService(oAuth2UserService))
+                                             .defaultSuccessUrl("/oauth") // TODO: 프론트 루트 경로로 이동
+                )
+                .build();
     }
+//    @Bean
+//    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+//        http
+//                .httpBasic().disable()
+//                .csrf().disable()
+//                .formLogin().disable()
+//                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+//
+//                .and()
+//                .exceptionHandling()
+//                .accessDeniedHandler(jwtAccessDeniedHandler)
+//                .authenticationEntryPoint(jwtAuthenticationEntryPoint)
+//
+//                .and()
+//                .authorizeHttpRequests(authorize -> authorize
+//                        .requestMatchers("/api/auth/**").permitAll()
+//                        .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger").permitAll()
+//                        .requestMatchers("/api").hasAnyRole("USER", "ADMIN")
+//                        .anyRequest().authenticated()
+//                )
+//                .addFilterBefore(new JwtAuthenticationFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class)
+//                .addFilterBefore(new JwtExceptionFilter(), JwtAuthenticationFilter.class);
+//        return http.build();
+//    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {

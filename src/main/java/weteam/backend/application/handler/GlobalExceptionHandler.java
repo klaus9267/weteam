@@ -8,47 +8,41 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.webjars.NotFoundException;
-import weteam.backend.application.common.ExceptionMetaData;
-import weteam.backend.application.common.ExceptionResponse;
-
-import java.util.List;
+import weteam.backend.application.handler.exception.ExceptionError;
 
 @RestControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler {
     @ExceptionHandler(RuntimeException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    protected ExceptionMetaData<?> handleRuntime(final RuntimeException e) {
-        return buildExceptionMetaData(e, HttpStatus.INTERNAL_SERVER_ERROR);
+    protected ExceptionError handleRuntime(final RuntimeException e) {
+        return buildExceptionError(e, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    protected ExceptionMetaData<?> handleMethodArgumentNotValid(final MethodArgumentNotValidException e) {
-        List<ExceptionResponse> errorResponseList = e.getBindingResult()
-                                                     .getAllErrors()
-                                                     .stream()
-                                                     .map(error -> ExceptionResponse.builder().field(error.getCodes()[1]).message(error.getDefaultMessage()).build())
-                                                     .toList();
-        return ExceptionMetaData.builder().httpStatus(HttpStatus.BAD_REQUEST).message("validation exception").data(errorResponseList).build();
+    protected ExceptionError handleMethodArgumentNotValid(final MethodArgumentNotValidException e) {
+        return buildExceptionError(e, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(DuplicateKeyException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    protected ExceptionMetaData<?> handleDuplicateKey(DuplicateKeyException e) {
-        return buildExceptionMetaData(e, HttpStatus.BAD_REQUEST);
+    protected ExceptionError handleDuplicateKey(DuplicateKeyException e) {
+        return buildExceptionError(e, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(NotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    protected ExceptionMetaData<?> handleNotFound(NotFoundException e) {
-        return buildExceptionMetaData(e, HttpStatus.NOT_FOUND);
+    protected ExceptionError handleNotFound(NotFoundException e) {
+        return buildExceptionError(e, HttpStatus.NOT_FOUND);
     }
 
-    private ExceptionMetaData<?> buildExceptionMetaData(Exception exception, HttpStatus status) {
-        return ExceptionMetaData.builder()
-                                .message(exception.getMessage())
-                                .httpStatus(status)
-                                .build();
+    private ExceptionError buildExceptionError(Exception exception, HttpStatus status) {
+        return ExceptionError
+                .builder()
+                .message(exception.getMessage())
+                .statusMessage(status.getReasonPhrase())
+                .statusCode(status.value())
+                .build();
     }
 }
