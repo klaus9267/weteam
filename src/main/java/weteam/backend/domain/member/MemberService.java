@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import weteam.backend.application.handler.exception.NotFoundException;
 import weteam.backend.application.ExceptionMessage;
+import weteam.backend.domain.member.dto.MemberDto;
 import weteam.backend.domain.member.entity.Member;
 import weteam.backend.domain.member.repository.MemberRepository;
 import weteam.backend.domain.member.repository.MemberRepositorySupport;
@@ -26,12 +27,12 @@ public class MemberService {
         return memberRepository.findByNickname(nickname);
     }
 
-    public Member findProfile(Long id) {
+    public MemberDto findProfile(Long id) {
         Member member = memberRepositorySupport.findProfile(id);
         if (member == null) {
             throw new NotFoundException(ExceptionMessage.NOT_FOUND);
         }
-        return member;
+        return MemberDto.from(member);
     }
 
     public Member findById(Long id) {

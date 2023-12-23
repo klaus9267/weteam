@@ -1,4 +1,4 @@
-package weteam.backend.application.oauth.provider;
+package weteam.backend.application.oauth;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
