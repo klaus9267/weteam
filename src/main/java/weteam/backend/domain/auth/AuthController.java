@@ -12,7 +12,6 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import weteam.backend.application.security.jwt.JwtUtil;
 import weteam.backend.domain.auth.dto.JoinDto;
 
 @RestController
@@ -24,23 +23,12 @@ public class AuthController {
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final CustomAuthService customAuthService;
     private final AuthService authService;
-    private final JwtUtil jwtUtil;
 
     @PostMapping("/join")
     @Operation(summary = "회원가입", description = "응답 없음")
     @ResponseStatus(HttpStatus.CREATED)
     public void join(@RequestBody @Valid JoinDto joinDto) {
         authService.join(joinDto);
-    }
-
-    @PostMapping("/login")
-    @Operation(summary = "로그인")
-    @ApiResponse(responseCode = "200", useReturnTypeSchema = true)
-    public ResponseEntity<String> login(@RequestBody @Valid JoinDto joinDto) {
-        UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(joinDto.uid(), joinDto.password());
-        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
-        return ResponseEntity.ok(jwtUtil.generateToken(authentication));
     }
 
     @GetMapping("/verify/uid/{uid}")

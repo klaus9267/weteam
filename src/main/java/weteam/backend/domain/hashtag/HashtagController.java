@@ -9,10 +9,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import weteam.backend.application.common.ApiMetaData;
+import weteam.backend.application.security.SecurityUtil;
 import weteam.backend.domain.hashtag.dto.AddHashtagDto;
 import weteam.backend.domain.hashtag.dto.HashtagDto;
-import weteam.backend.application.security.jwt.JwtUtil;
-import weteam.backend.application.security.SecurityUtil;
 
 import java.util.List;
 
@@ -23,7 +22,6 @@ import java.util.List;
 @Tag(name = "Hashtag", description = "hashtag API / jwt 필수")
 public class HashtagController {
     private final HashtagService hashTagService;
-    private final JwtUtil jwtUtil;
 
     @PostMapping
     @Operation(summary = "해시태그 생성", description = "응답 없음")
