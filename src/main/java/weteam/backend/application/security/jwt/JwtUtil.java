@@ -14,7 +14,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-import weteam.backend.application.message.ExceptionMessage;
+import weteam.backend.application.ExceptionMessage;
 
 import java.security.Key;
 import java.util.Arrays;

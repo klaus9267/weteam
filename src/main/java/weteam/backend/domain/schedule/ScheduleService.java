@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import weteam.backend.application.handler.exception.NotFoundException;
-import weteam.backend.application.message.ExceptionMessage;
+import weteam.backend.application.ExceptionMessage;
 import weteam.backend.domain.member.MemberService;
 import weteam.backend.domain.schedule.dto.RequestScheduleDto;
 import weteam.backend.domain.schedule.dto.ScheduleDto;

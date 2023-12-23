@@ -8,7 +8,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import weteam.backend.application.message.ExceptionMessage;
+import weteam.backend.application.ExceptionMessage;
 
 import java.io.IOException;
 

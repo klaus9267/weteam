@@ -1,4 +1,4 @@
-package weteam.backend.application.message;
+package weteam.backend.application;
 
 import lombok.Getter;
 
