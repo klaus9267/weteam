@@ -21,7 +21,7 @@ public class MemberRepositorySupport extends QuerydslRepositorySupport {
 
     public Member findProfile(Long memberId) {
         return queryFactory.selectFrom(member)
-                           .leftJoin(member.memberHashtagList, memberHashtag).fetchJoin()
+                           .leftJoin(memberHashtag.member, member).fetchJoin()
                            .leftJoin(memberHashtag.hashtag, hashtag).fetchJoin()
                            .where(member.id.eq(memberId),
                                    memberHashtag.isUse.isTrue().or(memberHashtag.isNull()))

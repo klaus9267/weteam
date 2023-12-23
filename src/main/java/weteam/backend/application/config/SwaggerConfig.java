@@ -6,6 +6,7 @@ import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
+import org.springdoc.core.models.GroupedOpenApi;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -13,19 +14,22 @@ import java.util.Collections;
 
 @OpenAPIDefinition(
         info = @Info(title = "Weteam Swagger",
-                     description = "api 명세서",
-                     version = "v1"))
+                     version = "0.1.0"))
 @Configuration
 public class SwaggerConfig {
+//    @Bean
+//    public OpenAPI openAPI(){
+//
+//        return new OpenAPI();
+////                .components(new Components().addSecuritySchemes("bearerAuth", securityScheme))
+////                .security(Collections.singletonList(securityRequirement));
+//    }
     @Bean
-    public OpenAPI openAPI(){
-        SecurityRequirement securityRequirement = new SecurityRequirement().addList("bearerAuth");
-        SecurityScheme securityScheme = new SecurityScheme()
-                .type(SecurityScheme.Type.HTTP).scheme("bearer").bearerFormat("JWT")
-                .in(SecurityScheme.In.HEADER).name("Authorization");
-
-        return new OpenAPI()
-                .components(new Components().addSecuritySchemes("bearerAuth", securityScheme))
-                .security(Collections.singletonList(securityRequirement));
+    public GroupedOpenApi openAPI() {
+        String[] paths = {"/api/**"};
+        return GroupedOpenApi.builder()
+                             .group("DAMO API")
+                             .pathsToMatch(paths)
+                             .build();
     }
 }
