@@ -45,27 +45,27 @@ public class HashtagController {
     }
 
 
-    @PatchMapping("/{memberHashtagId}")
+    @PatchMapping("/{hashtagId}")
     @Operation(summary = "해시태그 활성화/비활성화", description = "응답 없음")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateUse(
-            @PathVariable("memberHashtagId") final Long memberHashtagId,
+            @PathVariable("hashtagId") final Long hashtagId,
             @AuthenticationPrincipal PrincipalDetails principalDetails
     ) {
-        hashTagService.updateUse(memberHashtagId, principalDetails.getMember().id());
+        hashTagService.updateUse(hashtagId, principalDetails.getMember().id());
     }
 
-    @DeleteMapping("/{memberHashtagId}")
+    @DeleteMapping("/{hashtagId}")
     @Operation(summary = "해시태그 삭제", description = "응답 없음")
     @ResponseStatus(HttpStatus.OK)
     public void delete(
-            @PathVariable("memberHashtagId") final Long memberHashtagId,
+            @PathVariable("hashtagId") final Long hashtagId,
             @AuthenticationPrincipal PrincipalDetails principalDetails
     ) {
-        hashTagService.delete(memberHashtagId, principalDetails.getMember().id());
+        hashTagService.delete(hashtagId, principalDetails.getMember().id());
     }
 
-    @DeleteMapping("/all")
+    @DeleteMapping
     @Operation(summary = "해시태그 전체 삭제", description = "응답 없음")
     @ResponseStatus(HttpStatus.OK)
     public void deleteAll(@AuthenticationPrincipal PrincipalDetails principalDetails) {

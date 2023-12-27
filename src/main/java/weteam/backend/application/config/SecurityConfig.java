@@ -24,7 +24,7 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        return http.httpBasic(withDefaults())
+        return http.csrf().disable()
                    .authorizeHttpRequests(authorize -> authorize
                            .requestMatchers("/**").hasAnyRole("USER", "ADMIN")
                            .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger").permitAll()
@@ -35,8 +35,9 @@ public class SecurityConfig {
                                            .deleteCookies("JSESSIONID")  // 로그아웃 시 삭제할 쿠키 이름
                    )
                    .oauth2Login(oauth2 -> oauth2.userInfoEndpoint(endPoint -> endPoint.userService(oAuth2UserService))
-                                                .defaultSuccessUrl("/api/oauth") // TODO: 프론트 루트 경로로 이동
+//                                                .defaultSuccessUrl("/api/oauth") // TODO: 프론트 루트 경로로 이동
                    )
+                   .httpBasic(withDefaults())
                    .build();
     }
 }
