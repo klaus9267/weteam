@@ -10,6 +10,6 @@ import java.util.Optional;
 public interface MemberRepository extends JpaRepository<Member, Long> {
     Optional<Member> findByNickname(String nickname);
 
-    @EntityGraph(attributePaths = {"memberHashtagList"})
+    @EntityGraph(attributePaths = {"hashtagList"})
     Optional<Member> findOneByProviderAndProviderId(ProviderType provider, String providerId);
 }

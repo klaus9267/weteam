@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import weteam.backend.domain.hashtag.dto.AddHashtagDto;
+import weteam.backend.domain.member.entity.Member;
 
 @Entity
 @NoArgsConstructor
@@ -17,14 +18,20 @@ public class Hashtag {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private String name;
-
-    @Column(nullable = false)
+    @Column(columnDefinition = "BIT DEFAULT 0")
+    private boolean isUse;
+    private String color, name;
     private HashtagType type;
 
-    public Hashtag(AddHashtagDto hashtagDto) {
-        this.name = hashtagDto.getName();
-        this.type = HashtagType.valueOf(hashtagDto.getType());
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Member member;
+
+    public static Hashtag from(AddHashtagDto hashtagDto, Long memberId) {
+        return Hashtag.builder()
+                      .name(hashtagDto.name())
+                      .type(hashtagDto.type())
+                      .color(hashtagDto.color())
+                      .member(Member.builder().id(memberId).build())
+                      .build();
     }
 }

@@ -56,7 +56,6 @@ jobs:
           docker build -t ${{ secrets.DOCKER_ID }}/weteam .
           docker push ${{ secrets.DOCKER_ID }}/weteam
 
-      ## docker compose up
       - name: executing remote ssh commands using password
         uses: appleboy/ssh-action@master
         with:

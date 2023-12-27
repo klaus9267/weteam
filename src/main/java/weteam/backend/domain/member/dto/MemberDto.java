@@ -1,7 +1,6 @@
 package weteam.backend.domain.member.dto;
 
 import lombok.Builder;
-import weteam.backend.domain.hashtag.domain.MemberHashtag;
 import weteam.backend.domain.hashtag.dto.HashtagDto;
 import weteam.backend.domain.member.entity.Member;
 import weteam.backend.domain.member.entity.MemberRole;
@@ -24,7 +23,7 @@ public record MemberDto(
                         .nickname(member.getNickname())
                         .username(member.getUsername())
                         .organization(member.getOrganization())
-                        .memberHashtagList(HashtagDto.from(member.getMemberHashtagList()))
+                        .memberHashtagList(HashtagDto.from(member.getHashtagList()))
                         .role(member.getRole())
                         .build();
     }

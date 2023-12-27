@@ -6,10 +6,10 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import weteam.backend.application.common.ApiMetaData;
-import weteam.backend.application.security.SecurityUtil;
-import weteam.backend.domain.project.dto.ProjectDto;
+import weteam.backend.application.oauth.PrincipalDetails;
 import weteam.backend.domain.project.dto.ProjectMemberDto;
 import weteam.backend.domain.project.dto.RequestProjectDto;
 
@@ -25,24 +25,27 @@ public class ProjectController {
     @PostMapping
     @Operation(summary = "팀플 생성", description = "응답 없음")
     @ResponseStatus(HttpStatus.CREATED)
-    public void create(@RequestBody @Valid RequestProjectDto projectDto) {
-        Long memberId = SecurityUtil.getCurrentMemberId();
-        projectService.create(memberId, projectDto.toEntity());
+    public void create(
+            @RequestBody @Valid RequestProjectDto projectDto,
+            @AuthenticationPrincipal PrincipalDetails principalDetails
+    ) {
+        projectService.create(principalDetails.getMember().id(), projectDto.toEntity());
     }
 
     @GetMapping("{projectId}")
     @Operation(summary = "팀원 목록 조회")
     @ApiResponse(responseCode = "200", useReturnTypeSchema = true)
     public ApiMetaData<List<ProjectMemberDto>> findProjectMemberList(@PathVariable("projectId") Long projectId) {
-        Long memberId = SecurityUtil.getCurrentMemberId();
         return new ApiMetaData<>(projectService.findMemberListByProject(projectId));
     }
 
     @PatchMapping("{projectId}")
     @Operation(summary = "초대 수락", description = "응답 없음")
     @ResponseStatus(HttpStatus.OK)
-    public void acceptInvite(@PathVariable("projectId") Long projectId) {
-        Long memberId = SecurityUtil.getCurrentMemberId();
-        projectService.acceptInvite(projectId, memberId);
+    public void acceptInvite(
+            @PathVariable("projectId") Long projectId,
+            @AuthenticationPrincipal PrincipalDetails principalDetails
+    ) {
+        projectService.acceptInvite(projectId, principalDetails.getMember().id());
     }
 }

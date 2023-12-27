@@ -6,7 +6,6 @@ import org.springframework.stereotype.Repository;
 import weteam.backend.domain.member.entity.Member;
 
 import static weteam.backend.domain.hashtag.domain.QHashtag.hashtag;
-import static weteam.backend.domain.hashtag.domain.QMemberHashtag.memberHashtag;
 import static weteam.backend.domain.member.entity.QMember.member;
 
 
@@ -21,10 +20,9 @@ public class MemberRepositorySupport extends QuerydslRepositorySupport {
 
     public Member findProfile(Long memberId) {
         return queryFactory.selectFrom(member)
-                           .leftJoin(member.memberHashtagList, memberHashtag).fetchJoin()
-                           .leftJoin(memberHashtag.hashtag, hashtag).fetchJoin()
+                           .leftJoin(member.hashtagList, hashtag).fetchJoin()
                            .where(member.id.eq(memberId),
-                                   memberHashtag.isUse.isTrue().or(memberHashtag.isNull()))
+                                   hashtag.isUse.isTrue().or(hashtag.isNull()))
                            .distinct()
                            .fetchOne();
     }
