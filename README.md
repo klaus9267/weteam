@@ -17,7 +17,7 @@
 | spring boot | 3.0.12 |
 | --- | --- |
 | java | 17 |
-- jpa, queryDSL, mapstruct, swagger
+- jpa, queryDSL, swagger, OAuth
 - docker, ec2, rds
 
 ## ERD
