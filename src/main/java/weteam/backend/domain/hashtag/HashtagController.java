@@ -26,7 +26,7 @@ public class HashtagController {
     private final HashtagService hashTagService;
 
     @PostMapping
-    @Operation(summary = "해시태그 생성", description = "응답 없음")
+    @Operation(summary = "해시태그 생성", description = "응답 없음 / type - JOB_OBJECTIVE, MBTI, SPECIALTY, PERSONALITY, ETC")
     @ResponseStatus(HttpStatus.CREATED)
     public void create(
             @RequestBody @Valid final AddHashtagDto request,
@@ -46,7 +46,7 @@ public class HashtagController {
     }
 
 
-    @PatchMapping("/{hashtagId}")
+    @PatchMapping("/{hashtagId}/use")
     @Operation(summary = "해시태그 활성화/비활성화", description = "응답 없음")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateUse(

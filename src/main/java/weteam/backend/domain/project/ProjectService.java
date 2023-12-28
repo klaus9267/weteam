@@ -34,10 +34,6 @@ public class ProjectService {
 //
 //    }
 
-    public Project findById(Long id) {
-        return projectRepository.findById(id).orElseThrow(() -> new NotFoundException(ExceptionMessage.NOT_FOUND));
-    }
-
     public List<ProjectMemberDto> findMemberListByProject(Long projectId) {
         List<ProjectMember> projectMemberList = projectMemberRepository.findByProjectId(projectId);
         if (projectMemberList.isEmpty()) {

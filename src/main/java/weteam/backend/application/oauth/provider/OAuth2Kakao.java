@@ -2,25 +2,26 @@ package weteam.backend.application.oauth.provider;
 
 import java.util.Map;
 
-public class OAuthProvider {
-    private final ProviderType providerType;
-    private final Map<String, Object> attributes;
-    private final Map<String, Object> properties;
+public class OAuth2Kakao implements OAuth2Provider {
+    private Map<String, Object> attributes; // oauth2User.getAttributes();
+    private Map<String, Object> properties;
 
-    public OAuthProvider(final Map<String, Object> attributes, final ProviderType providerType) {
+    public OAuth2Kakao(Map<String, Object> attributes) {
         this.attributes = attributes;
         this.properties = (Map<String, Object>) attributes.get("properties");
-        this.providerType = providerType;
     }
 
+    @Override
     public String getProviderId() {
         return attributes.get("id").toString();
     }
 
+    @Override
     public ProviderType getProvider() {
-        return providerType;
+        return ProviderType.KAKAO;
     }
 
+    @Override
     public String getName() {
         return properties.get("nickname").toString();
     }
