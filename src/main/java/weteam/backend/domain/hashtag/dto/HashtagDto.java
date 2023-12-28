@@ -2,6 +2,7 @@ package weteam.backend.domain.hashtag.dto;
 
 import lombok.Builder;
 import weteam.backend.domain.hashtag.domain.Hashtag;
+import weteam.backend.domain.hashtag.domain.HashtagType;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -10,13 +11,13 @@ import java.util.stream.Collectors;
 public record HashtagDto(
         Long id,
         String name,
-        String type,
+        HashtagType type,
         boolean isUse) {
     public static HashtagDto from(Hashtag hashtag) {
         return HashtagDto.builder()
                          .id(hashtag.getId())
                          .name(hashtag.getName())
-                         .type(hashtag.getType().getTitle())
+                         .type(hashtag.getType())
                          .isUse(hashtag.isUse())
                          .build();
     }

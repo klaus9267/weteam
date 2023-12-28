@@ -15,7 +15,7 @@ public record MemberDto(
         String username,
         String organization,
         MemberRole role,
-        List<HashtagDto> memberHashtagList
+        List<HashtagDto> hashtagList
 ) {
     public static MemberDto from(Member member) {
         return MemberDto.builder()
@@ -23,7 +23,7 @@ public record MemberDto(
                         .nickname(member.getNickname())
                         .username(member.getUsername())
                         .organization(member.getOrganization())
-                        .memberHashtagList(HashtagDto.from(member.getHashtagList()))
+                        .hashtagList(HashtagDto.from(member.getHashtagList()))
                         .role(member.getRole())
                         .build();
     }

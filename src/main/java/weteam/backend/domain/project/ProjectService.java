@@ -3,12 +3,12 @@ package weteam.backend.domain.project;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import weteam.backend.application.handler.exception.NotFoundException;
 import weteam.backend.application.ExceptionMessage;
+import weteam.backend.application.handler.exception.DuplicateKeyException;
+import weteam.backend.application.handler.exception.NotFoundException;
 import weteam.backend.domain.member.MemberService;
-import weteam.backend.domain.member.entity.Member;
-import weteam.backend.domain.project.dto.ProjectDto;
 import weteam.backend.domain.project.dto.ProjectMemberDto;
+import weteam.backend.domain.project.dto.RequestProjectDto;
 import weteam.backend.domain.project.entity.Project;
 import weteam.backend.domain.project.entity.ProjectMember;
 import weteam.backend.domain.project.repository.ProjectMemberRepository;
@@ -22,21 +22,10 @@ import java.util.List;
 public class ProjectService {
     private final ProjectRepository projectRepository;
     private final ProjectMemberRepository projectMemberRepository;
-    private final MemberService memberService;
-    private final ProjectMemberService projectMemberService;
 
-    public ProjectDto create(Long memberId, Project request) {
-        Project project = projectRepository.save(request);
-        setProjectMember(memberId, project);
-        return ProjectDto.from(project, 1);
-    }
-
-    public void setProjectMember(Long memberId, Project project) {
-        Member member = memberService.findById(memberId);
-        ProjectMember projectMember = ProjectMember.builder()
-                                                   .project(project)
-                                                   .member(member)
-                                                   .build();
+    public void save(Long memberId, RequestProjectDto projectDto) {
+        Project project = projectRepository.save(projectDto.toEntity());
+        ProjectMember projectMember = ProjectMember.from(project, memberId);
         projectMemberRepository.save(projectMember);
     }
 
@@ -53,8 +42,9 @@ public class ProjectService {
     }
 
     public void acceptInvite(Long projectId, Long memberId) {
-        Project project = this.findById(projectId);
-        Member member = memberService.findById(memberId);
-        projectMemberService.addMember(member, project);
+        if (projectMemberRepository.findByProjectIdAndMemberId(projectId, memberId).isPresent()) {
+            throw new DuplicateKeyException(ExceptionMessage.DUPLICATE);
+        }
+        projectMemberRepository.save(ProjectMember.from(projectId, memberId));
     }
 }

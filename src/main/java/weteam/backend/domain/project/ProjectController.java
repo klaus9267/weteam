@@ -25,11 +25,11 @@ public class ProjectController {
     @PostMapping
     @Operation(summary = "팀플 생성", description = "응답 없음")
     @ResponseStatus(HttpStatus.CREATED)
-    public void create(
+    public void createProject(
             @RequestBody @Valid RequestProjectDto projectDto,
             @AuthenticationPrincipal PrincipalDetails principalDetails
     ) {
-        projectService.create(principalDetails.getMember().id(), projectDto.toEntity());
+        projectService.save(principalDetails.getMember().id(), projectDto);
     }
 
     @GetMapping("{projectId}")

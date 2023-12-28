@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.webjars.NotFoundException;
 import weteam.backend.application.ExceptionMessage;
+import weteam.backend.application.handler.exception.DuplicateKeyException;
 import weteam.backend.domain.hashtag.domain.Hashtag;
 import weteam.backend.domain.hashtag.dto.AddHashtagDto;
 import weteam.backend.domain.hashtag.dto.HashtagDto;
@@ -23,14 +24,13 @@ public class HashtagService {
     private final HashtagRepositorySupport hashtagRepositorySupport;
     private final MemberService memberService;
 
-    public HashtagDto create(final AddHashtagDto hashtagDto, final Long memberId) {
+    public void save(final AddHashtagDto hashtagDto, final Long memberId) {
         Optional<Hashtag> data = hashtagRepository.findByName(hashtagDto.name());
-
-        if (data.isEmpty()) {
-            Hashtag hashtag = Hashtag.from(hashtagDto, memberId);
-            return HashtagDto.from(hashtagRepository.save(hashtag));
+        if (data.isPresent()) {
+            throw new DuplicateKeyException(ExceptionMessage.DUPLICATE);
         }
-        return null;
+        Hashtag hashtag = Hashtag.from(hashtagDto, memberId);
+        hashtagRepository.save(hashtag);
     }
 
     public List<HashtagDto> findByMemberIdWithType(final Long memberId, final String type) {
@@ -49,7 +49,7 @@ public class HashtagService {
         hashtagRepository.delete(hashtag);
     }
 
-    public void deleteAllByMemberId(final Long memberId) {
+    public void deleteAll(final Long memberId) {
         if (hashtagRepository.findByMemberId(memberId).isEmpty()) {
             throw new NotFoundException(ExceptionMessage.NOT_FOUND.getMessage());
         }

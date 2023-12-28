@@ -31,7 +31,7 @@ public class HashtagController {
             @RequestBody @Valid final AddHashtagDto request,
             @AuthenticationPrincipal PrincipalDetails principalDetails
     ) {
-        hashTagService.create(request, principalDetails.getMember().id());
+        hashTagService.save(request, principalDetails.getMember().id());
     }
 
     @GetMapping("/{type}")
@@ -58,7 +58,7 @@ public class HashtagController {
     @DeleteMapping("/{hashtagId}")
     @Operation(summary = "해시태그 삭제", description = "응답 없음")
     @ResponseStatus(HttpStatus.OK)
-    public void delete(
+    public void removeHashtag(
             @PathVariable("hashtagId") final Long hashtagId,
             @AuthenticationPrincipal PrincipalDetails principalDetails
     ) {
@@ -68,7 +68,7 @@ public class HashtagController {
     @DeleteMapping
     @Operation(summary = "해시태그 전체 삭제", description = "응답 없음")
     @ResponseStatus(HttpStatus.OK)
-    public void deleteAll(@AuthenticationPrincipal PrincipalDetails principalDetails) {
-        hashTagService.deleteAllByMemberId(principalDetails.getMember().id());
+    public void removeAllHashtag(@AuthenticationPrincipal PrincipalDetails principalDetails) {
+        hashTagService.deleteAll(principalDetails.getMember().id());
     }
 }

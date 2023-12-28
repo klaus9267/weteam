@@ -7,11 +7,11 @@ import weteam.backend.domain.project.entity.Project;
 @Data
 @Builder
 public class ProjectDto {
-        private Long id;
-        private String name;
-        private int headCount;
+    private Long id;
+    private String name;
+    private int headCount;
 
-        public static ProjectDto from(Project project,int headCount) {
-                return new ProjectDto(project.getId(), project.getName(), headCount);
-        }
+    public static ProjectDto from(Project project, int headCount) {
+        return new ProjectDto(project.getId(), project.getName(), headCount);
+    }
 }
