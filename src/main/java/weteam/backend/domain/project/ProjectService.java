@@ -1,6 +1,7 @@
 package weteam.backend.domain.project;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import weteam.backend.application.ExceptionMessage;
@@ -28,6 +29,10 @@ public class ProjectService {
         ProjectMember projectMember = ProjectMember.from(project, memberId);
         projectMemberRepository.save(projectMember);
     }
+
+//    public Page<> findProjectList(Long memberId) {
+//
+//    }
 
     public Project findById(Long id) {
         return projectRepository.findById(id).orElseThrow(() -> new NotFoundException(ExceptionMessage.NOT_FOUND));

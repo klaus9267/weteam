@@ -18,9 +18,14 @@ public class Hashtag {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String color;
+    private String name;
+
     @Column(columnDefinition = "BIT DEFAULT 0")
     private boolean isUse;
-    private String color, name;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private HashtagType type;
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -11,6 +11,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import weteam.backend.application.common.ApiMetaData;
 import weteam.backend.application.oauth.PrincipalDetails;
+import weteam.backend.domain.hashtag.domain.HashtagType;
 import weteam.backend.domain.hashtag.dto.AddHashtagDto;
 import weteam.backend.domain.hashtag.dto.HashtagDto;
 
@@ -34,11 +35,11 @@ public class HashtagController {
         hashTagService.save(request, principalDetails.getMember().id());
     }
 
-    @GetMapping("/{type}")
+    @GetMapping
     @Operation(summary = "해시태그 조회")
     @ApiResponse(responseCode = "200", useReturnTypeSchema = true)
     public ApiMetaData<List<HashtagDto>> findByMemberIdWithType(
-            @PathVariable("type") final String type,
+            @RequestParam("type") final HashtagType type,
             @AuthenticationPrincipal PrincipalDetails principalDetails
     ) {
         return new ApiMetaData<>(hashTagService.findByMemberIdWithType(principalDetails.getMember().id(), type));

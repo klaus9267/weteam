@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -32,10 +33,17 @@ public class ProjectController {
         projectService.save(principalDetails.getMember().id(), projectDto);
     }
 
+    @GetMapping
+    @Operation(summary = "팀플 목록 조회")
+    @ApiResponse(responseCode = "200", useReturnTypeSchema = true)
+    public ApiMetaData<List<ProjectMemberDto>> findProjectList(@AuthenticationPrincipal PrincipalDetails principalDetails) {
+        return new ApiMetaData<>(projectService.findMemberListByProject(principalDetails.getMember().id()));
+    }
+
     @GetMapping("{projectId}")
     @Operation(summary = "팀원 목록 조회")
     @ApiResponse(responseCode = "200", useReturnTypeSchema = true)
-    public ApiMetaData<List<ProjectMemberDto>> findProjectMemberList(@PathVariable("projectId") Long projectId) {
+    public ApiMetaData<List<ProjectMemberDto>> findProjectMemberList(Pageable pageable, @PathVariable("projectId") Long projectId) {
         return new ApiMetaData<>(projectService.findMemberListByProject(projectId));
     }
 
