@@ -19,3 +19,6 @@
 | java | 17 |
 - jpa, queryDSL, mapstruct, swagger
 - docker, ec2, rds
+
+## ERD
+<img width="749" alt="image" src="https://github.com/klaus9267/weteam/assets/90795904/ebf112d4-0674-483f-bc5c-930b416cda50">
