@@ -10,7 +10,7 @@ import weteam.backend.application.oauth.provider.OAuth2Provider;
 import weteam.backend.domain.member.dto.MemberDto;
 import weteam.backend.domain.member.entity.Member;
 import weteam.backend.domain.member.entity.MemberRole;
-import weteam.backend.domain.member.repository.MemberRepository;
+import weteam.backend.domain.member.MemberRepository;
 
 import java.util.Map;
 

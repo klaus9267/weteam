@@ -4,10 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 import weteam.backend.application.common.BaseEntity;
 import weteam.backend.application.oauth.provider.ProviderType;
-import weteam.backend.domain.hashtag.domain.Hashtag;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @AllArgsConstructor
@@ -25,8 +21,4 @@ public class Member extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     private MemberRole role;
-
-    @OneToMany(mappedBy = "member")
-    @ToString.Exclude
-    private List<Hashtag> hashtagList = new ArrayList<>();
 }

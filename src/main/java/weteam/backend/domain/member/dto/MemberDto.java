@@ -1,11 +1,8 @@
 package weteam.backend.domain.member.dto;
 
 import lombok.Builder;
-import weteam.backend.domain.hashtag.dto.HashtagDto;
 import weteam.backend.domain.member.entity.Member;
 import weteam.backend.domain.member.entity.MemberRole;
-
-import java.util.List;
 
 
 @Builder
@@ -14,8 +11,7 @@ public record MemberDto(
         String nickname,
         String username,
         String organization,
-        MemberRole role,
-        List<HashtagDto> hashtagList
+        MemberRole role
 ) {
     public static MemberDto from(Member member) {
         return MemberDto.builder()
@@ -23,7 +19,6 @@ public record MemberDto(
                         .nickname(member.getNickname())
                         .username(member.getUsername())
                         .organization(member.getOrganization())
-                        .hashtagList(HashtagDto.from(member.getHashtagList()))
                         .role(member.getRole())
                         .build();
     }
