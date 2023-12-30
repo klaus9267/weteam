@@ -5,7 +5,7 @@ import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.user.OAuth2User;
-import weteam.backend.domain.member.dto.MemberDto;
+import weteam.backend.domain.user.dto.UserDto;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -14,7 +14,7 @@ import java.util.Map;
 @Data
 @AllArgsConstructor
 public class PrincipalDetails implements UserDetails, OAuth2User {
-    private final MemberDto member;
+    private final UserDto member;
     private final Map<String, Object> attributes;
 
     @Override

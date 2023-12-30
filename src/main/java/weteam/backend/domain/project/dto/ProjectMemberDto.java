@@ -2,7 +2,7 @@ package weteam.backend.domain.project.dto;
 
 import lombok.Builder;
 import lombok.Getter;
-import weteam.backend.domain.member.dto.MemberDto;
+import weteam.backend.domain.user.dto.UserDto;
 import weteam.backend.domain.project.entity.ProjectMember;
 
 import java.util.List;
@@ -13,13 +13,13 @@ import java.util.stream.Collectors;
 public class ProjectMemberDto {
     private Long id;
     private String role;
-    private MemberDto member;
+    private UserDto member;
 
     public static ProjectMemberDto from(ProjectMember projectMember) {
         return ProjectMemberDto.builder()
                                .id(projectMember.getId())
                                .role(projectMember.getRole())
-                               .member(MemberDto.from(projectMember.getMember()))
+                               .member(UserDto.from(projectMember.getUser()))
                                .build();
     }
 

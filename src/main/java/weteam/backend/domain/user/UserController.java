@@ -1,4 +1,4 @@
-package weteam.backend.domain.member;
+package weteam.backend.domain.user;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -10,31 +10,31 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import weteam.backend.application.oauth.PrincipalDetails;
-import weteam.backend.domain.member.dto.MemberDto;
-import weteam.backend.domain.member.entity.Member;
+import weteam.backend.domain.user.dto.UserDto;
+import weteam.backend.domain.user.entity.User;
 
 @RestController
 @Validated
 @RequestMapping("/api/members")
 @RequiredArgsConstructor
 @Tag(name = "MEMBER")
-public class MemberController {
-    private final MemberService memberService;
+public class UserController {
+    private final UserService memberService;
 
     @GetMapping("{id}")
     @Operation(summary = "다른 사용자 조회")
     @ApiResponse(responseCode = "200", useReturnTypeSchema = true)
-    public ResponseEntity<MemberDto> findById(@PathVariable("id") final Long id) {
-        final Member member = memberService.findOneById(id);
-        return ResponseEntity.ok(MemberDto.from(member));
+    public ResponseEntity<UserDto> findById(@PathVariable("id") final Long id) {
+        final User user = memberService.findOneById(id);
+        return ResponseEntity.ok(UserDto.from(user));
     }
 
     @GetMapping
     @Operation(summary = "내 정보 조회")
     @ApiResponse(responseCode = "200", useReturnTypeSchema = true)
-    public ResponseEntity<MemberDto> findMyInfo(@AuthenticationPrincipal final PrincipalDetails principalDetails) {
-        final Member member = memberService.findOneById(principalDetails.getMember().id());
-        return ResponseEntity.ok(MemberDto.from(member));
+    public ResponseEntity<UserDto> findMyInfo(@AuthenticationPrincipal final PrincipalDetails principalDetails) {
+        final User user = memberService.findOneById(principalDetails.getMember().id());
+        return ResponseEntity.ok(UserDto.from(user));
     }
 
     @PatchMapping("{organization}")

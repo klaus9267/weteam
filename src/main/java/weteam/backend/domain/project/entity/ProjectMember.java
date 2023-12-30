@@ -5,9 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import weteam.backend.domain.member.entity.Member;
+import weteam.backend.domain.user.entity.User;
 
-@Entity
+@Entity(name = "project_users")
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -20,16 +20,16 @@ public class ProjectMember {
     private String role;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private Member member;
+    private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Project project;
 
-    public static ProjectMember from(Project project, Long memberId) {
-        return ProjectMember.builder().project(project).member(Member.builder().id(memberId).build()).build();
+    public static ProjectMember from(Project project, Long userId) {
+        return ProjectMember.builder().project(project).user(User.builder().id(userId).build()).build();
     }
 
-    public static ProjectMember from(Long projectId, Long memberId) {
-        return ProjectMember.builder().project(Project.builder().id(projectId).build()).member(Member.builder().id(memberId).build()).build();
+    public static ProjectMember from(Long projectId, Long userId) {
+        return ProjectMember.builder().project(Project.builder().id(projectId).build()).user(User.builder().id(userId).build()).build();
     }
 }

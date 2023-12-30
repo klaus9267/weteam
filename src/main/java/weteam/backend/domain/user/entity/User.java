@@ -1,18 +1,19 @@
-package weteam.backend.domain.member.entity;
+package weteam.backend.domain.user.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import weteam.backend.application.BaseEntity;
 import weteam.backend.application.oauth.provider.ProviderType;
 
-@Entity
-@AllArgsConstructor
+@Entity(name = "users")
 @NoArgsConstructor
-@Data
+@AllArgsConstructor
 @Builder
-@EqualsAndHashCode(callSuper = true)
-@ToString(callSuper = true)
-public class Member extends BaseEntity {
+@Getter
+public class User extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -22,5 +23,9 @@ public class Member extends BaseEntity {
     private ProviderType provider;
 
     @Enumerated(EnumType.STRING)
-    private MemberRole role;
+    private UserRole role;
+
+    public void updateOrganization(String organization) {
+        this.organization = organization;
+    }
 }

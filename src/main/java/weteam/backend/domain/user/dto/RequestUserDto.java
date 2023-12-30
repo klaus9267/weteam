@@ -1,6 +1,6 @@
-package weteam.backend.domain.member.dto;
+package weteam.backend.domain.user.dto;
 
-public record RequestMemberDto(
+public record RequestUserDto(
         String nickname,
         String username,
         String organization

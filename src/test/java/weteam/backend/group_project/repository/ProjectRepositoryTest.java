@@ -3,7 +3,7 @@ package weteam.backend.group_project.repository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import weteam.backend.domain.project.entity.ProjectWork;
+import weteam.backend.domain.project.entity.ProjectTask;
 import weteam.backend.domain.project.repository.ProjectRepository;
 import weteam.backend.domain.project.repository.ProjectWorkRepository;
 
@@ -19,11 +19,11 @@ class ProjectRepositoryTest {
 
     @Test
     void test1() {
-        ProjectWork projectWork = ProjectWork.builder()
+        ProjectTask projectTask = ProjectTask.builder()
                                              .name("sdad")
                                              .startedAt(now())
                                              .build();
-        projectWorkRepository.save(projectWork);
+        projectWorkRepository.save(projectTask);
         projectWorkRepository.findAll().forEach(System.out::println);
     }
 }

@@ -37,7 +37,7 @@ public class ProjectService {
     }
 
     public void acceptInvite(Long projectId, Long memberId) {
-        if (projectMemberRepository.findByProjectIdAndMemberId(projectId, memberId).isPresent()) {
+        if (projectMemberRepository.findByProjectIdAndUserId(projectId, memberId).isPresent()) {
             throw new DuplicateKeyException(Message.DUPLICATE);
         }
         projectMemberRepository.save(ProjectMember.from(projectId, memberId));
