@@ -1,9 +1,9 @@
 package weteam.backend.application.handler.exception;
 
-import weteam.backend.application.ExceptionMessage;
+import weteam.backend.application.Message;
 
 public class BadRequestException extends RuntimeException{
-    public BadRequestException(ExceptionMessage message) {
+    public BadRequestException(Message message) {
         super(message.getMessage());
     }
 }

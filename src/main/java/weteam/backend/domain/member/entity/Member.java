@@ -2,7 +2,7 @@ package weteam.backend.domain.member.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import weteam.backend.application.common.BaseEntity;
+import weteam.backend.application.BaseEntity;
 import weteam.backend.application.oauth.provider.ProviderType;
 
 @Entity

@@ -7,9 +7,9 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import weteam.backend.application.common.ApiMetaData;
 import weteam.backend.application.oauth.PrincipalDetails;
 import weteam.backend.domain.project.dto.ProjectMemberDto;
 import weteam.backend.domain.project.dto.RequestProjectDto;
@@ -36,20 +36,20 @@ public class ProjectController {
     @GetMapping
     @Operation(summary = "팀플 목록 조회")
     @ApiResponse(responseCode = "200", useReturnTypeSchema = true)
-    public ApiMetaData<List<ProjectMemberDto>> findProjectList(@AuthenticationPrincipal PrincipalDetails principalDetails) {
-        return new ApiMetaData<>(projectService.findMemberListByProject(principalDetails.getMember().id()));
+    public ResponseEntity<List<ProjectMemberDto>> findProjectList(@AuthenticationPrincipal PrincipalDetails principalDetails) {
+        return ResponseEntity.ok(projectService.findMemberListByProject(principalDetails.getMember().id()));
     }
 
     @GetMapping("{projectId}")
     @Operation(summary = "팀원 목록 조회")
     @ApiResponse(responseCode = "200", useReturnTypeSchema = true)
-    public ApiMetaData<List<ProjectMemberDto>> findProjectMemberList(Pageable pageable, @PathVariable("projectId") Long projectId) {
-        return new ApiMetaData<>(projectService.findMemberListByProject(projectId));
+    public ResponseEntity<List<ProjectMemberDto>> findProjectMemberList(Pageable pageable, @PathVariable("projectId") Long projectId) {
+        return ResponseEntity.ok(projectService.findMemberListByProject(projectId));
     }
 
     @PatchMapping("{projectId}")
     @Operation(summary = "초대 수락", description = "응답 없음")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void acceptInvite(
             @PathVariable("projectId") Long projectId,
             @AuthenticationPrincipal PrincipalDetails principalDetails

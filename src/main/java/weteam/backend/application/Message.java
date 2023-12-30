@@ -3,7 +3,7 @@ package weteam.backend.application;
 import lombok.Getter;
 
 @Getter
-public enum ExceptionMessage {
+public enum Message {
     NOT_FOUND(404, "조회할 대상을 찾을 수 없습니다"),
     BAD_REQUEST(400, "잘못된 요청사항입니다."),
     DUPLICATE(400, "이미 존재하는 데이터입니다."),
@@ -18,7 +18,7 @@ public enum ExceptionMessage {
     private final Integer httpStatus;
     private final String message;
 
-    ExceptionMessage(Integer httpStatus, String message) {
+    Message(Integer httpStatus, String message) {
         this.httpStatus = httpStatus;
         this.message = message;
     }

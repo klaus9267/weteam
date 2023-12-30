@@ -1,6 +1,6 @@
 package weteam.backend.application.oauth;
 
-import weteam.backend.application.ExceptionMessage;
+import weteam.backend.application.Message;
 import weteam.backend.application.handler.exception.NotFoundException;
 import weteam.backend.application.oauth.provider.OAuth2Provider;
 import weteam.backend.application.oauth.provider.ProviderType;
@@ -23,7 +23,7 @@ public class OAuth2ProviderFactory {
 
     public OAuth2Provider getOAuth2Provider(String registrationId, Map<String, Object> attributes) {
         if (!strategies.containsKey(registrationId)) {
-            throw new NotFoundException(ExceptionMessage.NOT_FOUND_PROVIDER);
+            throw new NotFoundException(Message.NOT_FOUND_PROVIDER);
         }
         return strategies.get(registrationId).getProvider(attributes);
     }

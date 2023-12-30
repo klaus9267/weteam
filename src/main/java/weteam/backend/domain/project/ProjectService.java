@@ -1,13 +1,11 @@
 package weteam.backend.domain.project;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import weteam.backend.application.ExceptionMessage;
+import weteam.backend.application.Message;
 import weteam.backend.application.handler.exception.DuplicateKeyException;
 import weteam.backend.application.handler.exception.NotFoundException;
-import weteam.backend.domain.member.MemberService;
 import weteam.backend.domain.project.dto.ProjectMemberDto;
 import weteam.backend.domain.project.dto.RequestProjectDto;
 import weteam.backend.domain.project.entity.Project;
@@ -33,14 +31,14 @@ public class ProjectService {
     public List<ProjectMemberDto> findMemberListByProject(Long projectId) {
         List<ProjectMember> projectMemberList = projectMemberRepository.findByProjectId(projectId);
         if (projectMemberList.isEmpty()) {
-            throw new NotFoundException(ExceptionMessage.NOT_FOUND);
+            throw new NotFoundException(Message.NOT_FOUND);
         }
         return ProjectMemberDto.from(projectMemberList);
     }
 
     public void acceptInvite(Long projectId, Long memberId) {
         if (projectMemberRepository.findByProjectIdAndMemberId(projectId, memberId).isPresent()) {
-            throw new DuplicateKeyException(ExceptionMessage.DUPLICATE);
+            throw new DuplicateKeyException(Message.DUPLICATE);
         }
         projectMemberRepository.save(ProjectMember.from(projectId, memberId));
     }
