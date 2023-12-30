@@ -17,6 +17,8 @@ public class Member extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String username, nickname, organization, providerId;
+
+    @Enumerated(EnumType.STRING)
     private ProviderType provider;
 
     @Enumerated(EnumType.STRING)

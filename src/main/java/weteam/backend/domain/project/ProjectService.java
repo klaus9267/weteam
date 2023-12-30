@@ -30,10 +30,6 @@ public class ProjectService {
         projectMemberRepository.save(projectMember);
     }
 
-//    public Page<> findProjectList(Long memberId) {
-//
-//    }
-
     public List<ProjectMemberDto> findMemberListByProject(Long projectId) {
         List<ProjectMember> projectMemberList = projectMemberRepository.findByProjectId(projectId);
         if (projectMemberList.isEmpty()) {
