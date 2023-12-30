@@ -1,8 +1,7 @@
 package weteam.backend.domain.alarm;
 
 import jakarta.persistence.*;
-import lombok.*;
-import weteam.backend.domain.common.enums.AlarmState;
+import lombok.Getter;
 import weteam.backend.domain.user.entity.User;
 
 @Entity(name = "alarms")
@@ -13,8 +12,8 @@ public class Alarm {
     private Long id;
     private String content;
 
-    @Enumerated(EnumType.STRING)
-    private AlarmState state;
+    @Column(columnDefinition = "boolean default false")
+    private boolean isRead;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;

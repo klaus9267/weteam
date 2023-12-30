@@ -2,13 +2,14 @@ package weteam.backend.domain.alarm;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
+import org.springdoc.core.converters.models.PageableAsQueryParam;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import weteam.backend.application.oauth.PrincipalDetails;
-import weteam.backend.domain.project.dto.RequestProjectDto;
 
 @RestController
 @RequestMapping("/api/alarms")
@@ -17,13 +18,10 @@ import weteam.backend.domain.project.dto.RequestProjectDto;
 public class AlarmController {
     private final AlarmService alarmService;
 
-//    @PostMapping
-//    @Operation(summary = "알람 생성", description = "응답 없음")
-//    @ResponseStatus(HttpStatus.CREATED)
-//    public void createProject(
-//            @RequestBody @Valid RequestProjectDto projectDto,
-//            @AuthenticationPrincipal PrincipalDetails principalDetails
-//    ) {
-//        alarmService.save(principalDetails.getMember().id(), projectDto);
-//    }
+    @GetMapping
+    @Operation(summary = "알람 조회")
+    @PageableAsQueryParam
+    public void readAlarms(@AuthenticationPrincipal final PrincipalDetails principalDetails, Pageable pageable) {
+        alarmService.readAlarmList(pageable, principalDetails.getUser().id());
+    }
 }

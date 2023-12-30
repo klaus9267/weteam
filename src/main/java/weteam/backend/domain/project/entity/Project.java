@@ -3,7 +3,6 @@ package weteam.backend.domain.project.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import weteam.backend.application.BaseEntity;
-import weteam.backend.domain.common.enums.DoneState;
 
 import java.time.LocalDate;
 
@@ -21,6 +20,6 @@ public class Project extends BaseEntity {
     private String name, subtitle;
     private LocalDate startedAt, endedAt;
 
-    @Enumerated(EnumType.STRING)
-    private DoneState state;
+    @Column(columnDefinition = "boolean default false")
+    private boolean isDone;
 }

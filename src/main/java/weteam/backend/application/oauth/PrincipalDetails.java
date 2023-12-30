@@ -14,7 +14,7 @@ import java.util.Map;
 @Data
 @AllArgsConstructor
 public class PrincipalDetails implements UserDetails, OAuth2User {
-    private final UserDto member;
+    private final UserDto user;
     private final Map<String, Object> attributes;
 
     @Override
@@ -25,13 +25,13 @@ public class PrincipalDetails implements UserDetails, OAuth2User {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Collection<GrantedAuthority> collection = new ArrayList<>();
-        collection.add((GrantedAuthority) () -> member.role().getKey());
+        collection.add((GrantedAuthority) () -> user.role().getKey());
         return collection;
     }
 
     @Override
     public String getUsername() {
-        return member.username();
+        return user.username();
     }
 
     @Override

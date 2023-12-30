@@ -33,7 +33,7 @@ public class UserController {
     @Operation(summary = "내 정보 조회")
     @ApiResponse(responseCode = "200", useReturnTypeSchema = true)
     public ResponseEntity<UserDto> findMyInfo(@AuthenticationPrincipal final PrincipalDetails principalDetails) {
-        final User user = memberService.findOneById(principalDetails.getMember().id());
+        final User user = memberService.findOneById(principalDetails.getUser().id());
         return ResponseEntity.ok(UserDto.from(user));
     }
 
@@ -44,13 +44,13 @@ public class UserController {
             @PathVariable("organization") final String organization,
             @AuthenticationPrincipal final PrincipalDetails principalDetails
     ) {
-        memberService.updateOrganization(principalDetails.getMember().id(), organization);
+        memberService.updateOrganization(principalDetails.getUser().id(), organization);
     }
 
     @DeleteMapping
     @Operation(summary = "사용자 탈퇴", description = "응답 없음")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteMember(@AuthenticationPrincipal final PrincipalDetails principalDetails) {
-        memberService.delete(principalDetails.getMember().id());
+        memberService.delete(principalDetails.getUser().id());
     }
 }

@@ -30,14 +30,14 @@ public class ProjectController {
             @RequestBody @Valid RequestProjectDto projectDto,
             @AuthenticationPrincipal PrincipalDetails principalDetails
     ) {
-        projectService.save(principalDetails.getMember().id(), projectDto);
+        projectService.save(principalDetails.getUser().id(), projectDto);
     }
 
     @GetMapping
     @Operation(summary = "팀플 목록 조회")
     @ApiResponse(responseCode = "200", useReturnTypeSchema = true)
     public ResponseEntity<List<ProjectMemberDto>> findProjectList(@AuthenticationPrincipal PrincipalDetails principalDetails) {
-        return ResponseEntity.ok(projectService.findMemberListByProject(principalDetails.getMember().id()));
+        return ResponseEntity.ok(projectService.findMemberListByProject(principalDetails.getUser().id()));
     }
 
     @GetMapping("{projectId}")
@@ -54,6 +54,6 @@ public class ProjectController {
             @PathVariable("projectId") Long projectId,
             @AuthenticationPrincipal PrincipalDetails principalDetails
     ) {
-        projectService.acceptInvite(projectId, principalDetails.getMember().id());
+        projectService.acceptInvite(projectId, principalDetails.getUser().id());
     }
 }
