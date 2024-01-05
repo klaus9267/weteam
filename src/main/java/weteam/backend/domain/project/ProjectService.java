@@ -1,13 +1,16 @@
 package weteam.backend.domain.project;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import weteam.backend.application.Message;
 import weteam.backend.application.handler.exception.DuplicateKeyException;
 import weteam.backend.application.handler.exception.NotFoundException;
 import weteam.backend.domain.project.dto.ProjectMemberDto;
-import weteam.backend.domain.project.dto.RequestProjectDto;
+import weteam.backend.domain.project.dto.CreateProjectDto;
+import weteam.backend.domain.project.dto.ProjectPaginationDto;
 import weteam.backend.domain.project.entity.Project;
 import weteam.backend.domain.project.entity.ProjectMember;
 import weteam.backend.domain.project.repository.ProjectMemberRepository;
@@ -22,10 +25,9 @@ public class ProjectService {
     private final ProjectRepository projectRepository;
     private final ProjectMemberRepository projectMemberRepository;
 
-    public void save(Long memberId, RequestProjectDto projectDto) {
-        Project project = projectRepository.save(projectDto.toEntity());
-        ProjectMember projectMember = ProjectMember.from(project, memberId);
-        projectMemberRepository.save(projectMember);
+    public void save(Long memberId, CreateProjectDto projectDto) {
+        Project project = Project.from(projectDto, memberId);
+        projectRepository.save(project);
     }
 
     public List<ProjectMemberDto> findMemberListByProject(Long projectId) {
@@ -34,6 +36,11 @@ public class ProjectService {
             throw new NotFoundException(Message.NOT_FOUND);
         }
         return ProjectMemberDto.from(projectMemberList);
+    }
+
+    public ProjectPaginationDto findProjects(Long userId, Pageable pageable) {
+        Page<Project> projectPage = projectRepository.findAllByHostId(pageable, userId);
+        return ProjectPaginationDto.from(projectPage);
     }
 
     public void acceptInvite(Long projectId, Long memberId) {

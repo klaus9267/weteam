@@ -9,7 +9,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import weteam.backend.application.oauth.PrincipalDetails;
+import weteam.backend.domain.user.dto.UserDto;
 
 @RestController
 @RequestMapping("/api/alarms")
@@ -21,7 +21,7 @@ public class AlarmController {
     @GetMapping
     @Operation(summary = "알람 조회")
     @PageableAsQueryParam
-    public void readAlarms(@AuthenticationPrincipal final PrincipalDetails principalDetails, Pageable pageable) {
-        alarmService.readAlarmList(pageable, principalDetails.getUser().id());
+    public void readAlarms(@AuthenticationPrincipal final UserDto user, Pageable pageable) {
+        alarmService.readAlarmList(pageable, user.id());
     }
 }

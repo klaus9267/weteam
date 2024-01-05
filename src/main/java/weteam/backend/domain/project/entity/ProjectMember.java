@@ -25,8 +25,9 @@ public class ProjectMember {
     @ManyToOne(fetch = FetchType.LAZY)
     private Project project;
 
-    public static ProjectMember from(Project project, Long userId) {
-        return ProjectMember.builder().project(project).user(User.builder().id(userId).build()).build();
+    public ProjectMember(User user, Project project) {
+        this.user = user;
+        this.project = project;
     }
 
     public static ProjectMember from(Long projectId, Long userId) {

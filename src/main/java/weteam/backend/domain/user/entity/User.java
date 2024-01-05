@@ -6,7 +6,10 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import weteam.backend.application.BaseEntity;
-import weteam.backend.application.oauth.provider.ProviderType;
+import weteam.backend.domain.hashtag.Hashtag;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity(name = "users")
 @NoArgsConstructor
@@ -17,13 +20,20 @@ public class User extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String username, nickname, organization, providerId;
+    private String username, organization, providerId;
 
-    @Enumerated(EnumType.STRING)
-    private ProviderType provider;
+    //    @Enumerated(EnumType.STRING)
+    //    private ProviderType provider;
 
     @Enumerated(EnumType.STRING)
     private UserRole role;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Hashtag> hashtagList = new ArrayList<>();
+
+    public User(Long id) {
+        this.id = id;
+    }
 
     public void updateOrganization(String organization) {
         this.organization = organization;

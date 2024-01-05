@@ -12,18 +12,23 @@ import weteam.backend.domain.user.entity.User;
 public class UserService {
     private final UserRepository userRepository;
 
-    public User findOneById(final Long id) {
+    public User findOneById(Long id) {
         return userRepository.findById(id).orElseThrow(() -> new NotFoundException(Message.NOT_FOUND));
     }
 
     @Transactional
-    public void updateOrganization(final Long id, final String organization) {
+    public void updateOrganization(Long id, String organization) {
         User user = this.findOneById(id);
         user.updateOrganization(organization);
     }
 
     @Transactional
-    public void delete(final Long id) {
+    public void updateInfo(Long userId) {
+        User user = this.findOneById(userId);
+    }
+
+    @Transactional
+    public void delete(Long id) {
         User user = this.findOneById(id);
         userRepository.delete(user);
     }

@@ -1,17 +1,23 @@
 package weteam.backend.domain.project.dto;
 
-import lombok.Builder;
-import lombok.Data;
 import weteam.backend.domain.project.entity.Project;
+import weteam.backend.domain.user.dto.UserDto;
 
-@Data
-@Builder
-public class ProjectDto {
-    private Long id;
-    private String name;
-    private int headCount;
+import java.util.List;
 
-    public static ProjectDto from(Project project, int headCount) {
-        return new ProjectDto(project.getId(), project.getName(), headCount);
+public record ProjectDto(
+        Long id,
+        String name,
+        String explanation,
+        int headCount,
+        boolean isDone,
+        UserDto host
+) {
+    public static ProjectDto from(Project project) {
+        return new ProjectDto(project.getId(), project.getName(), project.getExplanation(), project.getProjectMemberList().size(), project.isDone(), UserDto.from(project.getHost()));
+    }
+
+    public static List<ProjectDto> from(List<Project> projectList) {
+        return projectList.stream().map(ProjectDto::from).toList();
     }
 }
