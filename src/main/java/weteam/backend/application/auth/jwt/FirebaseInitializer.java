@@ -1,4 +1,4 @@
-package weteam.backend.application.jwt;
+package weteam.backend.application.auth.jwt;
 
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
@@ -17,18 +17,13 @@ public class FirebaseInitializer {
 
     @Bean
     public FirebaseApp firebaseApp() throws IOException {
-        log.info("Initializing Firebase.");
-        FileInputStream serviceAccount =
-                new FileInputStream("./firebase.json");
-
+        FileInputStream serviceAccount = new FileInputStream("./firebase.json");
         FirebaseOptions options = new FirebaseOptions.Builder()
                 .setCredentials(GoogleCredentials.fromStream(serviceAccount))
-                .setStorageBucket("heroku-sample.appspot.com")
+                //                .setStorageBucket("https://weteam-1968a-default-rtdb.firebaseio.com")
                 .build();
 
-        FirebaseApp app = FirebaseApp.initializeApp(options);
-        log.info("FirebaseApp initialized" + app.getName());
-        return app;
+        return FirebaseApp.initializeApp(options);
     }
 
 

@@ -1,4 +1,4 @@
-package weteam.backend.application.jwt;
+package weteam.backend.application.auth.jwt;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
@@ -20,8 +20,7 @@ import java.util.NoSuchElementException;
 
 @AllArgsConstructor
 public class FirebaseTokenFilter extends OncePerRequestFilter {
-
-    private UserDetailsService userDetailsService;
+    private UserDetailCustomService userDetailCustomService;
     private FirebaseAuth firebaseAuth;
 
     @Override
@@ -38,7 +37,7 @@ public class FirebaseTokenFilter extends OncePerRequestFilter {
         String token = header.substring(7);
 
         // verify IdToken
-        try{
+        try {
             decodedToken = firebaseAuth.verifyIdToken(token);
         } catch (FirebaseAuthException e) {
             setUnauthorizedResponse(response, "INVALID_TOKEN");
@@ -46,12 +45,11 @@ public class FirebaseTokenFilter extends OncePerRequestFilter {
         }
 
         // User를 가져와 SecurityContext에 저장한다.
-        try{
-            UserDetails user = userDetailsService.loadUserByUsername(decodedToken.getUid());
-            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                    user, null, user.getAuthorities());
+        try {
+            UserDetails user = userDetailCustomService.loadUserByUsername(decodedToken.getEmail());
+            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authentication);
-        } catch(NoSuchElementException e){
+        } catch (NoSuchElementException e) {
             setUnauthorizedResponse(response, "USER_NOT_FOUND");
             return;
         }
@@ -61,6 +59,6 @@ public class FirebaseTokenFilter extends OncePerRequestFilter {
     private void setUnauthorizedResponse(HttpServletResponse response, String code) throws IOException {
         response.setStatus(HttpStatus.SC_UNAUTHORIZED);
         response.setContentType("application/json");
-        response.getWriter().write("{\"code\":\""+code+"\"}");
+        response.getWriter().write("{\"code\":\"" + code + "\"}");
     }
 }

@@ -7,17 +7,18 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import weteam.backend.application.jwt.FirebaseTokenFilter;
+import weteam.backend.application.auth.jwt.FirebaseTokenFilter;
+import weteam.backend.application.auth.jwt.UserDetailCustomService;
 
 @EnableWebSecurity
 @EnableMethodSecurity(securedEnabled = true)
 @RequiredArgsConstructor
 public class SecurityConfig {
-    private final UserDetailsService userDetailsService;
+    private final UserDetailCustomService userDetailCustomService;
     private final FirebaseAuth firebaseAuth;
 
     @Bean
@@ -26,11 +27,12 @@ public class SecurityConfig {
                    .httpBasic().disable()
                    .formLogin().disable()
                    .cors().disable()
-                   //                   .authorizeHttpRequests(authorize -> authorize
-                   //                           .requestMatchers("/**").hasAnyRole("USER", "ADMIN")
-                   //                           .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger").permitAll()
-                   //                   )
-                   .addFilterBefore(new FirebaseTokenFilter(userDetailsService, firebaseAuth),
+                   .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                   .authorizeHttpRequests(authorize -> authorize
+                                   .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger").permitAll()
+                                   .requestMatchers("/**").hasAnyRole("USER", "ADMIN")
+                   )
+                   .addFilterBefore(new FirebaseTokenFilter(userDetailCustomService, firebaseAuth),
                            UsernamePasswordAuthenticationFilter.class)
                    .exceptionHandling()
                    .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
