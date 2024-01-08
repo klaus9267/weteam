@@ -1,4 +1,4 @@
-package weteam.backend.application.auth.jwt;
+package weteam.backend.application.auth;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
@@ -12,8 +12,8 @@ import org.apache.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.filter.OncePerRequestFilter;
+import weteam.backend.application.auth.jwt.UserDetailCustomService;
 
 import java.io.IOException;
 import java.util.NoSuchElementException;
@@ -46,7 +46,7 @@ public class FirebaseTokenFilter extends OncePerRequestFilter {
 
         // User를 가져와 SecurityContext에 저장한다.
         try {
-            UserDetails user = userDetailCustomService.loadUserByUsername(decodedToken.getEmail());
+            UserDetails user = userDetailCustomService.loadUserByUsername(decodedToken);
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authentication);
         } catch (NoSuchElementException e) {

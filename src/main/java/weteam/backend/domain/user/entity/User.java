@@ -20,7 +20,7 @@ public class User extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String username, organization, providerId, email;
+    private String username, organization, uid, email;
 
     @Enumerated(EnumType.STRING)
     private UserRole role;

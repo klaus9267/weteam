@@ -1,8 +1,8 @@
 package weteam.backend.application.auth.jwt;
 
+import com.google.firebase.auth.FirebaseToken;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.util.StringUtils;
 import weteam.backend.application.auth.PrincipalDetails;
 import weteam.backend.domain.user.UserRepository;
@@ -10,14 +10,13 @@ import weteam.backend.domain.user.dto.UserDto;
 import weteam.backend.domain.user.entity.User;
 
 @AllArgsConstructor
-public class UserDetailCustomService implements UserDetailsService {
+public class UserDetailCustomService {
     private final UserRepository userRepository;
 
 
-    @Override
-    public UserDetails loadUserByUsername(String email) {
+    public UserDetails loadUserByUsername(FirebaseToken token) {
         //        validateEmail(oAuth2Provider.getEmail());
-        User user = registerUser(email);
+        User user = registerUser(token);
 
         return new PrincipalDetails(UserDto.from(user));
     }
@@ -28,11 +27,7 @@ public class UserDetailCustomService implements UserDetailsService {
         }
     }
 
-    private User registerUser(String email) {
-        return userRepository.findByEmail(email).orElseGet(() -> userRepository.save(
-                User.builder()
-                    .email(email)
-                    .build())
-        );
+    private User registerUser(FirebaseToken token) {
+        return userRepository.findByUid(token.getUid()).orElseGet(() -> userRepository.save(User.builder().uid(token.getUid()).email(token.getEmail()).username(token.getName()).build()));
     }
 }
