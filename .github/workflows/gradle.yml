@@ -48,6 +48,12 @@ jobs:
           name: "firebase.json"
           json: ${{ secrets.FIREBASE }}
 
+      - name: Copy JSON to resources folder
+        run: |
+          mkdir -p ./src/main/resources
+          cp ${{ steps.create-json.outputs.file }} ./src/main/resources/firebase.json
+      
+
       - name: chmod
         run: sudo chmod +x ./gradlew
 
