@@ -62,7 +62,7 @@ jobs:
           docker login -u ${{ secrets.DOCKER_EMAIL }} -p ${{ secrets.DOCKER_PASSWORD }}
           docker build -t ${{ secrets.DOCKER_ID }}/weteam .
           docker push ${{ secrets.DOCKER_ID }}/weteam
-0
+
       - name: executing remote ssh commands using password
         uses: appleboy/ssh-action@master
         with:
