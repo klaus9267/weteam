@@ -42,7 +42,6 @@ jobs:
         shell: bash
 
       - name: create-json
-        run: cd ./src/main/resources
         id: create-json
         uses: jsdaniell/create-json@1.1.2
         with:
