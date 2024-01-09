@@ -66,7 +66,6 @@ public class FirebaseInitializer {
         if (FirebaseApp.getApps().isEmpty()) {
             FirebaseApp.initializeApp(options);
         }
-
         return FirebaseAuth.getInstance();
     }
 
