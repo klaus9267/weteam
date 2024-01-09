@@ -41,12 +41,11 @@ jobs:
           echo "${{ secrets.SERVER }}" >> ./application-server.yml
         shell: bash
 
-      - name: make firebase.json
+      - name: make application-firebase.yml
         run: |
           cd ./src/main/resources
-          touch ./firebase.json
-          echo "${{ secrets.FIREBASE }}" >> ./firebase.json
-          sudo chmod 777 firebase.json
+          touch ./application-firebase.yml
+          echo "${{ secrets.FIREBASE }}" >> ./application-firebase.yml
         shell: bash
 
       - name: chmod

@@ -1,7 +1,7 @@
 
 spring:
   profiles:
-    active: db, server, oauth
+    active: db, server, oauth, firebase
   jpa:
     defer-datasource-initialization: true
     properties:
