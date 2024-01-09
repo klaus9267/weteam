@@ -7,6 +7,7 @@ ARG JAR_FILE_PATH=build/libs/backend-0.0.1-SNAPSHOT.jar
 WORKDIR $APP_HOME
 
 COPY $JAR_FILE_PATH app.jar
+COPY ./firebase.json .
 
 EXPOSE 8080
 
