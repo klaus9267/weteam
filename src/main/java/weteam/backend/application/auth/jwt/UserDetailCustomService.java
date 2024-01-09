@@ -15,7 +15,6 @@ public class UserDetailCustomService {
 
 
     public UserDetails loadUserByUsername(FirebaseToken token) {
-        //        validateEmail(oAuth2Provider.getEmail());
         User user = registerUser(token);
 
         return new PrincipalDetails(UserDto.from(user));
@@ -28,6 +27,7 @@ public class UserDetailCustomService {
     }
 
     private User registerUser(FirebaseToken token) {
-        return userRepository.findByUid(token.getUid()).orElseGet(() -> userRepository.save(User.builder().uid(token.getUid()).email(token.getEmail()).username(token.getName()).build()));
+        return userRepository.findByUid(token.getUid()).orElseGet(() -> userRepository.save(
+                User.builder().uid(token.getUid()).email(token.getEmail()).username(token.getName()).build()));
     }
 }

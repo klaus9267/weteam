@@ -11,6 +11,9 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import weteam.backend.application.auth.FirebaseTokenFilter;
 import weteam.backend.application.auth.jwt.UserDetailCustomService;
 
@@ -19,25 +22,42 @@ import weteam.backend.application.auth.jwt.UserDetailCustomService;
 @RequiredArgsConstructor
 public class SecurityConfig {
     private final UserDetailCustomService userDetailCustomService;
-    private final FirebaseAuth firebaseAuth;
+        private final FirebaseAuth firebaseAuth;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http.csrf().disable()
-                   .httpBasic().disable()
                    .formLogin().disable()
-                   .cors().disable()
+                   .httpBasic().disable()
                    .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                   .cors().configurationSource(corsConfigurationSource())
+
+                   .and()
                    .authorizeHttpRequests(authorize -> authorize
-                                   .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger").permitAll()
-                                   .requestMatchers("/**").hasAnyRole("USER", "ADMIN")
+                           .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger").permitAll()
+                           .requestMatchers("/**").hasAnyRole("USER", "ADMIN")
+                           .anyRequest().authenticated()
                    )
-                   .addFilterBefore(new FirebaseTokenFilter(userDetailCustomService, firebaseAuth),
-                           UsernamePasswordAuthenticationFilter.class)
+                   .addFilterBefore(new FirebaseTokenFilter(userDetailCustomService, firebaseAuth), UsernamePasswordAuthenticationFilter.class)
                    .exceptionHandling()
                    .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
 
                    .and()
                    .build();
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+
+        configuration.addAllowedOrigin("/*");
+        configuration.addAllowedHeader("*");
+        configuration.addAllowedMethod("*");
+        configuration.setAllowCredentials(true);
+        configuration.setMaxAge(3600L);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 }

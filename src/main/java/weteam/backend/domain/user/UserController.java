@@ -3,6 +3,8 @@ package weteam.backend.domain.user;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -31,7 +33,7 @@ public class UserController {
     @GetMapping
     @SwaggerOK(summary = "내 정보 조회")
     public ResponseEntity<UserDto> readMyInfo(@AuthenticationPrincipal final PrincipalDetails principalDetails) {
-        final UserDto userDto = memberService.findOneById(principalDetails.getUser().id());
+        final UserDto userDto = memberService.findOneById(1L);
         return ResponseEntity.ok(userDto);
     }
 
