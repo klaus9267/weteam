@@ -39,6 +39,7 @@ jobs:
           cd ./src/main/resources
           touch ./application-server.yml
           echo "${{ secrets.SERVER }}" >> ./application-server.yml
+          cat application-server.yml
         shell: bash
 
       - name: make firebase.json
