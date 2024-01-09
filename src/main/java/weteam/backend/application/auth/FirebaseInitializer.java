@@ -71,18 +71,26 @@ public class FirebaseInitializer {
     }
 
     private String createFirebaseConfigString() {
+        String realPrivateKey = privateKey.replace("\\n", "\n");
+        String realProjectId = projectId.replace("\\n", "\n");
+        String realPrivateKeyId = privateKeyId.replace("\\n", "\n");
+        String realClientEmail = clientEmail.replace("\\n", "\n");
+        String realClientId = clientId.replace("\\n", "\n");
+        String realClientX509CertUrl = clientX509CertUrl.replace("\\n", "\n");
+        String realUniverse_domain = universe_domain.replace("\\n", "\n");
+
         return "{"
                + "\"type\": \"service_account\","
-               + "\"project_id\": \"" + projectId + "\","
-               + "\"private_key_id\": \"" + privateKeyId +"\","
-               + "\"private_key\": \"" + privateKey + "\","
-               + "\"client_email\": \"" + clientEmail + "\","
-               + "\"client_id\": \"" + clientId + "\","
+               + "\"project_id\": \"" + realProjectId + "\","
+               + "\"private_key_id\": \"" + realPrivateKeyId +"\","
+               + "\"private_key\": \"" + realPrivateKey + "\","
+               + "\"client_email\": \"" + realClientEmail + "\","
+               + "\"client_id\": \"" + realClientId + "\","
                + "\"auth_uri\": \"https://accounts.google.com/o/oauth2/auth\","
                + "\"token_uri\": \"https://oauth2.googleapis.com/token\","
                + "\"auth_provider_x509_cert_url\": \"https://www.googleapis.com/oauth2/v1/certs\","
-               + "\"client_x509_cert_url\": \"" + clientX509CertUrl + "\","
-               + "\"universe_domain\": \"" + universe_domain + "\""
+               + "\"client_x509_cert_url\": \"" + realClientX509CertUrl + "\","
+               + "\"universe_domain\": \"" + realUniverse_domain + "\""
                + "}";
     }
 }
