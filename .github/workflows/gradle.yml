@@ -41,10 +41,11 @@ jobs:
           echo "${{ secrets.SERVER }}" >> ./application-server.yml
         shell: bash
 
-      - name: Create firebase.json
+      - name: make firebase.json
         run: |
-          echo "${{ secrets.FIREBASE }}" > ./firebase.json
-        working-directory: /home/runner/work/weteam/weteam/src/main/resources
+          cd ./src/main/resources
+          touch ./firebase.json
+          echo "${{ secrets.FIREBASE }}" >> ./firebase.json
 
       - name: chmod
         run: sudo chmod +x ./gradlew
