@@ -42,7 +42,9 @@ jobs:
         shell: bash
 
       - name: Create firebase.json
-        run: echo "${{ secrets.FIREBASE }}" > ./firebase.json
+        run: |
+          pwd
+          echo "${{ secrets.FIREBASE }}" > ./firebase.json
         working-directory: ./src/main/resources
 
       - name: chmod
