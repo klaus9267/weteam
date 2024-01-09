@@ -48,6 +48,7 @@ jobs:
           touch ./application-server.yml
           echo "${{ secrets.SERVER }}" >> ./application-server.yml
           ls
+          cat firebase.json
         shell: bash
 
       - name: chmod
