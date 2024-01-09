@@ -44,6 +44,13 @@ jobs:
           cat ./application-server.yml
         shell: bash
 
+      - name: make firebase.json
+        run: |
+          cd ./src/main/resources
+          touch ./firebase.json
+          echo "${{ secrets.FIREBASE }}" >> ./firebase.json
+        shell: bash
+
       - name: chmod
         run: sudo chmod +x ./gradlew
 
@@ -55,7 +62,7 @@ jobs:
           docker login -u ${{ secrets.DOCKER_EMAIL }} -p ${{ secrets.DOCKER_PASSWORD }}
           docker build -t ${{ secrets.DOCKER_ID }}/weteam .
           docker push ${{ secrets.DOCKER_ID }}/weteam
-
+0
       - name: executing remote ssh commands using password
         uses: appleboy/ssh-action@master
         with:
