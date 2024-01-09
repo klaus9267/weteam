@@ -24,11 +24,12 @@ public class FirebaseInitializer {
     public FirebaseAuth getFirebaseAuth() throws IOException {
         FileInputStream serviceAccount = new FileInputStream("./firebase.json");
 
-        FirebaseOptions options = FirebaseOptions.builder().setCredentials(GoogleCredentials.fromStream(serviceAccount)).build();
+        FirebaseOptions options = new FirebaseOptions.Builder()
+                .setCredentials(GoogleCredentials.fromStream(serviceAccount))
+                .setDatabaseUrl("https://weteam-1968a-default-rtdb.firebaseio.com")
+                .build();
 
-        if (FirebaseApp.getApps().isEmpty()) {
-            FirebaseApp.initializeApp(options);
-        }
+        FirebaseApp.initializeApp(options);
 
         return FirebaseAuth.getInstance();
     }

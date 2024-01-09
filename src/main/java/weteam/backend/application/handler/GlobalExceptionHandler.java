@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.webjars.NotFoundException;
+import weteam.backend.application.handler.exception.BadRequestException;
 import weteam.backend.application.handler.exception.ExceptionError;
 
 @RestControllerAdvice
@@ -26,6 +27,13 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     protected ExceptionError handleMethodArgumentNotValid(final MethodArgumentNotValidException e) {
+        log.warn(e.getMessage());
+        return buildExceptionError(e, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(BadRequestException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    protected ExceptionError handleBadRequest(final BadRequestException e) {
         log.warn(e.getMessage());
         return buildExceptionError(e, HttpStatus.BAD_REQUEST);
     }

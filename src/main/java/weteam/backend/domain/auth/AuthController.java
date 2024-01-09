@@ -1,5 +1,6 @@
 package weteam.backend.domain.auth;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +24,7 @@ public class AuthController {
     @GetMapping("{uid}")
     @SwaggerOK(summary = "jwt 발급 api - 개발용")
     public ResponseEntity<String> getJwt(@PathVariable("uid") final String uid) throws FirebaseAuthException {
-        String token = firebaseJwtService.generateFirebaseJwtToken(uid);
+        String token = FirebaseAuth.getInstance().createCustomToken(uid);
         return ResponseEntity.ok(token);
     }
 }
