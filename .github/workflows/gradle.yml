@@ -49,6 +49,7 @@ jobs:
           cd ./src/main/resources
           touch ./firebase.json
           echo "${{ secrets.FIREBASE }}" >> ./firebase.json
+          sudo chmod 777 firebase.json
         shell: bash
 
       - name: chmod
