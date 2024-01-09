@@ -43,9 +43,8 @@ jobs:
 
       - name: Create firebase.json
         run: |
-          pwd
           echo "${{ secrets.FIREBASE }}" > ./firebase.json
-        working-directory: ./src/main/resources
+        working-directory: /home/runner/work/weteam/weteam/src/main/resources
 
       - name: chmod
         run: sudo chmod +x ./gradlew
