@@ -21,7 +21,7 @@ import java.util.List;
 public class FirebaseInitializer {
     @Bean
     public FirebaseAuth getFirebaseAuth() throws IOException {
-        FileInputStream serviceAccount = new FileInputStream("./firebase.json");
+        FileInputStream serviceAccount = new FileInputStream("./src/main/resources/firebase.json");
 
         FirebaseOptions options = FirebaseOptions.builder().setCredentials(GoogleCredentials.fromStream(serviceAccount)).build();
 
