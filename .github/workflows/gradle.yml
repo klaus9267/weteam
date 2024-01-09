@@ -34,13 +34,6 @@ jobs:
           echo "${{ secrets.OAUTH }}" >> ./application-oauth.yml
         shell: bash
 
-      - name: make application-server.yml
-        run: |
-          cd ./src/main/resources
-          touch ./application-server.yml
-          echo "${{ secrets.SERVER }}" >> ./application-server.yml
-        shell: bash
-
       - name: create-json
         id: create-json
         uses: jsdaniell/create-json@1.1.2
@@ -48,6 +41,14 @@ jobs:
           name: "firebase.json"
           json: ${{ secrets.FIREBASE }}
           dir: "src/main/resources"
+
+      - name: make application-server.yml
+        run: |
+          cd ./src/main/resources
+          touch ./application-server.yml
+          echo "${{ secrets.SERVER }}" >> ./application-server.yml
+          ls
+        shell: bash
 
       - name: chmod
         run: sudo chmod +x ./gradlew
