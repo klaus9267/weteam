@@ -25,7 +25,6 @@ jobs:
           cd ./src/main/resources
           touch ./application-db.yml
           echo "${{ secrets.DATABASE }}" >> ./application-db.yml
-          cat ./application-db.yml
         shell: bash
 
       - name: make application-oauth.yml
@@ -33,7 +32,6 @@ jobs:
           cd ./src/main/resources
           touch ./application-oauth.yml
           echo "${{ secrets.OAUTH }}" >> ./application-oauth.yml
-          cat ./application-oauth.yml
         shell: bash
 
       - name: make application-server.yml
@@ -41,7 +39,6 @@ jobs:
           cd ./src/main/resources
           touch ./application-server.yml
           echo "${{ secrets.SERVER }}" >> ./application-server.yml
-          cat ./application-server.yml
         shell: bash
 
       - name: make firebase.json
@@ -71,7 +68,6 @@ jobs:
           username: ubuntu
           key: ${{ secrets.KEY }}
           script: |
-            sudo docker rm -f $(docker ps -qa)
             docker-compose down
             sudo docker pull ${{ secrets.DOCKER_ID }}/weteam
             docker-compose up -d
