@@ -34,14 +34,6 @@ jobs:
           echo "${{ secrets.OAUTH }}" >> ./application-oauth.yml
         shell: bash
 
-      - name: create-json
-        id: create-json
-        uses: jsdaniell/create-json@1.1.2
-        with:
-          name: "firebase.json"
-          json: ${{ secrets.FIREBASE }}
-          dir: "src/main/resources"
-
       - name: make application-server.yml
         run: |
           cd ./src/main/resources
