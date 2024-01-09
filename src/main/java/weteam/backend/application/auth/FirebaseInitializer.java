@@ -54,9 +54,7 @@ public class FirebaseInitializer {
 
     @Bean
     public FirebaseAuth getFirebaseAuth() throws IOException {
-        GoogleCredentials credentials = ServiceAccountCredentials.fromStream(
-                new ByteArrayInputStream(createFirebaseConfigString().getBytes(StandardCharsets.UTF_8))
-        );
+        GoogleCredentials credentials = ServiceAccountCredentials.fromStream(new ByteArrayInputStream(createFirebaseConfigString().getBytes(StandardCharsets.UTF_8)));
 
         FirebaseOptions options = FirebaseOptions.builder()
                                                  .setCredentials(credentials)
@@ -82,7 +80,7 @@ public class FirebaseInitializer {
         return "{"
                + "\"type\": \"service_account\","
                + "\"project_id\": \"" + realProjectId + "\","
-               + "\"private_key_id\": \"" + realPrivateKeyId +"\","
+               + "\"private_key_id\": \"" + realPrivateKeyId + "\","
                + "\"private_key\": \"" + realPrivateKey + "\","
                + "\"client_email\": \"" + realClientEmail + "\","
                + "\"client_id\": \"" + realClientId + "\","
