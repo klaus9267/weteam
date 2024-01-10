@@ -3,14 +3,11 @@ package weteam.backend.domain.user;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import weteam.backend.application.auth.PrincipalDetails;
 import weteam.backend.application.swagger.SwaggerNoContent;
 import weteam.backend.application.swagger.SwaggerOK;
 import weteam.backend.domain.user.dto.UserDto;
@@ -32,8 +29,8 @@ public class UserController {
 
     @GetMapping
     @SwaggerOK(summary = "내 정보 조회")
-    public ResponseEntity<UserDto> readMyInfo(@AuthenticationPrincipal final PrincipalDetails principalDetails) {
-        final UserDto userDto = memberService.findOneById(1L);
+    public ResponseEntity<UserDto> readMyInfo(@AuthenticationPrincipal final UserDto user) {
+        final UserDto userDto = memberService.findOneById(user.id());
         return ResponseEntity.ok(userDto);
     }
 
@@ -42,21 +39,14 @@ public class UserController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void changeOrganization(
             @PathVariable("organization") final String organization,
-            @AuthenticationPrincipal final PrincipalDetails principalDetails
+            @AuthenticationPrincipal final UserDto user
     ) {
-        memberService.updateOrganization(principalDetails.getUser().id(), organization);
+        memberService.updateOrganization(user.id(), organization);
     }
-
-    //    @PatchMapping
-    //    @Operation(summary = "사용자 소속 변경", description = "응답 없음")
-    //    @ResponseStatus(HttpStatus.NO_CONTENT)
-    //    public void changeInfo(@AuthenticationPrincipal final PrincipalDetails principalDetails) {
-    //        memberService.updateOrganization(principalDetails.getUser().id(), organization);
-    //    }
 
     @DeleteMapping
     @SwaggerNoContent(summary = "사용자 탈퇴")
-    public void deleteMember(@AuthenticationPrincipal final PrincipalDetails principalDetails) {
-        memberService.delete(principalDetails.getUser().id());
+    public void deleteMember(@AuthenticationPrincipal final UserDto user) {
+        memberService.delete(user.id());
     }
 }
