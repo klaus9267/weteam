@@ -32,8 +32,8 @@ public class User extends BaseEntity {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Hashtag> hashtagList = new ArrayList<>();
 
-    public User(Long id) {
-        this.id = id;
+    public static User from(final Long id) {
+        return User.builder().id(id).build();
     }
 
     public static User from(final UserDto userDto) {

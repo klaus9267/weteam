@@ -33,19 +33,19 @@ public class Project extends BaseEntity {
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
     private List<ProjectMember> projectMemberList = new ArrayList<>();
 
-    public Project(CreateProjectDto projectDto,Long memberId) {
-        User user = new User(memberId);
-        ProjectMember projectMember = new ProjectMember(user,this);
+    public Project(CreateProjectDto projectDto, Long userId) {
+        User user = User.from(userId);
+        ProjectMember projectMember = ProjectMember.from(user, this);
 
-        this.name= projectDto.name();;
-        this.explanation=projectDto.explanation();
-        this.startedAt=projectDto.startedAt();
-        this.endedAt=projectDto.endedAt();
+        this.name = projectDto.name();
+        this.explanation = projectDto.explanation();
+        this.startedAt = projectDto.startedAt();
+        this.endedAt = projectDto.endedAt();
         this.host = user;
         this.projectMemberList.add(projectMember);
     }
 
-    public static Project from(CreateProjectDto projectDto,Long memberId) {
-        return new Project(projectDto, memberId);
+    public static Project from(CreateProjectDto projectDto, Long userId) {
+        return new Project(projectDto, userId);
     }
 }
