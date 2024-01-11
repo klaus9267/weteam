@@ -33,6 +33,8 @@ public class UserController {
         return ResponseEntity.ok(user);
     }
 
+
+
     @PatchMapping("{organization}")
     @Operation(summary = "사용자 소속 변경", description = "응답 없음")
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -41,16 +43,6 @@ public class UserController {
             @AuthenticationPrincipal final UserDto user
     ) {
         memberService.updateOrganization(user.id(), organization);
-    }
-
-    @PatchMapping("profile/{imageId}")
-    @Operation(summary = "기본 프로필 사진 선택", description = "응답 없음")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void setDefaultProfile(
-            @PathVariable("imageId") final Long imageId,
-            @AuthenticationPrincipal final UserDto user
-    ) {
-        memberService.updateDefaultProfileImage(imageId, user.id());
     }
 
     @DeleteMapping

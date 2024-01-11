@@ -1,11 +1,14 @@
-package weteam.backend.domain.user.entity;
+package weteam.backend.domain.profile;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import weteam.backend.domain.user.entity.User;
 
 @Entity(name = "profile_images")
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -18,11 +21,15 @@ public class ProfileImage {
     private User user;
 
     @Column(nullable = false)
-    private String url;
+    private Long imageIdx;
 
-    public static ProfileImage from(final Long imageId, final User user) {
+    public static ProfileImage from(final Long imageIdx, final User user) {
         return ProfileImage.builder().user(user)
-                           .url(String.valueOf(imageId))
+                           .imageIdx(imageIdx)
                            .build();
+    }
+
+    public void updateImage(final Long imageIdx) {
+        this.imageIdx = imageIdx;
     }
 }
