@@ -31,18 +31,18 @@ public class Project extends BaseEntity {
     private User host;
 
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
-    private List<ProjectMember> projectMemberList = new ArrayList<>();
+    private List<ProjectUser> projectUserList = new ArrayList<>();
 
     public Project(CreateProjectDto projectDto, Long userId) {
         User user = User.from(userId);
-        ProjectMember projectMember = ProjectMember.from(user, this);
+        ProjectUser projectUser = ProjectUser.from(user, this);
 
         this.name = projectDto.name();
         this.explanation = projectDto.explanation();
         this.startedAt = projectDto.startedAt();
         this.endedAt = projectDto.endedAt();
         this.host = user;
-        this.projectMemberList.add(projectMember);
+        this.projectUserList.add(projectUser);
     }
 
     public static Project from(CreateProjectDto projectDto, Long userId) {

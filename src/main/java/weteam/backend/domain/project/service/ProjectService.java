@@ -1,4 +1,4 @@
-package weteam.backend.domain.project;
+package weteam.backend.domain.project.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -12,7 +12,7 @@ import weteam.backend.domain.project.dto.CreateProjectDto;
 import weteam.backend.domain.project.dto.ProjectMemberDto;
 import weteam.backend.domain.project.dto.ProjectPaginationDto;
 import weteam.backend.domain.project.entity.Project;
-import weteam.backend.domain.project.entity.ProjectMember;
+import weteam.backend.domain.project.entity.ProjectUser;
 import weteam.backend.domain.project.repository.ProjectMemberRepository;
 import weteam.backend.domain.project.repository.ProjectRepository;
 
@@ -33,24 +33,10 @@ public class ProjectService {
         projectRepository.save(project);
     }
 
-    public List<ProjectMemberDto> findMemberListByProject(final Long projectId) {
-        final List<ProjectMember> projectMemberList = projectMemberRepository.findByProjectId(projectId);
-        if (projectMemberList.isEmpty()) {
-            throw new NotFoundException(Message.NOT_FOUND);
-        }
-        return ProjectMemberDto.from(projectMemberList);
-    }
+
 
     public ProjectPaginationDto findProjects(final Long userId, final Pageable pageable) {
         final Page<Project> projectPage = projectRepository.findAllByHostId(pageable, userId);
         return ProjectPaginationDto.from(projectPage);
-    }
-
-    @Transactional
-    public void acceptInvite(final Long projectId, final Long userId) {
-        if (projectMemberRepository.findByProjectIdAndUserId(projectId, userId).isPresent()) {
-            throw new DuplicateKeyException(Message.DUPLICATE);
-        }
-        projectMemberRepository.save(ProjectMember.from(projectId, userId));
     }
 }

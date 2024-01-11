@@ -9,7 +9,7 @@ import weteam.backend.domain.project.entity.Project;
 import java.util.Optional;
 
 public interface ProjectRepository extends JpaRepository<Project, Long> {
-    @EntityGraph(attributePaths = {"projectMemberList", "host"})
+    @EntityGraph(attributePaths = {"projectUserList", "host"})
     Page<Project> findAllByHostId(Pageable pageable, Long hostId);
 
     Optional<Project> findByHostIdAndNameAndExplanation(final Long hostId, final String name, final String explanation);

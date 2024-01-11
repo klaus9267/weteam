@@ -14,7 +14,7 @@ public record ProjectDto(
         UserDto host
 ) {
     public static ProjectDto from(Project project) {
-        return new ProjectDto(project.getId(), project.getName(), project.getExplanation(), project.getProjectMemberList().size(), project.isDone(), UserDto.from(project.getHost()));
+        return new ProjectDto(project.getId(), project.getName(), project.getExplanation(), project.getProjectUserList().size(), project.isDone(), UserDto.from(project.getHost()));
     }
 
     public static List<ProjectDto> from(List<Project> projectList) {

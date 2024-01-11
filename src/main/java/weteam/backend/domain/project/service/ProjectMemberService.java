@@ -1,4 +1,4 @@
-package weteam.backend.domain.project;
+package weteam.backend.domain.project.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

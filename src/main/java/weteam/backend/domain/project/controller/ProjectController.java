@@ -1,4 +1,4 @@
-package weteam.backend.domain.project;
+package weteam.backend.domain.project.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springdoc.core.converters.models.PageableAsQueryParam;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -17,6 +18,9 @@ import weteam.backend.application.swagger.SwaggerOK;
 import weteam.backend.domain.project.dto.CreateProjectDto;
 import weteam.backend.domain.project.dto.ProjectMemberDto;
 import weteam.backend.domain.project.dto.ProjectPaginationDto;
+import weteam.backend.domain.project.param.UpdateProjectRoleParam;
+import weteam.backend.domain.project.service.ProjectService;
+import weteam.backend.domain.project.service.ProjectUserService;
 import weteam.backend.domain.user.dto.UserDto;
 
 import java.util.List;
@@ -46,21 +50,5 @@ public class ProjectController {
             @AuthenticationPrincipal final UserDto user
     ) {
         return ResponseEntity.ok(projectService.findProjects(user.id(), pageable));
-    }
-
-    @GetMapping("{projectId}")
-    @SwaggerOK(summary = "팀원 목록 조회")
-    public ResponseEntity<List<ProjectMemberDto>> findProjectMemberList(
-            Pageable pageable,
-            @PathVariable("projectId") final Long projectId
-    ) {
-        return ResponseEntity.ok(projectService.findMemberListByProject(projectId));
-    }
-
-    @PatchMapping("{projectId}")
-    @Operation(summary = "초대 수락", description = "응답 없음")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void acceptInvite(@PathVariable("projectId") final Long projectId, @AuthenticationPrincipal final UserDto user) {
-        projectService.acceptInvite(projectId, user.id());
     }
 }

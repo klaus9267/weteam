@@ -12,7 +12,7 @@ import weteam.backend.domain.user.entity.User;
 @AllArgsConstructor
 @Builder
 @Getter
-public class ProjectMember {
+public class ProjectUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -25,11 +25,15 @@ public class ProjectMember {
     @ManyToOne(fetch = FetchType.LAZY)
     private Project project;
 
-    public static ProjectMember from(final User user, final Project project) {
-        return ProjectMember.builder().user(user).project(project).build();
+    public static ProjectUser from(final User user, final Project project) {
+        return ProjectUser.builder().user(user).project(project).build();
     }
 
-    public static ProjectMember from(Long projectId, Long userId) {
-        return ProjectMember.builder().project(Project.builder().id(projectId).build()).user(User.builder().id(userId).build()).build();
+    public static ProjectUser from(Long projectId, Long userId) {
+        return ProjectUser.builder().project(Project.builder().id(projectId).build()).user(User.builder().id(userId).build()).build();
+    }
+
+    public void updateRole(final String role) {
+        this.role = role;
     }
 }
