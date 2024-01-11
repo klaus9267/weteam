@@ -25,27 +25,31 @@ public class Project extends BaseEntity {
     private LocalDate startedAt, endedAt;
 
     @Column(columnDefinition = "boolean default false")
-    private boolean isDone;
+    private boolean done;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private User host;
 
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
-    private List<ProjectMember> projectMemberList = new ArrayList<>();
+    private List<ProjectUser> projectUserList = new ArrayList<>();
 
-    public Project(CreateProjectDto projectDto,Long memberId) {
-        User user = new User(memberId);
-        ProjectMember projectMember = new ProjectMember(user,this);
+    public Project(CreateProjectDto projectDto, Long userId) {
+        User user = User.from(userId);
+        ProjectUser projectUser = ProjectUser.from(user, this);
 
-        this.name= projectDto.name();;
-        this.explanation=projectDto.explanation();
-        this.startedAt=projectDto.startedAt();
-        this.endedAt=projectDto.endedAt();
+        this.name = projectDto.name();
+        this.explanation = projectDto.explanation();
+        this.startedAt = projectDto.startedAt();
+        this.endedAt = projectDto.endedAt();
         this.host = user;
-        this.projectMemberList.add(projectMember);
+        this.projectUserList.add(projectUser);
     }
 
-    public static Project from(CreateProjectDto projectDto,Long memberId) {
-        return new Project(projectDto, memberId);
+    public static Project from(CreateProjectDto projectDto, Long userId) {
+        return new Project(projectDto, userId);
+    }
+
+    public void updateDone() {
+        this.done = !this.isDone();
     }
 }

@@ -1,17 +1,15 @@
 package weteam.backend.application.handler;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.json.JsonParseException;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.webjars.NotFoundException;
 import weteam.backend.application.handler.exception.BadRequestException;
+import weteam.backend.application.handler.exception.DuplicateKeyException;
 import weteam.backend.application.handler.exception.ExceptionError;
+import weteam.backend.application.handler.exception.NotFoundException;
 
 @RestControllerAdvice
 @Slf4j
