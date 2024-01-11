@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import weteam.backend.application.BaseEntity;
 import weteam.backend.domain.hashtag.Hashtag;
+import weteam.backend.domain.user.dto.UserDto;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +26,9 @@ public class User extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
+    @OneToOne(mappedBy = "user", cascade = CascadeType.PERSIST)
+    private ProfileImage profileImage;
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Hashtag> hashtagList = new ArrayList<>();
 
@@ -32,7 +36,20 @@ public class User extends BaseEntity {
         this.id = id;
     }
 
+    public static User from(final UserDto userDto) {
+        return User.builder().id(userDto.id())
+                   .username(userDto.username())
+                   .email(userDto.email())
+                   .organization(userDto.organization())
+                   .role(userDto.role())
+                   .build();
+    }
+
     public void updateOrganization(String organization) {
         this.organization = organization;
+    }
+
+    public void updateProfileImage(final Long imageId) {
+        this.profileImage = ProfileImage.from(imageId, this);
     }
 }

@@ -30,8 +30,7 @@ public class UserController {
     @GetMapping
     @SwaggerOK(summary = "내 정보 조회")
     public ResponseEntity<UserDto> readMyInfo(@AuthenticationPrincipal final UserDto user) {
-        final UserDto userDto = memberService.findOneById(user.id());
-        return ResponseEntity.ok(userDto);
+        return ResponseEntity.ok(user);
     }
 
     @PatchMapping("{organization}")
@@ -44,8 +43,19 @@ public class UserController {
         memberService.updateOrganization(user.id(), organization);
     }
 
+    @PatchMapping("profile/{imageId}")
+    @Operation(summary = "기본 프로필 사진 선택", description = "응답 없음")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void setDefaultProfile(
+            @PathVariable("imageId") final Long imageId,
+            @AuthenticationPrincipal final UserDto user
+    ) {
+        memberService.updateDefaultProfileImage(imageId, user.id());
+    }
+
     @DeleteMapping
     @SwaggerNoContent(summary = "사용자 탈퇴")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteMember(@AuthenticationPrincipal final UserDto user) {
         memberService.delete(user.id());
     }

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import weteam.backend.domain.user.UserRepository;
 import weteam.backend.domain.user.dto.UserDto;
 import weteam.backend.domain.user.entity.User;
+import weteam.backend.domain.user.entity.UserRole;
 
 @AllArgsConstructor
 @Service
@@ -19,6 +20,10 @@ public class UserDetailCustomService {
 
     private User registerUser(FirebaseToken token) {
         return userRepository.findByUid(token.getUid()).orElseGet(() -> userRepository.save(
-                User.builder().uid(token.getUid()).email(token.getEmail()).username(token.getName()).build()));
+                User.builder().uid(token.getUid())
+                    .email(token.getEmail())
+                    .username(token.getName())
+                    .role(UserRole.USER)
+                    .build()));
     }
 }
