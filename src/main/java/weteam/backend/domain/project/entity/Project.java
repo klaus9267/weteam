@@ -25,7 +25,7 @@ public class Project extends BaseEntity {
     private LocalDate startedAt, endedAt;
 
     @Column(columnDefinition = "boolean default false")
-    private boolean isDone;
+    private boolean done;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private User host;

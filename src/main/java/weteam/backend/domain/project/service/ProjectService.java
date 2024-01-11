@@ -2,21 +2,16 @@ package weteam.backend.domain.project.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import weteam.backend.application.Message;
 import weteam.backend.application.handler.exception.DuplicateKeyException;
-import weteam.backend.application.handler.exception.NotFoundException;
+import weteam.backend.domain.common.pagination.param.ProjectPaginationParam;
 import weteam.backend.domain.project.dto.CreateProjectDto;
-import weteam.backend.domain.project.dto.ProjectMemberDto;
 import weteam.backend.domain.project.dto.ProjectPaginationDto;
 import weteam.backend.domain.project.entity.Project;
-import weteam.backend.domain.project.entity.ProjectUser;
 import weteam.backend.domain.project.repository.ProjectMemberRepository;
 import weteam.backend.domain.project.repository.ProjectRepository;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -34,9 +29,8 @@ public class ProjectService {
     }
 
 
-
-    public ProjectPaginationDto findProjects(final Long userId, final Pageable pageable) {
-        final Page<Project> projectPage = projectRepository.findAllByHostId(pageable, userId);
+    public ProjectPaginationDto findProjects(final Long userId, final ProjectPaginationParam paginationParam) {
+        final Page<Project> projectPage = projectRepository.findAllByHostIdAndDone(paginationParam.toPageable(), userId, paginationParam.isDone());
         return ProjectPaginationDto.from(projectPage);
     }
 }

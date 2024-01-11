@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public interface ProjectRepository extends JpaRepository<Project, Long> {
     @EntityGraph(attributePaths = {"projectUserList", "host"})
-    Page<Project> findAllByHostId(Pageable pageable, Long hostId);
+    Page<Project> findAllByHostIdAndDone(final Pageable pageable, final Long hostId, final boolean done);
 
     Optional<Project> findByHostIdAndNameAndExplanation(final Long hostId, final String name, final String explanation);
 }

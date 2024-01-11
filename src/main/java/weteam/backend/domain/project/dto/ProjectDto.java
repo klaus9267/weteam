@@ -10,7 +10,7 @@ public record ProjectDto(
         String name,
         String explanation,
         int headCount,
-        boolean isDone,
+        boolean done,
         UserDto host
 ) {
     public static ProjectDto from(Project project) {
