@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import weteam.backend.application.Message;
 import weteam.backend.application.handler.exception.DuplicateKeyException;
+import weteam.backend.application.handler.exception.NotFoundException;
 import weteam.backend.domain.common.pagination.param.ProjectPaginationParam;
 import weteam.backend.domain.project.dto.CreateProjectDto;
 import weteam.backend.domain.project.dto.ProjectPaginationDto;
@@ -17,7 +18,6 @@ import weteam.backend.domain.project.repository.ProjectRepository;
 @RequiredArgsConstructor
 public class ProjectService {
     private final ProjectRepository projectRepository;
-    private final ProjectMemberRepository projectMemberRepository;
 
     @Transactional
     public void addProject(final Long userId, final CreateProjectDto projectDto) {
@@ -32,5 +32,11 @@ public class ProjectService {
     public ProjectPaginationDto findProjects(final Long userId, final ProjectPaginationParam paginationParam) {
         final Page<Project> projectPage = projectRepository.findAllByHostIdAndDone(paginationParam.toPageable(), userId, paginationParam.isDone());
         return ProjectPaginationDto.from(projectPage);
+    }
+
+    @Transactional
+    public void updateDone(final Long projectId, final Long userId) {
+        Project project = projectRepository.findByIdAndUserId(projectId, userId).orElseThrow(()->new NotFoundException(Message.NOT_FOUND));
+        project.updateDone();
     }
 }

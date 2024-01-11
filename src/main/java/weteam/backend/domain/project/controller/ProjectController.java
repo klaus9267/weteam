@@ -7,6 +7,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springdoc.core.converters.models.PageableAsQueryParam;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -34,7 +35,7 @@ public class ProjectController {
     }
 
     @GetMapping
-    @Operation(summary = "팀플 목록 조회")
+    @Operation(summary = "팀플 목록 조회 | done으로 종료, 진행 분류해서 조회")
     @ApiResponse(responseCode = "200", useReturnTypeSchema = true)
     @PageableAsQueryParam
     public ResponseEntity<ProjectPaginationDto> readProjectList(
@@ -44,5 +45,15 @@ public class ProjectController {
         final ProjectPaginationDto paginationDto = projectService.findProjects(user.id(), paginationParam);
 
         return ResponseEntity.ok(paginationDto);
+    }
+
+    @PatchMapping("{projectId}")
+    @Operation(summary = "팀플 진행 상황 변경")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void updateDone(
+            @PathVariable("projectId") final Long projectId,
+            @AuthenticationPrincipal final UserDto user
+    ) {
+        projectService.updateDone(projectId, user.id());
     }
 }

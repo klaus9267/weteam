@@ -48,4 +48,8 @@ public class Project extends BaseEntity {
     public static Project from(CreateProjectDto projectDto, Long userId) {
         return new Project(projectDto, userId);
     }
+
+    public void updateDone() {
+        this.done = !this.isDone();
+    }
 }
