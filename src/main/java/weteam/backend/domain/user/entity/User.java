@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import weteam.backend.application.BaseEntity;
 import weteam.backend.domain.hashtag.Hashtag;
+import weteam.backend.domain.profile.ProfileImage;
 import weteam.backend.domain.user.dto.UserDto;
 
 import java.util.ArrayList;
@@ -47,9 +48,5 @@ public class User extends BaseEntity {
 
     public void updateOrganization(String organization) {
         this.organization = organization;
-    }
-
-    public void updateProfileImage(final Long imageId) {
-        this.profileImage = ProfileImage.from(imageId, this);
     }
 }

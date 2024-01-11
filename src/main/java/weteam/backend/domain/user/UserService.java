@@ -13,12 +13,6 @@ import weteam.backend.domain.user.entity.User;
 public class UserService {
     private final UserRepository userRepository;
 
-    @Transactional
-    public void updateDefaultProfileImage(final Long imageId,final Long userId) {
-        User user = this.findOne(userId);
-        user.updateProfileImage(imageId);
-    }
-
     public UserDto findOneById(Long id) {
         User user = this.findOne(id);
         return UserDto.from(user);
