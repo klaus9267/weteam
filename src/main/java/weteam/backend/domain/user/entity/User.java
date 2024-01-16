@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import weteam.backend.application.BaseEntity;
 import weteam.backend.domain.hashtag.Hashtag;
 import weteam.backend.domain.profile.ProfileImage;
+import weteam.backend.domain.project.entity.Project;
 import weteam.backend.domain.user.dto.UserDto;
 
 import java.util.ArrayList;
@@ -32,6 +33,9 @@ public class User extends BaseEntity {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Hashtag> hashtagList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "host", cascade = CascadeType.ALL)
+    private List<Project> projectList = new ArrayList<>();
 
     public static User from(final Long id) {
         return User.builder().id(id).build();
