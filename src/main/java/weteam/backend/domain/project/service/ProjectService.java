@@ -5,19 +5,22 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import weteam.backend.application.Message;
+import weteam.backend.application.handler.exception.BadRequestException;
 import weteam.backend.application.handler.exception.DuplicateKeyException;
 import weteam.backend.application.handler.exception.NotFoundException;
 import weteam.backend.domain.common.pagination.param.ProjectPaginationParam;
 import weteam.backend.domain.project.dto.CreateProjectDto;
 import weteam.backend.domain.project.dto.ProjectPaginationDto;
 import weteam.backend.domain.project.entity.Project;
-import weteam.backend.domain.project.repository.ProjectMemberRepository;
+import weteam.backend.domain.project.param.UpdateHostParam;
 import weteam.backend.domain.project.repository.ProjectRepository;
+import weteam.backend.domain.user.UserRepository;
 
 @Service
 @RequiredArgsConstructor
 public class ProjectService {
     private final ProjectRepository projectRepository;
+    private final UserRepository userRepository;
 
     @Transactional
     public void addProject(final Long userId, final CreateProjectDto projectDto) {
@@ -36,7 +39,16 @@ public class ProjectService {
 
     @Transactional
     public void updateDone(final Long projectId, final Long userId) {
-        Project project = projectRepository.findByIdAndUserId(projectId, userId).orElseThrow(()->new NotFoundException(Message.NOT_FOUND));
+        Project project = projectRepository.findByIdAndUserId(projectId, userId).orElseThrow(() -> new NotFoundException(Message.NOT_FOUND));
         project.updateDone();
+    }
+
+    @Transactional
+    public void updateHost(final UpdateHostParam param, final Long userId) {
+        Project project = projectRepository.findByIdAndUserId(param.getProjectId(), userId).orElseThrow(() -> new NotFoundException(Message.NOT_FOUND));
+        if (!project.getHost().getId().equals(userId)) {
+            throw new BadRequestException(Message.INVALID_USER);
+        }
+        project.updateHost(param.getUserId());
     }
 }

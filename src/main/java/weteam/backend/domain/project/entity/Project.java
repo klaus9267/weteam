@@ -52,4 +52,8 @@ public class Project extends BaseEntity {
     public void updateDone() {
         this.done = !this.isDone();
     }
+
+    public void updateHost(final Long hostId) {
+        this.host = User.builder().id(hostId).build();
+    }
 }

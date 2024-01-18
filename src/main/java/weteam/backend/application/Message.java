@@ -14,7 +14,8 @@ public enum Message {
     ACCESS_DENIED(401,"접근이 거부됬습니다."),
     NOT_FOUND_PROVIDER(404,"프로바이더를 찾을 수 없습니다"),
     INVALID_HEADER(401,"invalid_header"),
-    INVALID_TOKEN(401,"invalid_token")
+    INVALID_TOKEN(401,"invalid_token"),
+    INVALID_USER(400,"잘못된 사용자의 접근입니다.")
     ;
 
     private final Integer httpStatus;
