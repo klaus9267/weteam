@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import weteam.backend.application.swagger.SwaggerCreated;
+import weteam.backend.application.swagger.SwaggerNoContent;
 import weteam.backend.domain.common.pagination.param.ProjectPaginationParam;
 import weteam.backend.domain.project.dto.CreateProjectDto;
 import weteam.backend.domain.project.dto.ProjectPaginationDto;
@@ -69,4 +70,12 @@ public class ProjectController {
         projectService.updateProject(projectDto, projectId, user.id());
     }
 
+    @DeleteMapping("{projectId}")
+    @SwaggerNoContent(summary = "팀플 삭제")
+    public void removeProject(
+            @PathVariable("projectId") final Long projectId,
+            @AuthenticationPrincipal final UserDto user
+    ) {
+        projectService.deleteProject(projectId, user.id());
+    }
 }

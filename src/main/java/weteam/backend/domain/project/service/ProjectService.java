@@ -50,4 +50,13 @@ public class ProjectService {
         }
         project.updateProject(projectDto);
     }
+
+    @Transactional
+    public void deleteProject(final Long projectId, final Long userId) {
+        Project project = projectRepository.findByIdAndUserId(projectId, userId).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND));
+        if (!project.getHost().getId().equals(userId)) {
+            throw new CustomException(CustomErrorCode.INVALID_USER);
+        }
+        projectRepository.delete(project);
+    }
 }
