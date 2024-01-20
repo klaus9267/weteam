@@ -4,10 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import weteam.backend.application.Message;
-import weteam.backend.application.handler.exception.BadRequestException;
-import weteam.backend.application.handler.exception.DuplicateKeyException;
-import weteam.backend.application.handler.exception.NotFoundException;
+import weteam.backend.application.CustomErrorCode;
+import weteam.backend.application.handler.exception.CustomException;
 import weteam.backend.domain.common.pagination.param.ProjectPaginationParam;
 import weteam.backend.domain.project.dto.CreateProjectDto;
 import weteam.backend.domain.project.dto.ProjectPaginationDto;
@@ -23,7 +21,7 @@ public class ProjectService {
     @Transactional
     public void addProject(final Long userId, final CreateProjectDto projectDto) {
         if (projectRepository.findByHostIdAndNameAndExplanation(userId, projectDto.name(), projectDto.explanation()).isPresent()) {
-            throw new DuplicateKeyException(Message.DUPLICATE);
+            throw new CustomException(CustomErrorCode.DUPLICATE);
         }
         final Project project = Project.from(projectDto, userId);
         projectRepository.save(project);
@@ -37,18 +35,18 @@ public class ProjectService {
 
     @Transactional
     public void updateDone(final Long projectId, final Long userId) {
-        Project project = projectRepository.findByIdAndUserId(projectId, userId).orElseThrow(() -> new NotFoundException(Message.NOT_FOUND));
+        Project project = projectRepository.findByIdAndUserId(projectId, userId).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND));
         if (!project.getHost().getId().equals(userId)) {
-            throw new BadRequestException(Message.INVALID_USER);
+            throw new CustomException(CustomErrorCode.INVALID_USER);
         }
         project.updateDone();
     }
 
     @Transactional
     public void updateProject(final UpdateProjectDto projectDto, final Long projectId, final Long userId) {
-        Project project = projectRepository.findByIdAndUserId(projectId, userId).orElseThrow(() -> new NotFoundException(Message.NOT_FOUND));
+        Project project = projectRepository.findByIdAndUserId(projectId, userId).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND));
         if (!project.getHost().getId().equals(userId)) {
-            throw new BadRequestException(Message.INVALID_USER);
+            throw new CustomException(CustomErrorCode.INVALID_USER);
         }
         project.updateProject(projectDto);
     }
