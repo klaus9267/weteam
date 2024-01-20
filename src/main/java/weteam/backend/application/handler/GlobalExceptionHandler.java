@@ -6,18 +6,13 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import weteam.backend.application.handler.exception.BadRequestException;
-import weteam.backend.application.handler.exception.DuplicateKeyException;
 import weteam.backend.application.handler.exception.ExceptionError;
-import weteam.backend.application.handler.exception.NotFoundException;
 
 @RestControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler {
     @ExceptionHandler(RuntimeException.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     protected ExceptionError handleRuntime(final RuntimeException e) {
-        log.warn(e.getClass().toString());
         log.warn(e.getMessage());
         return buildExceptionError(e, HttpStatus.INTERNAL_SERVER_ERROR);
     }
@@ -27,27 +22,6 @@ public class GlobalExceptionHandler {
     protected ExceptionError handleMethodArgumentNotValid(final MethodArgumentNotValidException e) {
         log.warn(e.getMessage());
         return buildExceptionError(e, HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(BadRequestException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    protected ExceptionError handleBadRequest(final BadRequestException e) {
-        log.warn(e.getMessage());
-        return buildExceptionError(e, HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(DuplicateKeyException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    protected ExceptionError handleDuplicateKey(DuplicateKeyException e) {
-        log.warn(e.getMessage());
-        return buildExceptionError(e, HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(NotFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    protected ExceptionError handleNotFound(NotFoundException e) {
-        log.warn(e.getMessage());
-        return buildExceptionError(e, HttpStatus.NOT_FOUND);
     }
 
     private ExceptionError buildExceptionError(Exception exception, HttpStatus status) {

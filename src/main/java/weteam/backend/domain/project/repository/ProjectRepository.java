@@ -18,6 +18,8 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
            """)
     Optional<Project> findByIdAndUserId(final Long projectId, final Long userId);
 
+    boolean existsByHostId(final Long hostId);
+
     @EntityGraph(attributePaths = {"projectUserList", "host"})
     Page<Project> findAllByHostIdAndDone(final Pageable pageable, final Long hostId, final boolean done);
 

@@ -12,9 +12,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import weteam.backend.application.swagger.SwaggerCreated;
+import weteam.backend.application.swagger.SwaggerNoContent;
 import weteam.backend.domain.common.pagination.param.ProjectPaginationParam;
 import weteam.backend.domain.project.dto.CreateProjectDto;
 import weteam.backend.domain.project.dto.ProjectPaginationDto;
+import weteam.backend.domain.project.dto.UpdateProjectDto;
 import weteam.backend.domain.project.service.ProjectService;
 import weteam.backend.domain.user.dto.UserDto;
 
@@ -47,7 +49,7 @@ public class ProjectController {
         return ResponseEntity.ok(paginationDto);
     }
 
-    @PatchMapping("{projectId}")
+    @PatchMapping("{projectId}/done")
     @Operation(summary = "팀플 진행 상황 변경")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateDone(
@@ -55,5 +57,36 @@ public class ProjectController {
             @AuthenticationPrincipal final UserDto user
     ) {
         projectService.updateDone(projectId, user.id());
+    }
+
+    @PatchMapping("{projectId}")
+    @Operation(summary = "팀플 수정")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void updateProject(
+            @PathVariable("projectId") final Long projectId,
+            @RequestBody @Valid final UpdateProjectDto projectDto,
+            @AuthenticationPrincipal final UserDto user
+    ) {
+        projectService.updateProject(projectDto, projectId, user.id());
+    }
+
+    @PatchMapping("{projectId}/{userId}")
+    @Operation(summary = "팀플 수정")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void updateHost(
+            @PathVariable("projectId") final Long projectId,
+            @PathVariable("userId") final Long userId,
+            @AuthenticationPrincipal final UserDto user
+    ) {
+        projectService.updateHost(projectId, user.id(), userId);
+    }
+
+    @DeleteMapping("{projectId}")
+    @SwaggerNoContent(summary = "팀플 삭제")
+    public void removeProject(
+            @PathVariable("projectId") final Long projectId,
+            @AuthenticationPrincipal final UserDto user
+    ) {
+        projectService.deleteProject(projectId, user.id());
     }
 }

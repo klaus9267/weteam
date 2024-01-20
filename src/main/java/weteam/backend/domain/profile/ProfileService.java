@@ -3,8 +3,8 @@ package weteam.backend.domain.profile;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import weteam.backend.application.Message;
-import weteam.backend.application.handler.exception.NotFoundException;
+import weteam.backend.application.CustomErrorCode;
+import weteam.backend.application.handler.exception.CustomException;
 import weteam.backend.domain.profile.dto.ProfileDto;
 import weteam.backend.domain.user.UserRepository;
 import weteam.backend.domain.user.entity.User;
@@ -22,7 +22,7 @@ public class ProfileService {
 
     @Transactional
     public void addProfileImage(final Long userId, final Long imageIdx) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException(Message.NOT_FOUND));
+        User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND));
         final ProfileImage image = ProfileImage.from(imageIdx, user);
         profileRepository.save(image);
     }
@@ -34,6 +34,6 @@ public class ProfileService {
     }
 
     private ProfileImage findOne(final Long userId) {
-        return profileRepository.findByUserId(userId).orElseThrow(() -> new NotFoundException(Message.NOT_FOUND));
+        return profileRepository.findByUserId(userId).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND));
     }
 }
