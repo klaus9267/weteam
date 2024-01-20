@@ -71,7 +71,7 @@ public class ProjectController {
     }
 
     @PatchMapping("{projectId}/{userId}")
-    @Operation(summary = "팀플 수정")
+    @Operation(summary = "호스트 넘기기")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateHost(
             @PathVariable("projectId") final Long projectId,
