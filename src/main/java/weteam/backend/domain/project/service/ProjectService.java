@@ -12,11 +12,14 @@ import weteam.backend.domain.project.dto.ProjectPaginationDto;
 import weteam.backend.domain.project.dto.UpdateProjectDto;
 import weteam.backend.domain.project.entity.Project;
 import weteam.backend.domain.project.repository.ProjectRepository;
+import weteam.backend.domain.user.UserRepository;
+import weteam.backend.domain.user.entity.User;
 
 @Service
 @RequiredArgsConstructor
 public class ProjectService {
     private final ProjectRepository projectRepository;
+    private final UserRepository userRepository;
 
     @Transactional
     public void addProject(final Long userId, final CreateProjectDto projectDto) {
@@ -49,6 +52,16 @@ public class ProjectService {
             throw new CustomException(CustomErrorCode.INVALID_USER);
         }
         project.updateProject(projectDto);
+    }
+
+    @Transactional
+    public void updateHost(final Long projectId, final Long userId, final Long newHostId) {
+        Project project = projectRepository.findByIdAndUserId(projectId, userId).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND));
+        if (!project.getHost().getId().equals(userId)) {
+            throw new CustomException(CustomErrorCode.INVALID_USER);
+        }
+        User newHost = userRepository.findById(newHostId).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND));
+        project.updateHost(newHost);
     }
 
     @Transactional

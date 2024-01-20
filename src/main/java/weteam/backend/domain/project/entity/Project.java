@@ -54,6 +54,10 @@ public class Project extends BaseEntity {
         this.done = !this.isDone();
     }
 
+    public void updateHost(final User newHost) {
+        this.host = newHost;
+    }
+
     public void updateProject(final UpdateProjectDto projectDto) {
         this.name = projectDto.name() == null ? name : projectDto.name();
         this.startedAt = projectDto.startedAt() == null ? startedAt : projectDto.startedAt();

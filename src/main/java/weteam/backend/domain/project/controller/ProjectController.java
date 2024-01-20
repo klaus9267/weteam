@@ -70,6 +70,17 @@ public class ProjectController {
         projectService.updateProject(projectDto, projectId, user.id());
     }
 
+    @PatchMapping("{projectId}/{userId}")
+    @Operation(summary = "팀플 수정")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void updateHost(
+            @PathVariable("projectId") final Long projectId,
+            @PathVariable("userId") final Long userId,
+            @AuthenticationPrincipal final UserDto user
+    ) {
+        projectService.updateHost(projectId, user.id(), userId);
+    }
+
     @DeleteMapping("{projectId}")
     @SwaggerNoContent(summary = "팀플 삭제")
     public void removeProject(
