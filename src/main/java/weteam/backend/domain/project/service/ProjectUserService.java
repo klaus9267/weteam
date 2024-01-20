@@ -38,4 +38,12 @@ public class ProjectUserService {
         ProjectUser projectUser = projectMemberRepository.findByProjectIdAndUserId(param.getProjectId(), userId).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND));
         projectUser.updateRole(param.getRole());
     }
+
+    @Transactional
+    public void kickUser(final Long userId, final Long targetUserId) {
+        if (!projectMemberRepository.checkHost(userId)) {
+            throw new CustomException(CustomErrorCode.INVALID_USER, "호스트가 아닙니다.");
+        }
+        projectMemberRepository.deleteByUserId(targetUserId);
+    }
 }
