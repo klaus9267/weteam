@@ -5,13 +5,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import weteam.backend.application.Message;
+import weteam.backend.application.handler.exception.BadRequestException;
 import weteam.backend.application.handler.exception.DuplicateKeyException;
 import weteam.backend.application.handler.exception.NotFoundException;
 import weteam.backend.domain.common.pagination.param.ProjectPaginationParam;
 import weteam.backend.domain.project.dto.CreateProjectDto;
 import weteam.backend.domain.project.dto.ProjectPaginationDto;
+import weteam.backend.domain.project.dto.UpdateProjectDto;
 import weteam.backend.domain.project.entity.Project;
-import weteam.backend.domain.project.repository.ProjectMemberRepository;
 import weteam.backend.domain.project.repository.ProjectRepository;
 
 @Service
@@ -36,7 +37,19 @@ public class ProjectService {
 
     @Transactional
     public void updateDone(final Long projectId, final Long userId) {
-        Project project = projectRepository.findByIdAndUserId(projectId, userId).orElseThrow(()->new NotFoundException(Message.NOT_FOUND));
+        Project project = projectRepository.findByIdAndUserId(projectId, userId).orElseThrow(() -> new NotFoundException(Message.NOT_FOUND));
+        if (!project.getHost().getId().equals(userId)) {
+            throw new BadRequestException(Message.INVALID_USER);
+        }
         project.updateDone();
+    }
+
+    @Transactional
+    public void updateProject(final UpdateProjectDto projectDto, final Long projectId, final Long userId) {
+        Project project = projectRepository.findByIdAndUserId(projectId, userId).orElseThrow(() -> new NotFoundException(Message.NOT_FOUND));
+        if (!project.getHost().getId().equals(userId)) {
+            throw new BadRequestException(Message.INVALID_USER);
+        }
+        project.updateProject(projectDto);
     }
 }

@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import weteam.backend.application.BaseEntity;
 import weteam.backend.domain.project.dto.CreateProjectDto;
+import weteam.backend.domain.project.dto.UpdateProjectDto;
 import weteam.backend.domain.user.entity.User;
 
 import java.time.LocalDate;
@@ -33,7 +34,7 @@ public class Project extends BaseEntity {
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
     private List<ProjectUser> projectUserList = new ArrayList<>();
 
-    public Project(CreateProjectDto projectDto, Long userId) {
+    public Project(final CreateProjectDto projectDto, final Long userId) {
         User user = User.from(userId);
         ProjectUser projectUser = ProjectUser.from(user, this);
 
@@ -45,11 +46,18 @@ public class Project extends BaseEntity {
         this.projectUserList.add(projectUser);
     }
 
-    public static Project from(CreateProjectDto projectDto, Long userId) {
+    public static Project from(final CreateProjectDto projectDto, final Long userId) {
         return new Project(projectDto, userId);
     }
 
     public void updateDone() {
         this.done = !this.isDone();
+    }
+
+    public void updateProject(final UpdateProjectDto projectDto) {
+        this.name = projectDto.name() == null ? name : projectDto.name();
+        this.startedAt = projectDto.startedAt() == null ? startedAt : projectDto.startedAt();
+        this.endedAt = projectDto.endedAt() == null ? endedAt : projectDto.startedAt();
+        this.explanation = projectDto.explanation() == null ? explanation : projectDto.explanation();
     }
 }
