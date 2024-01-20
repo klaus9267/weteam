@@ -14,11 +14,11 @@ public interface ProjectMemberRepository extends JpaRepository<ProjectUser, Long
 
 
     @Query("""
-           SELECT count(h.id) > 0
+           SELECT count(u.id) > 0
            FROM project_users pu
-                LEFT JOIN FETCH pu.project p
-                LEFT JOIN FETCH p.host h
-           WHERE h.id = :userId
+                LEFT JOIN FETCH projects p ON pu.project.id = p.id
+                LEFT JOIN FETCH users u ON p.host.id = u.id
+           WHERE u.id = :userId
            """)
     boolean checkHost(final Long userId);
 
