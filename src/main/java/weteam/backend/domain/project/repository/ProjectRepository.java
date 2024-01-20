@@ -13,7 +13,7 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
     @Query("""
            SELECT p
            FROM projects p
-           LEFT JOIN FETCH project_users pu
+           LEFT JOIN FETCH project_users pu ON pu.project.id = p.id
            WHERE p.id = :projectId AND (pu.user.id = :userId AND pu.project.id = :projectId)
            """)
     Optional<Project> findByIdAndUserId(final Long projectId, final Long userId);
