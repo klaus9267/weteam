@@ -12,10 +12,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import weteam.backend.application.swagger.SwaggerCreated;
+import weteam.backend.application.swagger.SwaggerNoContent;
 import weteam.backend.domain.common.pagination.param.ProjectPaginationParam;
 import weteam.backend.domain.project.dto.CreateProjectDto;
 import weteam.backend.domain.project.dto.ProjectPaginationDto;
-import weteam.backend.domain.project.param.UpdateHostParam;
+import weteam.backend.domain.project.dto.UpdateProjectDto;
 import weteam.backend.domain.project.service.ProjectService;
 import weteam.backend.domain.user.dto.UserDto;
 
@@ -48,7 +49,7 @@ public class ProjectController {
         return ResponseEntity.ok(paginationDto);
     }
 
-    @PatchMapping("{projectId}")
+    @PatchMapping("{projectId}/done")
     @Operation(summary = "팀플 진행 상황 변경")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateDone(
@@ -58,13 +59,34 @@ public class ProjectController {
         projectService.updateDone(projectId, user.id());
     }
 
-    @PatchMapping
-    @Operation(summary = "팀플 호스트 변경")
+    @PatchMapping("{projectId}")
+    @Operation(summary = "팀플 수정")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updateHost(
-            @ParameterObject @Valid final UpdateHostParam param,
+    public void updateProject(
+            @PathVariable("projectId") final Long projectId,
+            @RequestBody @Valid final UpdateProjectDto projectDto,
             @AuthenticationPrincipal final UserDto user
     ) {
-        projectService.updateHost(param, user.id());
+        projectService.updateProject(projectDto, projectId, user.id());
+    }
+
+    @PatchMapping("{projectId}/{userId}")
+    @Operation(summary = "호스트 넘기기")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void updateHost(
+            @PathVariable("projectId") final Long projectId,
+            @PathVariable("userId") final Long userId,
+            @AuthenticationPrincipal final UserDto user
+    ) {
+        projectService.updateHost(projectId, user.id(), userId);
+    }
+
+    @DeleteMapping("{projectId}")
+    @SwaggerNoContent(summary = "팀플 삭제")
+    public void removeProject(
+            @PathVariable("projectId") final Long projectId,
+            @AuthenticationPrincipal final UserDto user
+    ) {
+        projectService.deleteProject(projectId, user.id());
     }
 }

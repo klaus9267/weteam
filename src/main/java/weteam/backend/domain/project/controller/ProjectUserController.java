@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import weteam.backend.application.swagger.SwaggerNoContent;
 import weteam.backend.application.swagger.SwaggerOK;
 import weteam.backend.domain.project.dto.ProjectMemberDto;
 import weteam.backend.domain.project.param.UpdateProjectRoleParam;
@@ -41,12 +42,20 @@ public class ProjectUserController {
     }
 
     @PatchMapping("{projectId}")
-    @Operation(summary = "초대 수락", description = "응답 없음")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @SwaggerNoContent(summary = "초대 수락", description = "응답 없음")
     public void acceptInvite(
             @PathVariable("projectId") final Long projectId,
             @AuthenticationPrincipal final UserDto user
     ) {
         projectUserService.acceptInvite(projectId, user.id());
+    }
+
+    @DeleteMapping("{userId}")
+    @SwaggerNoContent(summary = "팀원 강퇴", description = "응답 없음")
+    public void kickUser(
+            @PathVariable("userId") final Long userId,
+            @AuthenticationPrincipal final UserDto user
+    ) {
+        projectUserService.kickUser(user.id(), userId);
     }
 }
