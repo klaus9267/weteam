@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import weteam.backend.application.BaseEntity;
 import weteam.backend.domain.project.dto.CreateProjectDto;
+import weteam.backend.domain.project.dto.UpdateProjectDto;
 import weteam.backend.domain.user.entity.User;
 
 import java.time.LocalDate;
@@ -59,8 +60,8 @@ public class Project extends BaseEntity {
 
     public void updateProject(final UpdateProjectDto projectDto) {
         this.name = projectDto.name() == null ? name : projectDto.name();
-        this.startedAt = projectDto.startedAt() == null ? startedAt : projectDto.startedAt();
-        this.endedAt = projectDto.endedAt() == null ? endedAt : projectDto.startedAt();
+        this.startedAt = projectDto.startedAt();
+        this.endedAt = projectDto.startedAt();
         this.explanation = projectDto.explanation() == null ? explanation : projectDto.explanation();
     }
 }
