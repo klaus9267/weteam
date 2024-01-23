@@ -26,4 +26,11 @@ public class AlarmService {
         List<Alarm> alarmList = Alarm.from(project, status);
         alarmRepository.saveAll(alarmList);
     }
+
+    @Transactional
+    public void addAlarmWithTargetUser(final Project project, final AlarmStatus status, final Long userId) {
+        List<ProjectUser> projectUserList = project.getProjectUserList();
+        List<Alarm> alarmList = Alarm.from(project, status);
+        alarmRepository.saveAll(alarmList);
+    }
 }
