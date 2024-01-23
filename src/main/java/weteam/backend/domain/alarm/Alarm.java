@@ -38,4 +38,16 @@ public class Alarm {
     public static List<Alarm> from(final Project project, final AlarmStatus status) {
         return project.getProjectUserList().stream().map(projectUser -> new Alarm(project, status, projectUser.getUser())).toList();
     }
+
+    public static List<Alarm> from(final Project project, final AlarmStatus status, final Long userId) {
+        return project.getProjectUserList()
+                      .stream()
+                      .filter(projectUser -> !projectUser.getUser().getId().equals(userId))
+                      .map(projectUser -> new Alarm(project, status, projectUser.getUser()))
+                      .toList();
+    }
+
+    public void changeIsRead() {
+        this.isRead = !isRead;
+    }
 }
