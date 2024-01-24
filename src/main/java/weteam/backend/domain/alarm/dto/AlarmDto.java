@@ -6,6 +6,8 @@ import weteam.backend.domain.alarm.AlarmStatus;
 import weteam.backend.domain.project.dto.ProjectDto;
 import weteam.backend.domain.user.dto.UserDto;
 
+import java.util.List;
+
 @Getter
 public class AlarmDto {
     private final Long id;
@@ -20,5 +22,9 @@ public class AlarmDto {
         this.user = UserDto.from(alarm.getUser());
         this.project = ProjectDto.from(alarm.getProject());
         this.status = alarm.getStatus();
+    }
+
+    public static List <AlarmDto> from(final List<Alarm> alarmList) {
+        return alarmList.stream().map(AlarmDto::new).toList();
     }
 }

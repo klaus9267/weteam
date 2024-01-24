@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import weteam.backend.application.CustomErrorCode;
 import weteam.backend.application.handler.exception.CustomException;
 import weteam.backend.domain.alarm.dto.AlarmDto;
+import weteam.backend.domain.alarm.dto.AlarmPaginationDto;
 import weteam.backend.domain.project.entity.Project;
 
 import java.util.List;
@@ -17,8 +18,9 @@ import java.util.List;
 public class AlarmService {
     private final AlarmRepository alarmRepository;
 
-    public Page<AlarmDto> readAlarmList(final Pageable pageable, final Long userId) {
-        return alarmRepository.findAll(pageable, userId);
+    public AlarmPaginationDto readAlarmList(final Pageable pageable, final Long userId) {
+        Page<AlarmDto> alarmPage = alarmRepository.findAll(pageable, userId);
+        return AlarmPaginationDto.from(alarmPage);
     }
 
     @Transactional
@@ -27,6 +29,7 @@ public class AlarmService {
         alarmRepository.saveAll(alarmList);
     }
 
+    // 다른 서비스에서 사용하는 알람 추가 메서드
     @Transactional
     public void addAlarmWithTargetUser(final Project project, final AlarmStatus status, final Long userId) {
         final List<Alarm> alarmList = Alarm.from(project, status, userId);
@@ -40,5 +43,13 @@ public class AlarmService {
             throw new CustomException(CustomErrorCode.DUPLICATE, "읽은 알람입니다.");
         }
         alarm.changeIsRead();
+    }
+
+    @Transactional
+    public void makeAllAlarmAsRead( final Long userId) {
+        List<Alarm> alarmList = alarmRepository.findAllByUserId(userId).stream().filter(alarm -> !alarm.isRead()).toList();
+        if (!alarmList.isEmpty()) {
+            alarmList.forEach(Alarm::changeIsRead);
+        }
     }
 }

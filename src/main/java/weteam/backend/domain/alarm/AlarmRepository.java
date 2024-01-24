@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import weteam.backend.domain.alarm.dto.AlarmDto;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface AlarmRepository extends JpaRepository<Alarm, Long> {
@@ -18,4 +19,6 @@ public interface AlarmRepository extends JpaRepository<Alarm, Long> {
     Page<AlarmDto> findAll(final Pageable pageable, final Long userId);
 
     Optional<Alarm> findByIdAndUserId(final Long alarmId, final Long userId);
+
+    List<Alarm> findAllByUserId(final Long userId);
 }
