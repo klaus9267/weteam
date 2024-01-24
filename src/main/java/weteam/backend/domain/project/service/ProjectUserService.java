@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import weteam.backend.application.CustomErrorCode;
+import weteam.backend.application.auth.SecurityUtil;
 import weteam.backend.application.handler.exception.CustomException;
 import weteam.backend.domain.alarm.AlarmService;
 import weteam.backend.domain.alarm.AlarmStatus;
@@ -19,6 +20,7 @@ import java.util.List;
 public class ProjectUserService {
     private final ProjectMemberRepository projectMemberRepository;
     private final AlarmService alarmService;
+    private final SecurityUtil securityUtil;
 
     public List<ProjectMemberDto> findUsersByProjectId(final Long projectId) {
         final List<ProjectUser> projectUserList = projectMemberRepository.findByProjectId(projectId);
@@ -29,23 +31,23 @@ public class ProjectUserService {
     }
 
     @Transactional
-    public void acceptInvite(final Long projectId, final Long userId) {
-        if (projectMemberRepository.findByProjectIdAndUserId(projectId, userId).isPresent()) {
+    public void acceptInvite(final Long projectId) {
+        if (projectMemberRepository.findByProjectIdAndUserId(projectId, securityUtil.getId()).isPresent()) {
             throw new CustomException(CustomErrorCode.DUPLICATE);
         }
-        projectMemberRepository.save(ProjectUser.from(projectId, userId));
-        alarmService.addAlarmWithTargetUser(projectId, AlarmStatus.JOIN, userId);
+        projectMemberRepository.save(ProjectUser.from(projectId, securityUtil.getId()));
+        alarmService.addAlarmWithTargetUser(projectId, AlarmStatus.JOIN, securityUtil.getId());
     }
 
     @Transactional
-    public void updateProjectRole(final UpdateProjectRoleParam param, final Long userId) {
-        ProjectUser projectUser = projectMemberRepository.findByProjectIdAndUserId(param.getProjectId(), userId).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND));
+    public void updateProjectRole(final UpdateProjectRoleParam param) {
+        ProjectUser projectUser = projectMemberRepository.findByProjectIdAndUserId(param.getProjectId(), securityUtil.getId()).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND));
         projectUser.updateRole(param.getRole());
     }
 
     @Transactional
-    public void kickUser(final Long projectId, final Long userId, final Long targetUserId) {
-        if (!projectMemberRepository.checkHost(userId)) {
+    public void kickUser(final Long projectId, final Long targetUserId) {
+        if (!projectMemberRepository.checkHost(securityUtil.getId())) {
             throw new CustomException(CustomErrorCode.INVALID_USER, "호스트가 아닙니다.");
         }
         projectMemberRepository.deleteByUserId(targetUserId);

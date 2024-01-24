@@ -9,7 +9,6 @@ import org.springdoc.core.annotations.ParameterObject;
 import org.springdoc.core.converters.models.PageableAsQueryParam;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import weteam.backend.application.swagger.SwaggerCreated;
 import weteam.backend.application.swagger.SwaggerNoContent;
@@ -18,7 +17,6 @@ import weteam.backend.domain.project.dto.CreateProjectDto;
 import weteam.backend.domain.project.dto.ProjectPaginationDto;
 import weteam.backend.domain.project.dto.UpdateProjectDto;
 import weteam.backend.domain.project.service.ProjectService;
-import weteam.backend.domain.user.dto.UserDto;
 
 @RestController
 @RequestMapping("/api/projects")
@@ -29,22 +27,16 @@ public class ProjectController {
 
     @PostMapping
     @SwaggerCreated(summary = "팀플 생성")
-    public void addProject(
-            @RequestBody @Valid final CreateProjectDto projectDto,
-            @AuthenticationPrincipal final UserDto user
-    ) {
-        projectService.addProject(user.id(), projectDto);
+    public void addProject(@RequestBody @Valid final CreateProjectDto projectDto) {
+        projectService.addProject(projectDto);
     }
 
     @GetMapping
     @Operation(summary = "팀플 목록 조회 | done으로 종료, 진행 분류해서 조회")
     @ApiResponse(responseCode = "200", useReturnTypeSchema = true)
     @PageableAsQueryParam
-    public ResponseEntity<ProjectPaginationDto> readProjectList(
-            @ParameterObject @Valid final ProjectPaginationParam paginationParam,
-            @AuthenticationPrincipal final UserDto user
-    ) {
-        final ProjectPaginationDto paginationDto = projectService.findProjects(user.id(), paginationParam);
+    public ResponseEntity<ProjectPaginationDto> readProjectList(@ParameterObject @Valid final ProjectPaginationParam paginationParam) {
+        final ProjectPaginationDto paginationDto = projectService.findProjects(paginationParam);
 
         return ResponseEntity.ok(paginationDto);
     }
@@ -52,11 +44,8 @@ public class ProjectController {
     @PatchMapping("{projectId}/done")
     @Operation(summary = "팀플 진행 상황 변경")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updateDone(
-            @PathVariable("projectId") final Long projectId,
-            @AuthenticationPrincipal final UserDto user
-    ) {
-        projectService.updateDone(projectId, user.id());
+    public void updateDone(@PathVariable("projectId") final Long projectId) {
+        projectService.updateDone(projectId);
     }
 
     @PatchMapping("{projectId}")
@@ -64,10 +53,9 @@ public class ProjectController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateProject(
             @PathVariable("projectId") final Long projectId,
-            @RequestBody @Valid final UpdateProjectDto projectDto,
-            @AuthenticationPrincipal final UserDto user
+            @RequestBody @Valid final UpdateProjectDto projectDto
     ) {
-        projectService.updateProject(projectDto, projectId, user.id());
+        projectService.updateProject(projectDto, projectId);
     }
 
     @PatchMapping("{projectId}/{userId}")
@@ -75,18 +63,14 @@ public class ProjectController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateHost(
             @PathVariable("projectId") final Long projectId,
-            @PathVariable("userId") final Long userId,
-            @AuthenticationPrincipal final UserDto user
+            @PathVariable("userId") final Long userId
     ) {
-        projectService.updateHost(projectId, user.id(), userId);
+        projectService.updateHost(projectId, userId);
     }
 
     @DeleteMapping("{projectId}")
     @SwaggerNoContent(summary = "팀플 삭제")
-    public void removeProject(
-            @PathVariable("projectId") final Long projectId,
-            @AuthenticationPrincipal final UserDto user
-    ) {
-        projectService.deleteProject(projectId, user.id());
+    public void removeProject(@PathVariable("projectId") final Long projectId) {
+        projectService.deleteProject(projectId);
     }
 }

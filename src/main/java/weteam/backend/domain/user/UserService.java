@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import weteam.backend.application.CustomErrorCode;
+import weteam.backend.application.auth.SecurityUtil;
 import weteam.backend.application.handler.exception.CustomException;
 import weteam.backend.domain.project.repository.ProjectRepository;
 import weteam.backend.domain.user.dto.UserDto;
@@ -14,6 +15,7 @@ import weteam.backend.domain.user.entity.User;
 public class UserService {
     private final UserRepository userRepository;
     private final ProjectRepository projectRepository;
+    private final SecurityUtil securityUtil;
 
     public UserDto findOneById(Long id) {
         User user = this.findOne(id);
@@ -25,22 +27,18 @@ public class UserService {
     }
 
     @Transactional
-    public void updateOrganization(Long id, String organization) {
-        User user = this.findOne(id);
+    public void updateOrganization(String organization) {
+        User user = this.findOne(securityUtil.getId());
         user.updateOrganization(organization);
     }
 
     @Transactional
-    public void updateInfo(Long userId) {
-        User user = this.findOne(userId);
-    }
-
-    @Transactional
-    public void delete(Long id) {
-        if (projectRepository.existsByHostId(id)) {
+    public void delete() {
+        Long userId = securityUtil.getId();
+        if (projectRepository.existsByHostId(userId)) {
             throw new CustomException(CustomErrorCode.BAD_REQUEST, "호스트로 진행중인 팀플이 존재합니다.");
         }
-        userRepository.deleteById(id);
+        userRepository.deleteById(userId);
     }
 }
 

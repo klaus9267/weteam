@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import weteam.backend.application.CustomErrorCode;
+import weteam.backend.application.auth.SecurityUtil;
 import weteam.backend.application.handler.exception.CustomException;
 import weteam.backend.domain.alarm.AlarmService;
 import weteam.backend.domain.alarm.AlarmStatus;
@@ -23,26 +24,27 @@ public class ProjectService {
     private final ProjectRepository projectRepository;
     private final UserRepository userRepository;
     private final AlarmService alarmService;
+    private final SecurityUtil securityUtil;
 
     @Transactional
-    public void addProject(final Long userId, final CreateProjectDto projectDto) {
-        if (projectRepository.findByHostIdAndNameAndExplanation(userId, projectDto.name(), projectDto.explanation()).isPresent()) {
+    public void addProject(final CreateProjectDto projectDto) {
+        if (projectRepository.findByHostIdAndNameAndExplanation(securityUtil.getId(), projectDto.name(), projectDto.explanation()).isPresent()) {
             throw new CustomException(CustomErrorCode.DUPLICATE);
         }
-        final Project project = Project.from(projectDto, userId);
+        final Project project = Project.from(projectDto, securityUtil.getId());
         projectRepository.save(project);
     }
 
 
-    public ProjectPaginationDto findProjects(final Long userId, final ProjectPaginationParam paginationParam) {
-        final Page<Project> projectPage = projectRepository.findAllByHostIdAndDone(paginationParam.toPageable(), userId, paginationParam.isDone());
+    public ProjectPaginationDto findProjects(final ProjectPaginationParam paginationParam) {
+        final Page<Project> projectPage = projectRepository.findAllByHostIdAndDone(paginationParam.toPageable(), securityUtil.getId(), paginationParam.isDone());
         return ProjectPaginationDto.from(projectPage);
     }
 
     @Transactional
-    public void updateDone(final Long projectId, final Long userId) {
-        Project project = projectRepository.findByIdAndUserId(projectId, userId).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND));
-        if (!project.getHost().getId().equals(userId)) {
+    public void updateDone(final Long projectId) {
+        Project project = projectRepository.findByIdAndUserId(projectId, securityUtil.getId()).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND));
+        if (!project.getHost().getId().equals(securityUtil.getId())) {
             throw new CustomException(CustomErrorCode.INVALID_USER);
         }
         project.updateDone();
@@ -50,9 +52,9 @@ public class ProjectService {
     }
 
     @Transactional
-    public void updateProject(final UpdateProjectDto projectDto, final Long projectId, final Long userId) {
-        Project project = projectRepository.findByIdAndUserId(projectId, userId).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND));
-        if (!project.getHost().getId().equals(userId)) {
+    public void updateProject(final UpdateProjectDto projectDto, final Long projectId) {
+        Project project = projectRepository.findByIdAndUserId(projectId, securityUtil.getId()).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND));
+        if (!project.getHost().getId().equals(securityUtil.getId())) {
             throw new CustomException(CustomErrorCode.INVALID_USER);
         }
         project.updateProject(projectDto);
@@ -60,9 +62,9 @@ public class ProjectService {
     }
 
     @Transactional
-    public void updateHost(final Long projectId, final Long userId, final Long newHostId) {
-        Project project = projectRepository.findByIdAndUserId(projectId, userId).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND));
-        if (!project.getHost().getId().equals(userId)) {
+    public void updateHost(final Long projectId, final Long newHostId) {
+        Project project = projectRepository.findByIdAndUserId(projectId, securityUtil.getId()).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND));
+        if (!project.getHost().getId().equals(securityUtil.getId())) {
             throw new CustomException(CustomErrorCode.INVALID_USER);
         }
         User newHost = userRepository.findById(newHostId).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND));
@@ -71,9 +73,9 @@ public class ProjectService {
     }
 
     @Transactional
-    public void deleteProject(final Long projectId, final Long userId) {
-        Project project = projectRepository.findByIdAndUserId(projectId, userId).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND));
-        if (!project.getHost().getId().equals(userId)) {
+    public void deleteProject(final Long projectId) {
+        Project project = projectRepository.findByIdAndUserId(projectId, securityUtil.getId()).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND));
+        if (!project.getHost().getId().equals(securityUtil.getId())) {
             throw new CustomException(CustomErrorCode.INVALID_USER);
         }
         projectRepository.delete(project);

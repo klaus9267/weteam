@@ -1,11 +1,16 @@
 package weteam.backend.domain.project.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import weteam.backend.domain.meeting.entity.MeetingUser;
 import weteam.backend.domain.user.entity.User;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity(name = "project_users")
 @NoArgsConstructor
@@ -24,6 +29,10 @@ public class ProjectUser {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Project project;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "projectUser")
+    private List<MeetingUser> meetingUserList = new ArrayList<>();
 
     public static ProjectUser from(final User user, final Project project) {
         return ProjectUser.builder().user(user).project(project).build();
