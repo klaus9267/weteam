@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import weteam.backend.application.CustomErrorCode;
 import weteam.backend.application.handler.exception.CustomException;
+import weteam.backend.domain.alarm.AlarmService;
+import weteam.backend.domain.alarm.AlarmStatus;
 import weteam.backend.domain.project.dto.ProjectMemberDto;
 import weteam.backend.domain.project.entity.ProjectUser;
 import weteam.backend.domain.project.param.UpdateProjectRoleParam;
@@ -16,6 +18,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ProjectUserService {
     private final ProjectMemberRepository projectMemberRepository;
+    private final AlarmService alarmService;
 
     public List<ProjectMemberDto> findUsersByProjectId(final Long projectId) {
         final List<ProjectUser> projectUserList = projectMemberRepository.findByProjectId(projectId);
@@ -31,6 +34,7 @@ public class ProjectUserService {
             throw new CustomException(CustomErrorCode.DUPLICATE);
         }
         projectMemberRepository.save(ProjectUser.from(projectId, userId));
+        alarmService.addAlarmWithTargetUser(projectId, AlarmStatus.JOIN, userId);
     }
 
     @Transactional
@@ -40,10 +44,11 @@ public class ProjectUserService {
     }
 
     @Transactional
-    public void kickUser(final Long userId, final Long targetUserId) {
+    public void kickUser(final Long projectId, final Long userId, final Long targetUserId) {
         if (!projectMemberRepository.checkHost(userId)) {
             throw new CustomException(CustomErrorCode.INVALID_USER, "호스트가 아닙니다.");
         }
         projectMemberRepository.deleteByUserId(targetUserId);
+        alarmService.addAlarmWithTargetUser(projectId, AlarmStatus.KICK, targetUserId);
     }
 }

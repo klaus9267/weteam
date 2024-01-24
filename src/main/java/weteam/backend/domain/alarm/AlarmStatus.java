@@ -4,5 +4,5 @@ import lombok.Getter;
 
 @Getter
 public enum AlarmStatus {
-    JOIN, EXIT, CHANGE_HOST, UPDATE_PROJECT, DROP
+    JOIN, EXIT, CHANGE_HOST, UPDATE_PROJECT, KICK,DONE
 }

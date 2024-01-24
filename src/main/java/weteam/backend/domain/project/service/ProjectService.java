@@ -6,6 +6,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import weteam.backend.application.CustomErrorCode;
 import weteam.backend.application.handler.exception.CustomException;
+import weteam.backend.domain.alarm.AlarmService;
+import weteam.backend.domain.alarm.AlarmStatus;
 import weteam.backend.domain.common.pagination.param.ProjectPaginationParam;
 import weteam.backend.domain.project.dto.CreateProjectDto;
 import weteam.backend.domain.project.dto.ProjectPaginationDto;
@@ -20,6 +22,7 @@ import weteam.backend.domain.user.entity.User;
 public class ProjectService {
     private final ProjectRepository projectRepository;
     private final UserRepository userRepository;
+    private final AlarmService alarmService;
 
     @Transactional
     public void addProject(final Long userId, final CreateProjectDto projectDto) {
@@ -43,6 +46,7 @@ public class ProjectService {
             throw new CustomException(CustomErrorCode.INVALID_USER);
         }
         project.updateDone();
+        alarmService.addAlarm(project, AlarmStatus.DONE);
     }
 
     @Transactional
@@ -52,6 +56,7 @@ public class ProjectService {
             throw new CustomException(CustomErrorCode.INVALID_USER);
         }
         project.updateProject(projectDto);
+        alarmService.addAlarm(project, AlarmStatus.UPDATE_PROJECT);
     }
 
     @Transactional
@@ -62,6 +67,7 @@ public class ProjectService {
         }
         User newHost = userRepository.findById(newHostId).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND));
         project.updateHost(newHost);
+        alarmService.addAlarmWithTargetUser(project, AlarmStatus.CHANGE_HOST, newHostId);
     }
 
     @Transactional

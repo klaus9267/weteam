@@ -37,6 +37,13 @@ public class AlarmService {
     }
 
     @Transactional
+    public void addAlarmWithTargetUser(final Long projectId, final AlarmStatus status, final Long userId) {
+        Project project = Project.builder().id(projectId).build();
+        final List<Alarm> alarmList = Alarm.from(project, status, userId);
+        alarmRepository.saveAll(alarmList);
+    }
+
+    @Transactional
     public void makeAlarmAsRead(final Long alarmId, final Long userId) {
         Alarm alarm = alarmRepository.findByIdAndUserId(alarmId, userId).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND));
         if (alarm.isRead()) {
