@@ -34,7 +34,7 @@ public class Project extends BaseEntity {
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
     private List<ProjectUser> projectUserList = new ArrayList<>();
 
-    public Project(final CreateProjectDto projectDto, final Long userId) {
+    public Project(CreateProjectDto projectDto, Long userId) {
         User user = User.from(userId);
         ProjectUser projectUser = ProjectUser.from(user, this);
 
@@ -46,7 +46,7 @@ public class Project extends BaseEntity {
         this.projectUserList.add(projectUser);
     }
 
-    public static Project from(final CreateProjectDto projectDto, final Long userId) {
+    public static Project from(CreateProjectDto projectDto, Long userId) {
         return new Project(projectDto, userId);
     }
 
@@ -60,8 +60,8 @@ public class Project extends BaseEntity {
 
     public void updateProject(final UpdateProjectDto projectDto) {
         this.name = projectDto.name() == null ? name : projectDto.name();
-        this.startedAt = projectDto.startedAt() == null ? startedAt : projectDto.startedAt();
-        this.endedAt = projectDto.endedAt() == null ? endedAt : projectDto.startedAt();
+        this.startedAt = projectDto.startedAt();
+        this.endedAt = projectDto.startedAt();
         this.explanation = projectDto.explanation() == null ? explanation : projectDto.explanation();
     }
 }

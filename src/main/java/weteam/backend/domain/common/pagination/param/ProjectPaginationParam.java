@@ -18,13 +18,12 @@ public class ProjectPaginationParam extends AbstractPaginationParam {
     @Parameter(example = "10", required = true)
     private final Integer size;
 
-    @Parameter()
+    @Parameter(example = "false")
     private final boolean done;
 
     @Parameter(name = "direction", description = "default desc")
     private final Sort.Direction direction;
 
-    //    @Parameter(description = "대상 정렬은 ACTION, EVENT_DATE만 사용 가능")
     @PaginationValidation(sortGroup = PaginationSortGroup.PROJECT)
     private final PaginationSortType field;
 
