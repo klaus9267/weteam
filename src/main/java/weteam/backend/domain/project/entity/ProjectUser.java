@@ -24,6 +24,9 @@ public class ProjectUser {
 
     private String role;
 
+    @Column(columnDefinition = "boolean default false")
+    private boolean enable;
+
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
@@ -44,5 +47,9 @@ public class ProjectUser {
 
     public void updateRole(final String role) {
         this.role = role;
+    }
+
+    public void disable() {
+        this.enable = !enable;
     }
 }

@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import weteam.backend.application.swagger.SwaggerNoContent;
 import weteam.backend.application.swagger.SwaggerOK;
-import weteam.backend.domain.project.dto.ProjectMemberDto;
+import weteam.backend.domain.project.dto.ProjectUserDto;
 import weteam.backend.domain.project.param.UpdateProjectRoleParam;
 import weteam.backend.domain.project.service.ProjectUserService;
 
@@ -25,7 +25,7 @@ public class ProjectUserController {
 
     @GetMapping("{projectId}")
     @SwaggerOK(summary = "팀원 목록 조회")
-    public ResponseEntity<List<ProjectMemberDto>> findProjectMemberList(@PathVariable("projectId") final Long projectId) {
+    public ResponseEntity<List<ProjectUserDto>> findProjectMemberList(@PathVariable("projectId") final Long projectId) {
         return ResponseEntity.ok(projectUserService.findUsersByProjectId(projectId));
     }
 
@@ -42,12 +42,12 @@ public class ProjectUserController {
         projectUserService.acceptInvite(projectId);
     }
 
-    @DeleteMapping("{projectId}/{userId}")
+    @DeleteMapping("{projectId}/{projectUserId}")
     @SwaggerNoContent(summary = "팀원 강퇴", description = "응답 없음")
     public void kickUser(
             @PathVariable("projectId") final Long projectId,
-            @PathVariable("userId") final Long userId
+            @PathVariable("projectUserId") final Long projectUserId
     ) {
-        projectUserService.kickUser(projectId, userId);
+        projectUserService.kickUser(projectId, projectUserId);
     }
 }

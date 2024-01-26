@@ -1,5 +1,6 @@
 package weteam.backend.domain.alarm;
 
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.core.converters.models.PageableAsQueryParam;
@@ -22,7 +23,7 @@ public class AlarmController {
     @GetMapping
     @SwaggerOK(summary = "알람 조회")
     @PageableAsQueryParam
-    public ResponseEntity<AlarmPaginationDto> readAlarms(@AuthenticationPrincipal final UserDto user, Pageable pageable) {
+    public ResponseEntity<AlarmPaginationDto> readAlarms(@AuthenticationPrincipal final UserDto user,@Parameter(hidden = true) Pageable pageable) {
         final AlarmPaginationDto alarmPaginationDto = alarmService.readAlarmList(pageable, user.id());
         return ResponseEntity.ok(alarmPaginationDto);
     }

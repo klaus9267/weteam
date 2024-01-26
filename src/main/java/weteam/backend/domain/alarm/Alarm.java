@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import weteam.backend.domain.project.entity.Project;
 import weteam.backend.domain.user.entity.User;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity(name = "alarms")
@@ -16,6 +17,7 @@ public class Alarm {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private AlarmStatus status;
+    private LocalDate date;
 
     @Column(columnDefinition = "boolean default false")
     private boolean isRead;
@@ -33,17 +35,26 @@ public class Alarm {
         this.status = status;
         this.project = project;
         this.user = user;
+        this.date = LocalDate.now();
+    }
+
+    private Alarm(final Project project, final AlarmStatus status, final User user, final Long targetUserId) {
+        this.status = status;
+        this.project = project;
+        this.user = user;
+        this.date = LocalDate.now();
+        this.targetUser = User.builder().id(targetUserId).build();
     }
 
     public static List<Alarm> from(final Project project, final AlarmStatus status) {
         return project.getProjectUserList().stream().map(projectUser -> new Alarm(project, status, projectUser.getUser())).toList();
     }
 
-    public static List<Alarm> from(final Project project, final AlarmStatus status, final Long userId) {
+    public static List<Alarm> from(final Project project, final AlarmStatus status, final Long targetUserId) {
         return project.getProjectUserList()
                       .stream()
-                      .filter(projectUser -> !projectUser.getUser().getId().equals(userId))
-                      .map(projectUser -> new Alarm(project, status, projectUser.getUser()))
+                      .filter(projectUser -> !projectUser.getUser().getId().equals(targetUserId))
+                      .map(projectUser -> new Alarm(project, status, projectUser.getUser(), targetUserId))
                       .toList();
     }
 

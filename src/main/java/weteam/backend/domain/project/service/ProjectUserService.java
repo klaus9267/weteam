@@ -8,49 +8,53 @@ import weteam.backend.application.auth.SecurityUtil;
 import weteam.backend.application.handler.exception.CustomException;
 import weteam.backend.domain.alarm.AlarmService;
 import weteam.backend.domain.alarm.AlarmStatus;
-import weteam.backend.domain.project.dto.ProjectMemberDto;
+import weteam.backend.domain.project.dto.ProjectUserDto;
 import weteam.backend.domain.project.entity.ProjectUser;
 import weteam.backend.domain.project.param.UpdateProjectRoleParam;
-import weteam.backend.domain.project.repository.ProjectMemberRepository;
+import weteam.backend.domain.project.repository.ProjectUserRepository;
 
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class ProjectUserService {
-    private final ProjectMemberRepository projectMemberRepository;
+    private final ProjectUserRepository projectUserRepository;
     private final AlarmService alarmService;
     private final SecurityUtil securityUtil;
 
-    public List<ProjectMemberDto> findUsersByProjectId(final Long projectId) {
-        final List<ProjectUser> projectUserList = projectMemberRepository.findByProjectId(projectId);
+    public List<ProjectUserDto> findUsersByProjectId(final Long projectId) {
+        final List<ProjectUser> projectUserList = projectUserRepository.findByProjectId(projectId);
         if (projectUserList.isEmpty()) {
             throw new CustomException(CustomErrorCode.NOT_FOUND);
         }
-        return ProjectMemberDto.from(projectUserList);
+        return ProjectUserDto.from(projectUserList);
     }
 
     @Transactional
     public void acceptInvite(final Long projectId) {
-        if (projectMemberRepository.findByProjectIdAndUserId(projectId, securityUtil.getId()).isPresent()) {
+        if (projectUserRepository.findByProjectIdAndUserId(projectId, securityUtil.getId()).isPresent()) {
             throw new CustomException(CustomErrorCode.DUPLICATE);
         }
-        projectMemberRepository.save(ProjectUser.from(projectId, securityUtil.getId()));
-        alarmService.addAlarmWithTargetUser(projectId, AlarmStatus.JOIN, securityUtil.getId());
+        ProjectUser projectUser = projectUserRepository.save(ProjectUser.from(projectId, securityUtil.getId()));
+        alarmService.addAlarmWithTargetUser(projectUser.getProject(), AlarmStatus.JOIN, securityUtil.getId());
     }
 
     @Transactional
     public void updateProjectRole(final UpdateProjectRoleParam param) {
-        ProjectUser projectUser = projectMemberRepository.findByProjectIdAndUserId(param.getProjectId(), securityUtil.getId()).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND));
+        ProjectUser projectUser = projectUserRepository.findByProjectIdAndUserId(param.getProjectId(), securityUtil.getId()).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND));
         projectUser.updateRole(param.getRole());
     }
 
     @Transactional
-    public void kickUser(final Long projectId, final Long targetUserId) {
-        if (!projectMemberRepository.checkHost(securityUtil.getId())) {
-            throw new CustomException(CustomErrorCode.INVALID_USER, "호스트가 아닙니다.");
+    public void kickUser(final Long projectId, final Long projectUserId) {
+        ProjectUser projectUser = projectUserRepository.findById(projectUserId).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND));
+        if (!projectUser.isEnable()) {
+            throw new CustomException(CustomErrorCode.BAD_REQUEST, "이미 팀플을 나간 유저입니다.");
         }
-        projectMemberRepository.deleteByUserId(targetUserId);
-        alarmService.addAlarmWithTargetUser(projectId, AlarmStatus.KICK, targetUserId);
+        if (!projectUser.getProject().getHost().getId().equals(securityUtil.getId())) {
+            throw new CustomException(CustomErrorCode.BAD_REQUEST, "호스트가 아닙니다.");
+        }
+        projectUser.disable();
+        alarmService.addAlarmWithTargetUser(projectUser.getProject(), AlarmStatus.KICK, projectUserId);
     }
 }
