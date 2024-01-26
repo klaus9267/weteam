@@ -42,12 +42,9 @@ public class ProjectUserController {
         projectUserService.acceptInvite(projectId);
     }
 
-    @DeleteMapping("{projectId}/{projectUserId}")
+    @DeleteMapping("{projectUserId}")
     @SwaggerNoContent(summary = "팀원 강퇴", description = "응답 없음")
-    public void kickUser(
-            @PathVariable("projectId") final Long projectId,
-            @PathVariable("projectUserId") final Long projectUserId
-    ) {
-        projectUserService.kickUser(projectId, projectUserId);
+    public void kickUser(@PathVariable("projectUserId") final Long projectUserId) {
+        projectUserService.kickUser(projectUserId);
     }
 }

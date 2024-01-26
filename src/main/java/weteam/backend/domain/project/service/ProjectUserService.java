@@ -9,8 +9,10 @@ import weteam.backend.application.handler.exception.CustomException;
 import weteam.backend.domain.alarm.AlarmService;
 import weteam.backend.domain.alarm.AlarmStatus;
 import weteam.backend.domain.project.dto.ProjectUserDto;
+import weteam.backend.domain.project.entity.Project;
 import weteam.backend.domain.project.entity.ProjectUser;
 import weteam.backend.domain.project.param.UpdateProjectRoleParam;
+import weteam.backend.domain.project.repository.ProjectRepository;
 import weteam.backend.domain.project.repository.ProjectUserRepository;
 
 import java.util.List;
@@ -19,6 +21,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ProjectUserService {
     private final ProjectUserRepository projectUserRepository;
+    private final ProjectRepository projectRepository;
     private final AlarmService alarmService;
     private final SecurityUtil securityUtil;
 
@@ -32,10 +35,13 @@ public class ProjectUserService {
 
     @Transactional
     public void acceptInvite(final Long projectId) {
-        if (projectUserRepository.findByProjectIdAndUserId(projectId, securityUtil.getId()).isPresent()) {
-            throw new CustomException(CustomErrorCode.DUPLICATE);
-        }
-        ProjectUser projectUser = projectUserRepository.save(ProjectUser.from(projectId, securityUtil.getId()));
+        Project project= projectRepository.findById(projectId).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND));
+        project.getProjectUserList().forEach(projectUser -> {
+            if (projectUser.getUser().getId().equals(securityUtil.getId())) {
+                throw new CustomException(CustomErrorCode.DUPLICATE);
+            }
+        });
+        ProjectUser projectUser = projectUserRepository.save(ProjectUser.from(project, securityUtil.getId()));
         alarmService.addAlarmWithTargetUser(projectUser.getProject(), AlarmStatus.JOIN, securityUtil.getId());
     }
 
@@ -46,7 +52,7 @@ public class ProjectUserService {
     }
 
     @Transactional
-    public void kickUser(final Long projectId, final Long projectUserId) {
+    public void kickUser(final Long projectUserId) {
         ProjectUser projectUser = projectUserRepository.findById(projectUserId).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND));
         if (!projectUser.isEnable()) {
             throw new CustomException(CustomErrorCode.BAD_REQUEST, "이미 팀플을 나간 유저입니다.");

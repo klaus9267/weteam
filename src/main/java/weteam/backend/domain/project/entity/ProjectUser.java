@@ -41,8 +41,8 @@ public class ProjectUser {
         return ProjectUser.builder().user(user).project(project).build();
     }
 
-    public static ProjectUser from(Long projectId, Long userId) {
-        return ProjectUser.builder().project(Project.builder().id(projectId).build()).user(User.builder().id(userId).build()).build();
+    public static ProjectUser from(Project project, Long userId) {
+        return ProjectUser.builder().project(project).user(new User(userId)).build();
     }
 
     public void updateRole(final String role) {

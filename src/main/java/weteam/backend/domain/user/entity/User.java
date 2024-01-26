@@ -37,8 +37,8 @@ public class User extends BaseEntity {
     @OneToMany(mappedBy = "host", cascade = CascadeType.ALL)
     private List<Project> projectList = new ArrayList<>();
 
-    public static User from(final Long id) {
-        return User.builder().id(id).build();
+    public User(final Long id) {
+        this.id = id;
     }
 
     public static User from(final UserDto userDto) {
