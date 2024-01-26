@@ -7,14 +7,12 @@ import lombok.RequiredArgsConstructor;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import weteam.backend.application.swagger.SwaggerNoContent;
 import weteam.backend.application.swagger.SwaggerOK;
-import weteam.backend.domain.project.dto.ProjectMemberDto;
+import weteam.backend.domain.project.dto.ProjectUserDto;
 import weteam.backend.domain.project.param.UpdateProjectRoleParam;
 import weteam.backend.domain.project.service.ProjectUserService;
-import weteam.backend.domain.user.dto.UserDto;
 
 import java.util.List;
 
@@ -27,35 +25,26 @@ public class ProjectUserController {
 
     @GetMapping("{projectId}")
     @SwaggerOK(summary = "팀원 목록 조회")
-    public ResponseEntity<List<ProjectMemberDto>> findProjectMemberList(@PathVariable("projectId") final Long projectId) {
+    public ResponseEntity<List<ProjectUserDto>> findProjectMemberList(@PathVariable("projectId") final Long projectId) {
         return ResponseEntity.ok(projectUserService.findUsersByProjectId(projectId));
     }
 
     @PatchMapping
     @Operation(summary = "담당 역할 변경", description = "응답 없음")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updateProjectRole(
-            @ParameterObject @Valid UpdateProjectRoleParam updateProjectRoleParam,
-            @AuthenticationPrincipal final UserDto user
-    ) {
-        projectUserService.updateProjectRole(updateProjectRoleParam, user.id());
+    public void updateProjectRole(@ParameterObject @Valid UpdateProjectRoleParam updateProjectRoleParam) {
+        projectUserService.updateProjectRole(updateProjectRoleParam);
     }
 
     @PatchMapping("{projectId}")
     @SwaggerNoContent(summary = "초대 수락", description = "응답 없음")
-    public void acceptInvite(
-            @PathVariable("projectId") final Long projectId,
-            @AuthenticationPrincipal final UserDto user
-    ) {
-        projectUserService.acceptInvite(projectId, user.id());
+    public void acceptInvite(@PathVariable("projectId") final Long projectId) {
+        projectUserService.acceptInvite(projectId);
     }
 
-    @DeleteMapping("{userId}")
+    @DeleteMapping
     @SwaggerNoContent(summary = "팀원 강퇴", description = "응답 없음")
-    public void kickUser(
-            @PathVariable("userId") final Long userId,
-            @AuthenticationPrincipal final UserDto user
-    ) {
-        projectUserService.kickUser(user.id(), userId);
+    public void kickUser(@RequestParam("projectUserIdList") final List<Long> projectUserIdList) {
+        projectUserService.kickUsers(projectUserIdList);
     }
 }

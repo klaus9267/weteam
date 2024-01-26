@@ -10,13 +10,17 @@ import weteam.backend.application.handler.exception.CustomException;
 import weteam.backend.domain.alarm.dto.AlarmDto;
 import weteam.backend.domain.alarm.dto.AlarmPaginationDto;
 import weteam.backend.domain.project.entity.Project;
+import weteam.backend.domain.project.entity.ProjectUser;
+import weteam.backend.domain.project.repository.ProjectRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class AlarmService {
     private final AlarmRepository alarmRepository;
+    private final ProjectRepository projectRepository;
 
     public AlarmPaginationDto readAlarmList(final Pageable pageable, final Long userId) {
         Page<AlarmDto> alarmPage = alarmRepository.findAll(pageable, userId);
@@ -29,10 +33,16 @@ public class AlarmService {
         alarmRepository.saveAll(alarmList);
     }
 
-    // 다른 서비스에서 사용하는 알람 추가 메서드
     @Transactional
     public void addAlarmWithTargetUser(final Project project, final AlarmStatus status, final Long userId) {
         final List<Alarm> alarmList = Alarm.from(project, status, userId);
+        alarmRepository.saveAll(alarmList);
+    }
+
+    @Transactional
+    public void addAlarmList(final List<ProjectUser> projectUserList) {
+        List<Alarm> alarmList = new ArrayList<>();
+        projectUserList.forEach(projectUser -> Alarm.from(projectUser.getProject(), AlarmStatus.KICK, projectUser.getUser().getId()));
         alarmRepository.saveAll(alarmList);
     }
 
@@ -46,7 +56,7 @@ public class AlarmService {
     }
 
     @Transactional
-    public void makeAllAlarmAsRead( final Long userId) {
+    public void makeAllAlarmAsRead(final Long userId) {
         List<Alarm> alarmList = alarmRepository.findAllByUserId(userId).stream().filter(alarm -> !alarm.isRead()).toList();
         if (!alarmList.isEmpty()) {
             alarmList.forEach(Alarm::changeIsRead);

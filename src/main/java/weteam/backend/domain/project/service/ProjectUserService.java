@@ -4,46 +4,57 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import weteam.backend.application.CustomErrorCode;
+import weteam.backend.application.auth.SecurityUtil;
 import weteam.backend.application.handler.exception.CustomException;
-import weteam.backend.domain.project.dto.ProjectMemberDto;
+import weteam.backend.domain.alarm.AlarmService;
+import weteam.backend.domain.alarm.AlarmStatus;
+import weteam.backend.domain.project.dto.ProjectUserDto;
+import weteam.backend.domain.project.entity.Project;
 import weteam.backend.domain.project.entity.ProjectUser;
 import weteam.backend.domain.project.param.UpdateProjectRoleParam;
-import weteam.backend.domain.project.repository.ProjectMemberRepository;
+import weteam.backend.domain.project.repository.ProjectRepository;
+import weteam.backend.domain.project.repository.ProjectUserRepository;
 
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class ProjectUserService {
-    private final ProjectMemberRepository projectMemberRepository;
+    private final ProjectUserRepository projectUserRepository;
+    private final ProjectRepository projectRepository;
+    private final AlarmService alarmService;
+    private final SecurityUtil securityUtil;
 
-    public List<ProjectMemberDto> findUsersByProjectId(final Long projectId) {
-        final List<ProjectUser> projectUserList = projectMemberRepository.findByProjectId(projectId);
+    public List<ProjectUserDto> findUsersByProjectId(final Long projectId) {
+        final List<ProjectUser> projectUserList = projectUserRepository.findByProjectId(projectId);
         if (projectUserList.isEmpty()) {
             throw new CustomException(CustomErrorCode.NOT_FOUND);
         }
-        return ProjectMemberDto.from(projectUserList);
+        return ProjectUserDto.from(projectUserList);
     }
 
     @Transactional
-    public void acceptInvite(final Long projectId, final Long userId) {
-        if (projectMemberRepository.findByProjectIdAndUserId(projectId, userId).isPresent()) {
-            throw new CustomException(CustomErrorCode.DUPLICATE);
-        }
-        projectMemberRepository.save(ProjectUser.from(projectId, userId));
+    public void acceptInvite(final Long projectId) {
+        Project project = projectRepository.findById(projectId).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND));
+        project.getProjectUserList().forEach(projectUser -> {
+            if (projectUser.getUser().getId().equals(securityUtil.getId())) {
+                throw new CustomException(CustomErrorCode.DUPLICATE);
+            }
+        });
+        ProjectUser projectUser = projectUserRepository.save(ProjectUser.from(project, securityUtil.getId()));
+        alarmService.addAlarmWithTargetUser(projectUser.getProject(), AlarmStatus.JOIN, securityUtil.getId());
     }
 
     @Transactional
-    public void updateProjectRole(final UpdateProjectRoleParam param, final Long userId) {
-        ProjectUser projectUser = projectMemberRepository.findByProjectIdAndUserId(param.getProjectId(), userId).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND));
+    public void updateProjectRole(final UpdateProjectRoleParam param) {
+        ProjectUser projectUser = projectUserRepository.findByProjectIdAndUserId(param.getProjectId(), securityUtil.getId()).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND));
         projectUser.updateRole(param.getRole());
     }
 
     @Transactional
-    public void kickUser(final Long userId, final Long targetUserId) {
-        if (!projectMemberRepository.checkHost(userId)) {
-            throw new CustomException(CustomErrorCode.INVALID_USER, "호스트가 아닙니다.");
-        }
-        projectMemberRepository.deleteByUserId(targetUserId);
+    public void kickUsers(final List<Long> projectUserIdList) {
+        List<ProjectUser> projectUser = projectUserRepository.findAllById(projectUserIdList).stream().filter(user -> !user.isEnable()).toList();
+        projectUser.forEach(ProjectUser::disable);
+        alarmService.addAlarmList(projectUser);
     }
 }
