@@ -38,11 +38,11 @@ public class ProjectUser {
     private List<MeetingUser> meetingUserList = new ArrayList<>();
 
     public static ProjectUser from(final User user, final Project project) {
-        return ProjectUser.builder().user(user).project(project).build();
+        return ProjectUser.builder().user(user).project(project).enable(true).build();
     }
 
     public static ProjectUser from(Project project, Long userId) {
-        return ProjectUser.builder().project(project).user(new User(userId)).build();
+        return ProjectUser.builder().project(project).user(new User(userId)).enable(true).build();
     }
 
     public void updateRole(final String role) {

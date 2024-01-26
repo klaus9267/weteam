@@ -20,7 +20,14 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
 
     boolean existsByHostId(final Long hostId);
 
-    @EntityGraph(attributePaths = {"projectUserList", "host"})
+    @Query("""
+           SELECT p
+           FROM projects p
+                LEFT JOIN FETCH project_users pu ON pu.project.id = p.id
+           WHERE p.host.id = :hostId
+                AND p.done = :done
+                AND pu.enable = true
+           """)
     Page<Project> findAllByHostIdAndDone(final Pageable pageable, final Long hostId, final boolean done);
 
     Optional<Project> findByHostIdAndNameAndExplanation(final Long hostId, final String name, final String explanation);
