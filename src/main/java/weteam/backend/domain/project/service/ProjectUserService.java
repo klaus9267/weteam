@@ -35,7 +35,7 @@ public class ProjectUserService {
 
     @Transactional
     public void acceptInvite(final Long projectId) {
-        Project project= projectRepository.findById(projectId).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND));
+        Project project = projectRepository.findById(projectId).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND));
         project.getProjectUserList().forEach(projectUser -> {
             if (projectUser.getUser().getId().equals(securityUtil.getId())) {
                 throw new CustomException(CustomErrorCode.DUPLICATE);
@@ -52,15 +52,9 @@ public class ProjectUserService {
     }
 
     @Transactional
-    public void kickUser(final Long projectUserId) {
-        ProjectUser projectUser = projectUserRepository.findById(projectUserId).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND));
-        if (!projectUser.isEnable()) {
-            throw new CustomException(CustomErrorCode.BAD_REQUEST, "이미 팀플을 나간 유저입니다.");
-        }
-        if (!projectUser.getProject().getHost().getId().equals(securityUtil.getId())) {
-            throw new CustomException(CustomErrorCode.BAD_REQUEST, "호스트가 아닙니다.");
-        }
-        projectUser.disable();
-        alarmService.addAlarmWithTargetUser(projectUser.getProject(), AlarmStatus.KICK, projectUserId);
+    public void kickUsers(final List<Long> projectUserIdList) {
+        List<ProjectUser> projectUser = projectUserRepository.findAllById(projectUserIdList).stream().filter(user -> !user.isEnable()).toList();
+        projectUser.forEach(ProjectUser::disable);
+        alarmService.addAlarmList(projectUser);
     }
 }

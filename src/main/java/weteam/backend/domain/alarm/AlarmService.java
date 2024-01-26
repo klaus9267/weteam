@@ -10,8 +10,10 @@ import weteam.backend.application.handler.exception.CustomException;
 import weteam.backend.domain.alarm.dto.AlarmDto;
 import weteam.backend.domain.alarm.dto.AlarmPaginationDto;
 import weteam.backend.domain.project.entity.Project;
+import weteam.backend.domain.project.entity.ProjectUser;
 import weteam.backend.domain.project.repository.ProjectRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -34,6 +36,13 @@ public class AlarmService {
     @Transactional
     public void addAlarmWithTargetUser(final Project project, final AlarmStatus status, final Long userId) {
         final List<Alarm> alarmList = Alarm.from(project, status, userId);
+        alarmRepository.saveAll(alarmList);
+    }
+
+    @Transactional
+    public void addAlarmList(final List<ProjectUser> projectUserList) {
+        List<Alarm> alarmList = new ArrayList<>();
+        projectUserList.forEach(projectUser -> Alarm.from(projectUser.getProject(), AlarmStatus.KICK, projectUser.getUser().getId()));
         alarmRepository.saveAll(alarmList);
     }
 
