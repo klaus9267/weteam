@@ -7,7 +7,7 @@ import weteam.backend.application.CustomErrorCode;
 import weteam.backend.application.auth.SecurityUtil;
 import weteam.backend.application.handler.exception.CustomException;
 import weteam.backend.domain.project.repository.ProjectRepository;
-import weteam.backend.domain.user.dto.UserDto;
+import weteam.backend.domain.user.dto.UserWithProfileImageDto;
 import weteam.backend.domain.user.entity.User;
 
 @Service
@@ -17,9 +17,8 @@ public class UserService {
     private final ProjectRepository projectRepository;
     private final SecurityUtil securityUtil;
 
-    public UserDto findOneById(Long id) {
-        User user = this.findOne(id);
-        return UserDto.from(user);
+    public UserWithProfileImageDto findOneById(Long id) {
+        return userRepository.findWithProfileImage(id).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND));
     }
 
     private User findOne(Long id) {
