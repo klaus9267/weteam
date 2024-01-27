@@ -2,7 +2,6 @@ package weteam.backend.domain.user.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import weteam.backend.domain.profile.ProfileImage;
 import weteam.backend.domain.profile.dto.ProfileDto;
 import weteam.backend.domain.user.entity.User;
 import weteam.backend.domain.user.entity.UserRole;
@@ -17,12 +16,16 @@ public class UserWithProfileImageDto {
     private final UserRole role;
     private final ProfileDto profile;
 
-    public UserWithProfileImageDto(final User user, final ProfileImage profileImage) {
+    private UserWithProfileImageDto(final User user) {
         this.id = user.getId();
         this.username = user.getUsername();
         this.email = user.getEmail();
         this.organization = user.getOrganization();
         this.role = user.getRole();
-        this.profile = ProfileDto.from(profileImage);
+        this.profile = user.getProfileImage() == null ? null : ProfileDto.from(user.getProfileImage());
+    }
+
+    public static UserWithProfileImageDto from(final User user) {
+        return new UserWithProfileImageDto(user);
     }
 }

@@ -17,8 +17,9 @@ public class UserService {
     private final ProjectRepository projectRepository;
     private final SecurityUtil securityUtil;
 
-    public UserWithProfileImageDto findOneById(Long id) {
-        return userRepository.findWithProfileImage(id).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND));
+    public UserWithProfileImageDto findOneById(Long userId) {
+        final User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND));
+        return UserWithProfileImageDto.from(user);
     }
 
     private User findOne(Long id) {

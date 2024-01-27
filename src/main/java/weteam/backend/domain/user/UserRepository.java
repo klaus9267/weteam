@@ -9,12 +9,4 @@ import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByUid(String uid);
-
-    @Query("""
-           SELECT new weteam.backend.domain.user.dto.UserWithProfileImageDto(u,i)
-           FROM users u
-                LEFT JOIN FETCH profile_images i ON u.profileImage.user = u
-           WHERE u.id = :userId
-           """)
-    Optional<UserWithProfileImageDto> findWithProfileImage(final Long userId);
 }
