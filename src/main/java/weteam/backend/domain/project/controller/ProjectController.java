@@ -32,7 +32,7 @@ public class ProjectController {
     }
 
     @GetMapping
-    @Operation(summary = "팀플 목록 조회 | done으로 종료, 진행 분류해서 조회")
+    @Operation(summary = "팀플 목록 조회", description = "done으로 종료, 진행 분류해서 조회")
     @ApiResponse(responseCode = "200", useReturnTypeSchema = true)
     @PageableAsQueryParam
     public ResponseEntity<ProjectPaginationDto> readProjectList(@ParameterObject @Valid final ProjectPaginationParam paginationParam) {

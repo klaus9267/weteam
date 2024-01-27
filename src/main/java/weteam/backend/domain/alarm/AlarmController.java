@@ -21,9 +21,9 @@ public class AlarmController {
     private final AlarmService alarmService;
 
     @GetMapping
-    @SwaggerOK(summary = "알람 조회")
+    @SwaggerOK(summary = "알람 조회", description = "JOIN = 팀플 참가, EXIT = 팀플 탈퇴, CHANGE_HOST = 호스트 변경, UPDATE_PROJECT = 팀플 수정, KICK = 팀원 강퇴, DONE = 팀플 종료")
     @PageableAsQueryParam
-    public ResponseEntity<AlarmPaginationDto> readAlarms(@AuthenticationPrincipal final UserDto user,@Parameter(hidden = true) Pageable pageable) {
+    public ResponseEntity<AlarmPaginationDto> readAlarms(@AuthenticationPrincipal final UserDto user, @Parameter(hidden = true) Pageable pageable) {
         final AlarmPaginationDto alarmPaginationDto = alarmService.readAlarmList(pageable, user.id());
         return ResponseEntity.ok(alarmPaginationDto);
     }

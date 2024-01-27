@@ -22,13 +22,6 @@ public class ProfileController {
         profileService.addProfileImage(imageIdx);
     }
 
-    @GetMapping
-    @SwaggerOK(summary = "프로필 사진 조회")
-    public ResponseEntity<ProfileDto> readProfileImage() {
-        final ProfileDto profileDto = profileService.findProfileImage();
-        return ResponseEntity.ok(profileDto);
-    }
-
     @PatchMapping("{imageIdx}")
     @SwaggerNoContent(summary = "프로필 사진 변경")
     public void updateProfileImage(@PathVariable("imageIdx") final Long imageIdx) {

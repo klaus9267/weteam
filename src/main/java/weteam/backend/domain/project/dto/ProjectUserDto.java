@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import weteam.backend.domain.project.entity.ProjectUser;
-import weteam.backend.domain.user.dto.UserDto;
+import weteam.backend.domain.user.dto.UserWithProfileImageDto;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -15,13 +15,13 @@ import java.util.stream.Collectors;
 public class ProjectUserDto {
     private Long id;
     private String role;
-    private UserDto user;
+    private UserWithProfileImageDto user;
     private boolean enable;
 
     private ProjectUserDto(ProjectUser projectUser) {
         this.id = projectUser.getId();
         this.role = projectUser.getRole();
-        this.user = UserDto.from(projectUser.getUser());
+        this.user = UserWithProfileImageDto.from(projectUser.getUser());
         this.enable = projectUser.isEnable();
     }
 

@@ -17,11 +17,6 @@ public class ProfileService {
     private final UserRepository userRepository;
     private final SecurityUtil securityUtil;
 
-    public ProfileDto findProfileImage() {
-        final ProfileImage image = this.findOne();
-        return ProfileDto.from(image);
-    }
-
     @Transactional
     public void addProfileImage(final Long imageIdx) {
         User user = userRepository.findById(securityUtil.getId()).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND));
