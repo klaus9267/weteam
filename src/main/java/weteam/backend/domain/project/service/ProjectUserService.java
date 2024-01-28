@@ -57,4 +57,11 @@ public class ProjectUserService {
         projectUser.forEach(ProjectUser::disable);
         alarmService.addAlarmList(projectUser);
     }
+
+    @Transactional
+    public void exitProject(final Long projectId) {
+        Project project = projectRepository.findById(projectId).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND));
+        project.exitProject(securityUtil.getId());
+        alarmService.addAlarmWithTargetUser(project, AlarmStatus.EXIT, securityUtil.getId());
+    }
 }

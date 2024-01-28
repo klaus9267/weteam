@@ -37,14 +37,23 @@ public class ProjectUserController {
     }
 
     @PatchMapping("{projectId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @SwaggerNoContent(summary = "초대 수락", description = "응답 없음")
     public void acceptInvite(@PathVariable("projectId") final Long projectId) {
         projectUserService.acceptInvite(projectId);
     }
 
     @DeleteMapping
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @SwaggerNoContent(summary = "팀원 강퇴", description = "응답 없음")
     public void kickUser(@RequestParam("projectUserIdList") final List<Long> projectUserIdList) {
         projectUserService.kickUsers(projectUserIdList);
+    }
+
+    @DeleteMapping("{projectId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @SwaggerNoContent(summary = "팀플 탈퇴", description = "응답 없음")
+    public void exitProject(@PathVariable("projectId") final Long projectId) {
+        projectUserService.exitProject(projectId);
     }
 }
