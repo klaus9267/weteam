@@ -9,16 +9,17 @@
 - 기간 : 2023.11~
 - 작업 인원
     - **백엔드 1명**
-    - 프론트 2명
-    - 디자이너 4명
+    - 프론트 3명
+    - 디자이너 2명
+    - 기획 2명
 
 ## 기술 스택
 
 | spring boot | 3.0.12 |
 | --- | --- |
 | java | 17 |
-- jpa, queryDSL, swagger, OAuth
-- docker, ec2, rds
+- jpa, swagger, firebase
+- docker, aws(rds, ec2), github action
 
 ## ERD
-<img width="749" alt="image" src="https://github.com/klaus9267/weteam/assets/90795904/ebf112d4-0674-483f-bc5c-930b416cda50">
+![다이어그램](https://github.com/klaus9267/weteam/assets/90795904/e6397089-d9ad-49d0-900c-eea7ed9dc3c2)
