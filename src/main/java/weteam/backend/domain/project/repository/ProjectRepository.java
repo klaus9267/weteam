@@ -24,11 +24,11 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
            SELECT p
            FROM projects p
                 LEFT JOIN FETCH project_users pu ON pu.project.id = p.id
-           WHERE p.host.id = :hostId
+           WHERE pu.user.id = :userId
                 AND p.done = :done
                 AND pu.enable = true
            """)
-    Page<Project> findAllByHostIdAndDone(final Pageable pageable, final Long hostId, final boolean done);
+    Page<Project> findAllByHostIdAndDone(final Pageable pageable, final Long userId, final boolean done);
 
     Optional<Project> findByHostIdAndNameAndExplanation(final Long hostId, final String name, final String explanation);
 }

@@ -15,8 +15,8 @@ import java.util.stream.Collectors;
 public class ProjectUserDto {
     private Long id;
     private String role;
-    private UserWithProfileImageDto user;
     private boolean enable;
+    private UserWithProfileImageDto user;
 
     private ProjectUserDto(ProjectUser projectUser) {
         this.id = projectUser.getId();
