@@ -38,7 +38,7 @@ public class ProjectUserService {
         Project project = projectRepository.findById(projectId).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND));
         project.getProjectUserList().forEach(projectUser -> {
             if (projectUser.getUser().getId().equals(securityUtil.getId())) {
-                throw new CustomException(CustomErrorCode.DUPLICATE);
+                throw new CustomException(CustomErrorCode.DUPLICATE, "이미 참가한 프로젝트입니다.");
             }
         });
         ProjectUser projectUser = projectUserRepository.save(ProjectUser.from(project, securityUtil.getId()));

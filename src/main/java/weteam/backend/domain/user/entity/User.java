@@ -9,6 +9,7 @@ import weteam.backend.application.BaseEntity;
 import weteam.backend.domain.hashtag.Hashtag;
 import weteam.backend.domain.profile.ProfileImage;
 import weteam.backend.domain.project.entity.Project;
+import weteam.backend.domain.project.entity.ProjectUser;
 import weteam.backend.domain.user.dto.UserDto;
 
 import java.util.ArrayList;
@@ -36,6 +37,9 @@ public class User extends BaseEntity {
 
     @OneToMany(mappedBy = "host", cascade = CascadeType.ALL)
     private List<Project> projectList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<ProjectUser> projectUserList = new ArrayList<>();
 
     public User(final Long id) {
         this.id = id;

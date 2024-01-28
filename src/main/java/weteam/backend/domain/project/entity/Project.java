@@ -76,9 +76,10 @@ public class Project extends BaseEntity {
             throw new CustomException(CustomErrorCode.BAD_REQUEST, "호스트를 넘기기전에 탈퇴할 수 없습니다.");
         }
         this.getProjectUserList().forEach(projectUser -> {
-            if (projectUser.getUser().getId().equals(userId)) {
-                projectUser.disable();
+            if (projectUser.getUser().getId().equals(userId) && !projectUser.isEnable()) {
+                throw new CustomException(CustomErrorCode.BAD_REQUEST, "이미 탈퇴한 프로젝트입니다.");
             }
+            projectUser.disable();
         });
     }
 }

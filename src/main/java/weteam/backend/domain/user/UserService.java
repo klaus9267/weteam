@@ -17,24 +17,24 @@ public class UserService {
     private final ProjectRepository projectRepository;
     private final SecurityUtil securityUtil;
 
-    public UserWithProfileImageDto findOneById(Long userId) {
-        final User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND));
-        return UserWithProfileImageDto.from(user);
+    public UserWithProfileImageDto findOneById(final Long userId, final boolean isMine) {
+        final User user = this.findOne(userId);
+        return UserWithProfileImageDto.from(user, isMine);
     }
 
-    private User findOne(Long id) {
+    private User findOne(final Long id) {
         return userRepository.findById(id).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND));
     }
 
     @Transactional
-    public void updateOrganization(String organization) {
-        User user = this.findOne(securityUtil.getId());
+    public void updateOrganization(final String organization) {
+        final User user = this.findOne(securityUtil.getId());
         user.updateOrganization(organization);
     }
 
     @Transactional
     public void delete() {
-        Long userId = securityUtil.getId();
+        final Long userId = securityUtil.getId();
         if (projectRepository.existsByHostId(userId)) {
             throw new CustomException(CustomErrorCode.BAD_REQUEST, "호스트로 진행중인 팀플이 존재합니다.");
         }
