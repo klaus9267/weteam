@@ -21,7 +21,7 @@ public class ProjectUserDto {
     private ProjectUserDto(ProjectUser projectUser) {
         this.id = projectUser.getId();
         this.role = projectUser.getRole();
-        this.user = UserWithProfileImageDto.from(projectUser.getUser());
+        this.user = UserWithProfileImageDto.from(projectUser.getUser(), false);
         this.enable = projectUser.isEnable();
     }
 

@@ -16,16 +16,16 @@ public class UserWithProfileImageDto {
     private final UserRole role;
     private final ProfileDto profile;
 
-    private UserWithProfileImageDto(final User user) {
+    private UserWithProfileImageDto(final User user, final boolean isMine) {
         this.id = user.getId();
         this.username = user.getUsername();
-        this.email = user.getEmail();
+        this.email = isMine ? user.getEmail() : null;
         this.organization = user.getOrganization();
         this.role = user.getRole();
         this.profile = user.getProfileImage() == null ? null : ProfileDto.from(user.getProfileImage());
     }
 
-    public static UserWithProfileImageDto from(final User user) {
-        return new UserWithProfileImageDto(user);
+    public static UserWithProfileImageDto from(final User user, final boolean isMine) {
+        return new UserWithProfileImageDto(user, isMine);
     }
 }

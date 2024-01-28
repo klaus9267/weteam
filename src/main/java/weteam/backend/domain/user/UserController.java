@@ -24,17 +24,16 @@ public class UserController {
     @GetMapping("{id}")
     @SwaggerOK(summary = "다른 사용자 조회")
     public ResponseEntity<UserWithProfileImageDto> readOne(@PathVariable("id") final Long id) {
-        final UserWithProfileImageDto user = memberService.findOneById(id);
+        final UserWithProfileImageDto user = memberService.findOneById(id, false);
         return ResponseEntity.ok(user);
     }
 
     @GetMapping
     @SwaggerOK(summary = "내 정보 조회")
     public ResponseEntity<UserWithProfileImageDto> readMyInfo() {
-        final UserWithProfileImageDto user = memberService.findOneById(securityUtil.getId());
+        final UserWithProfileImageDto user = memberService.findOneById(securityUtil.getId(), true);
         return ResponseEntity.ok(user);
     }
-
 
     @PatchMapping("{organization}")
     @Operation(summary = "사용자 소속 변경", description = "응답 없음")
