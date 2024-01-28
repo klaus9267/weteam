@@ -12,6 +12,7 @@ import weteam.backend.application.handler.exception.ExceptionError;
 @Slf4j
 public class GlobalExceptionHandler {
     @ExceptionHandler(RuntimeException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     protected ExceptionError handleRuntime(final RuntimeException e) {
         log.warn(e.getMessage());
         return buildExceptionError(e, HttpStatus.INTERNAL_SERVER_ERROR);

@@ -3,6 +3,7 @@ package weteam.backend.domain.project.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import weteam.backend.application.BaseEntity;
+import weteam.backend.domain.alarm.Alarm;
 import weteam.backend.domain.project.dto.CreateProjectDto;
 import weteam.backend.domain.project.dto.UpdateProjectDto;
 import weteam.backend.domain.user.entity.User;
@@ -33,6 +34,9 @@ public class Project extends BaseEntity {
 
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
     private List<ProjectUser> projectUserList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
+    private List<Alarm> alarmList = new ArrayList<>();
 
     public Project(CreateProjectDto projectDto, Long userId) {
         User user = new User(userId);

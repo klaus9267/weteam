@@ -69,6 +69,7 @@ public class ProjectController {
     }
 
     @DeleteMapping("{projectId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @SwaggerNoContent(summary = "팀플 삭제")
     public void removeProject(@PathVariable("projectId") final Long projectId) {
         projectService.deleteProject(projectId);
