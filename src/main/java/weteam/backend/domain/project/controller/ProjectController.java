@@ -27,6 +27,7 @@ public class ProjectController {
 
     @PostMapping
     @SwaggerCreated(summary = "팀플 생성")
+    @ResponseStatus(HttpStatus.CREATED)
     public void addProject(@RequestBody @Valid final CreateProjectDto projectDto) {
         projectService.addProject(projectDto);
     }
@@ -37,7 +38,6 @@ public class ProjectController {
     @PageableAsQueryParam
     public ResponseEntity<ProjectPaginationDto> readProjectList(@ParameterObject @Valid final ProjectPaginationParam paginationParam) {
         final ProjectPaginationDto paginationDto = projectService.findProjects(paginationParam);
-
         return ResponseEntity.ok(paginationDto);
     }
 
