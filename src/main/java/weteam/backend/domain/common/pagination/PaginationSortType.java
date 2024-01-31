@@ -8,6 +8,7 @@ import org.springframework.data.domain.Sort;
 @Getter
 public enum PaginationSortType {
     DONE("done"),
+    STARTED_AT("startedAt"),
     EMPTY(null);
 
     private final String field;

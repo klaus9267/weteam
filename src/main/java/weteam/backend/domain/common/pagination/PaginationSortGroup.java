@@ -9,6 +9,7 @@ import java.util.List;
 @Getter
 public enum PaginationSortGroup {
     PROJECT(List.of(PaginationSortType.DONE)),
+    MEETING(List.of(PaginationSortType.STARTED_AT)),
     EMPTY(List.of(PaginationSortType.EMPTY));
 
     private final List<PaginationSortType> sortTypes;

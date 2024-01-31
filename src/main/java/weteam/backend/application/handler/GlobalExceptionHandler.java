@@ -8,13 +8,16 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import weteam.backend.application.handler.exception.ExceptionError;
 
+import java.util.Arrays;
+
 @RestControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler {
     @ExceptionHandler(RuntimeException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     protected ExceptionError handleRuntime(final RuntimeException e) {
-        log.warn(e.getMessage());
+        log.warn(e.toString());
+        e.printStackTrace();
         return buildExceptionError(e, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 

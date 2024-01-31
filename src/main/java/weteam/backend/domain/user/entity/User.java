@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import weteam.backend.application.BaseEntity;
+import weteam.backend.domain.meeting.entity.Meeting;
+import weteam.backend.domain.meeting.entity.MeetingUser;
 import weteam.backend.domain.profile.ProfileImage;
 import weteam.backend.domain.project.entity.Project;
 import weteam.backend.domain.project.entity.ProjectUser;
@@ -36,6 +38,9 @@ public class User extends BaseEntity {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<ProjectUser> projectUserList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "host", cascade = CascadeType.ALL)
+    private List<Meeting> meetingList = new ArrayList<>();
 
     public User(final Long id) {
         this.id = id;

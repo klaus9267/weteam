@@ -13,7 +13,6 @@ import java.lang.annotation.Target;
 @Target({ElementType.METHOD, ElementType.ANNOTATION_TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @Operation(responses = {@ApiResponse(responseCode = "201", description = "응답 없음")})
-@ResponseStatus(HttpStatus.CREATED)
 public @interface SwaggerCreated {
     String summary() default "";
 

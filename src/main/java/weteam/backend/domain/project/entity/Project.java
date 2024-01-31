@@ -52,6 +52,10 @@ public class Project extends BaseEntity {
         this.projectUserList.add(projectUser);
     }
 
+    public Project(final Long projectId) {
+        this.id = projectId;
+    }
+
     public static Project from(CreateProjectDto projectDto, Long userId) {
         return new Project(projectDto, userId);
     }

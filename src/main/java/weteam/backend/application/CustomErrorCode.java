@@ -9,6 +9,7 @@ public enum CustomErrorCode {
     NOT_FOUND_USER(HttpStatus.NOT_FOUND, "조회할 사용자를 찾을 수 없습니다."),
     NOT_FOUND_PROJECT(HttpStatus.NOT_FOUND, "조회할 프로젝트를 찾을 수 없습니다."),
     NOT_FOUND_PROJECT_USER(HttpStatus.NOT_FOUND, "조회할 프로젝트 멤버를 찾을 수 없습니다."),
+    NOT_FOUND_MEETING(HttpStatus.NOT_FOUND, "조회할 약속을 찾을 수 없습니다."),
     BAD_REQUEST(HttpStatus.BAD_REQUEST, "잘못된 요청사항입니다."),
     DUPLICATE(HttpStatus.CONFLICT, "이미 존재하는 데이터입니다."),
     WRONG_TOKEN(HttpStatus.UNAUTHORIZED, "잘못된 토큰입니다."),
