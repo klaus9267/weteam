@@ -12,6 +12,7 @@ import weteam.backend.application.swagger.SwaggerNoContent;
 import weteam.backend.application.swagger.SwaggerOK;
 import weteam.backend.domain.common.pagination.param.MeetingPaginationParam;
 import weteam.backend.domain.meeting.dto.meeting.CreateMeetingDto;
+import weteam.backend.domain.meeting.dto.meeting.MeetingDetailDto;
 import weteam.backend.domain.meeting.dto.meeting.MeetingPaginationDto;
 import weteam.backend.domain.meeting.dto.meeting.UpdateMeetingDto;
 
@@ -34,6 +35,13 @@ public class MeetingController {
     public ResponseEntity<MeetingPaginationDto> readMeetingList(@ParameterObject @Valid final MeetingPaginationParam paginationParam) {
         final MeetingPaginationDto meetingDtoList = meetingService.readMeetingList(paginationParam);
         return ResponseEntity.ok(meetingDtoList);
+    }
+
+    @GetMapping("{meetingId}")
+    @SwaggerOK(summary = "약속 상세 조회")
+    public ResponseEntity<MeetingDetailDto> readMeeting(@PathVariable("meetingId") final Long meetingId) {
+        final MeetingDetailDto meetingDetailDto = meetingService.readMeeting(meetingId);
+        return ResponseEntity.ok(meetingDetailDto);
     }
 
     @PatchMapping("{meetingId}")
