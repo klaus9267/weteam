@@ -2,10 +2,9 @@ package weteam.backend.domain.meeting.dto;
 
 import java.time.LocalDateTime;
 
-public record CreateMeetingDto(
-        String title,
+public record TimeSlotDto(
+        Long id,
         LocalDateTime startedAt,
-        LocalDateTime endedAt,
-        Long projectId
+        LocalDateTime endedAt
 ) {
 }

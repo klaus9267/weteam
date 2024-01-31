@@ -28,14 +28,14 @@ public class ProjectUserService {
     public List<ProjectUserDto> findUsersByProjectId(final Long projectId) {
         final List<ProjectUser> projectUserList = projectUserRepository.findByProjectId(projectId);
         if (projectUserList.isEmpty()) {
-            throw new CustomException(CustomErrorCode.NOT_FOUND);
+            throw new CustomException(CustomErrorCode.NOT_FOUND_PROJECT_USER);
         }
         return ProjectUserDto.from(projectUserList);
     }
 
     @Transactional
     public void acceptInvite(final Long projectId) {
-        Project project = projectRepository.findById(projectId).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND));
+        Project project = projectRepository.findById(projectId).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND_PROJECT));
         project.getProjectUserList().forEach(projectUser -> {
             if (projectUser.getUser().getId().equals(securityUtil.getId())) {
                 throw new CustomException(CustomErrorCode.DUPLICATE, "이미 참가한 프로젝트입니다.");
@@ -47,7 +47,7 @@ public class ProjectUserService {
 
     @Transactional
     public void updateProjectRole(final UpdateProjectRoleParam param) {
-        ProjectUser projectUser = projectUserRepository.findByProjectIdAndUserId(param.getProjectId(), securityUtil.getId()).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND));
+        ProjectUser projectUser = projectUserRepository.findByProjectIdAndUserId(param.getProjectId(), securityUtil.getId()).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND_PROJECT_USER));
         projectUser.updateRole(param.getRole());
     }
 
@@ -60,7 +60,7 @@ public class ProjectUserService {
 
     @Transactional
     public void exitProject(final Long projectId) {
-        Project project = projectRepository.findById(projectId).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND));
+        Project project = projectRepository.findById(projectId).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND_PROJECT));
         project.exitProject(securityUtil.getId());
         alarmService.addAlarmWithTargetUser(project, AlarmStatus.EXIT, securityUtil.getId());
     }

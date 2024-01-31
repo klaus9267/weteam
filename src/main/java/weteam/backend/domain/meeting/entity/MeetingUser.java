@@ -29,4 +29,13 @@ public class MeetingUser {
 
     @OneToMany(mappedBy = "meetingUser", cascade = CascadeType.ALL)
     private List<TimeSlot> timeSlotList = new ArrayList<>();
+
+    private MeetingUser(final ProjectUser projectUser, final Meeting meeting) {
+        this.meeting = meeting;
+        this.projectUser = projectUser;
+    }
+
+    public static MeetingUser from(final ProjectUser projectUser, final Meeting meeting) {
+        return new MeetingUser(projectUser, meeting);
+    }
 }

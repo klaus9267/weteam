@@ -20,7 +20,8 @@ public class UserDetailCustomService {
 
     private User registerUser(FirebaseToken token) {
         return userRepository.findByUid(token.getUid()).orElseGet(() -> userRepository.save(
-                User.builder().uid(token.getUid())
+                User.builder()
+                    .uid(token.getUid())
                     .email(token.getEmail())
                     .username(token.getName())
                     .role(UserRole.USER)

@@ -52,6 +52,10 @@ public class Project extends BaseEntity {
         this.projectUserList.add(projectUser);
     }
 
+    public Project(final Long projectId) {
+        this.id = projectId;
+    }
+
     public static Project from(CreateProjectDto projectDto, Long userId) {
         return new Project(projectDto, userId);
     }
@@ -61,6 +65,9 @@ public class Project extends BaseEntity {
     }
 
     public void updateHost(final User newHost) {
+        if (this.host.equals(newHost)) {
+            throw new CustomException(CustomErrorCode.BAD_REQUEST, "이미 호스트로 진행중인 프로젝트입니다.");
+        }
         this.host = newHost;
     }
 
