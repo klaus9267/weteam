@@ -41,6 +41,9 @@ public class MeetingService {
     @Transactional
     public void updateMeeting(final UpdateMeetingDto meetingDto, final Long meetingId) {
         Meeting meeting = meetingRepository.findById(meetingId).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND_MEETING));
+        if (!meeting.getHost().getId().equals(securityUtil.getId())) {
+            throw new CustomException(CustomErrorCode.INVALID_HOST);
+        }
         meeting.updateMeeting(meetingDto);
     }
 

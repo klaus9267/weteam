@@ -5,6 +5,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springdoc.core.converters.models.PageableAsQueryParam;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import weteam.backend.application.swagger.SwaggerCreated;
@@ -24,10 +25,13 @@ public class MeetingController {
     private final MeetingService meetingService;
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     @SwaggerCreated(summary = "약속 생성")
     public void addMeeting(@Valid @RequestBody final CreateMeetingDto meetingDto) {
         meetingService.addMeeting(meetingDto);
     }
+
+    @PostMapping
 
     @GetMapping
     @SwaggerOK(summary = "약속 목록 조회")
@@ -45,6 +49,7 @@ public class MeetingController {
     }
 
     @PatchMapping("{meetingId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @SwaggerNoContent(summary = "약속 수정")
     public void updateMeeting(
             @PathVariable("meetingId") final Long meetingId,
@@ -54,6 +59,7 @@ public class MeetingController {
     }
 
     @DeleteMapping("{meetingId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @SwaggerNoContent(summary = "약속 삭제")
     public void updateMeeting(@PathVariable("meetingId") final Long meetingId) {
         meetingService.deleteMeeting(meetingId);
