@@ -8,8 +8,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import weteam.backend.application.swagger.SwaggerNoContent;
-import weteam.backend.application.swagger.SwaggerOK;
+import weteam.backend.domain.common.swagger.SwaggerNoContent;
+import weteam.backend.domain.common.swagger.SwaggerOK;
 import weteam.backend.domain.alarm.dto.AlarmPaginationDto;
 import weteam.backend.domain.user.dto.UserDto;
 
