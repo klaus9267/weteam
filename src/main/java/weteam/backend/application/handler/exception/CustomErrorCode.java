@@ -1,4 +1,4 @@
-package weteam.backend.application;
+package weteam.backend.application.handler.exception;
 
 import lombok.Getter;
 import org.springframework.http.HttpStatus;

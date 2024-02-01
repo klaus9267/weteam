@@ -3,10 +3,9 @@ package weteam.backend.domain.profile;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import weteam.backend.application.CustomErrorCode;
+import weteam.backend.application.handler.exception.CustomErrorCode;
 import weteam.backend.application.auth.SecurityUtil;
 import weteam.backend.application.handler.exception.CustomException;
-import weteam.backend.domain.profile.dto.ProfileDto;
 import weteam.backend.domain.user.UserRepository;
 import weteam.backend.domain.user.entity.User;
 

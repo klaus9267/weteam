@@ -3,7 +3,7 @@ package weteam.backend.domain.project.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import weteam.backend.application.BaseEntity;
-import weteam.backend.application.CustomErrorCode;
+import weteam.backend.application.handler.exception.CustomErrorCode;
 import weteam.backend.application.handler.exception.CustomException;
 import weteam.backend.domain.alarm.Alarm;
 import weteam.backend.domain.project.dto.CreateProjectDto;

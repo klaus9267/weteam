@@ -1,4 +1,4 @@
-package weteam.backend.application.config;
+package weteam.backend.application;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
