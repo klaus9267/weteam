@@ -31,8 +31,6 @@ public class MeetingController {
         meetingService.addMeeting(meetingDto);
     }
 
-    @PostMapping
-
     @GetMapping
     @SwaggerOK(summary = "약속 목록 조회")
     @PageableAsQueryParam
