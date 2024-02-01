@@ -8,10 +8,7 @@ import weteam.backend.application.CustomErrorCode;
 import weteam.backend.application.auth.SecurityUtil;
 import weteam.backend.application.handler.exception.CustomException;
 import weteam.backend.domain.common.pagination.param.MeetingPaginationParam;
-import weteam.backend.domain.meeting.dto.meeting.CreateMeetingDto;
-import weteam.backend.domain.meeting.dto.meeting.MeetingDto;
-import weteam.backend.domain.meeting.dto.meeting.MeetingPaginationDto;
-import weteam.backend.domain.meeting.dto.meeting.UpdateMeetingDto;
+import weteam.backend.domain.meeting.dto.meeting.*;
 import weteam.backend.domain.meeting.entity.Meeting;
 import weteam.backend.domain.meeting.repository.MeetingRepository;
 import weteam.backend.domain.project.entity.Project;
@@ -24,10 +21,10 @@ public class MeetingService {
     private final ProjectRepository projectRepository;
     private final SecurityUtil securityUtil;
 
-    //    public MeetingDto readMeeting(final Long meetingId) {
-    //        final Meeting meeting = meetingRepository.findById(meetingId).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND_MEETING));
-    //        return MeetingDto.from(meeting);
-    //    }
+    public MeetingDetailDto readMeeting(final Long meetingId) {
+        final Meeting meeting = meetingRepository.findById(meetingId).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND_MEETING));
+        return MeetingDetailDto.from(meeting);
+    }
 
     public MeetingPaginationDto readMeetingList(final MeetingPaginationParam paginationParam) {
         final Page<MeetingDto> meetingPage = meetingRepository.findAllByUserId(paginationParam.toPageable(), securityUtil.getId());
@@ -44,6 +41,9 @@ public class MeetingService {
     @Transactional
     public void updateMeeting(final UpdateMeetingDto meetingDto, final Long meetingId) {
         Meeting meeting = meetingRepository.findById(meetingId).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND_MEETING));
+        if (!meeting.getHost().getId().equals(securityUtil.getId())) {
+            throw new CustomException(CustomErrorCode.INVALID_HOST);
+        }
         meeting.updateMeeting(meetingDto);
     }
 
