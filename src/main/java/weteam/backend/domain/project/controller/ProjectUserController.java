@@ -1,6 +1,7 @@
 package weteam.backend.domain.project.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -47,7 +48,9 @@ public class ProjectUserController {
     @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @SwaggerNoContent(summary = "팀원 강퇴", description = "응답 없음")
-    public void kickUser(@NotNull @RequestParam("projectUserIdList") final List<Long> projectUserIdList) {
+    public void kickUser(
+            @Parameter(description = "userId가 아닌 projectUserId")
+            @NotNull @RequestParam("projectUserIdList") final List<Long> projectUserIdList) {
         projectUserService.kickUsers(projectUserIdList);
     }
 

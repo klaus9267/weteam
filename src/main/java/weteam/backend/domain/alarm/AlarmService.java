@@ -40,9 +40,9 @@ public class AlarmService {
     }
 
     @Transactional
-    public void addAlarmList(final List<ProjectUser> projectUserList) {
+    public void addAlarmList(final List<ProjectUser> projectUserList, final AlarmStatus status) {
         List<Alarm> alarmList = new ArrayList<>();
-        projectUserList.forEach(projectUser -> Alarm.from(projectUser.getProject(), AlarmStatus.KICK, projectUser.getUser().getId()));
+        projectUserList.forEach(projectUser -> alarmList.addAll(Alarm.from(projectUser.getProject(), status, projectUser.getUser().getId())));
         alarmRepository.saveAll(alarmList);
     }
 

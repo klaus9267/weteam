@@ -6,6 +6,7 @@ import weteam.backend.application.BaseEntity;
 import weteam.backend.application.handler.exception.CustomErrorCode;
 import weteam.backend.application.handler.exception.CustomException;
 import weteam.backend.domain.alarm.Alarm;
+import weteam.backend.domain.meeting.entity.Meeting;
 import weteam.backend.domain.project.dto.CreateProjectDto;
 import weteam.backend.domain.project.dto.UpdateProjectDto;
 import weteam.backend.domain.user.entity.User;
@@ -39,6 +40,9 @@ public class Project extends BaseEntity {
 
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
     private List<Alarm> alarmList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
+    private List<Meeting> meetingList = new ArrayList<>();
 
     public Project(CreateProjectDto projectDto, Long userId) {
         User user = new User(userId);
@@ -76,17 +80,5 @@ public class Project extends BaseEntity {
         this.startedAt = projectDto.startedAt();
         this.endedAt = projectDto.startedAt();
         this.explanation = projectDto.explanation() == null ? explanation : projectDto.explanation();
-    }
-
-    public void exitProject(final Long userId) {
-        if (this.host.getId().equals(userId)) {
-            throw new CustomException(CustomErrorCode.BAD_REQUEST, "호스트를 넘기기전에 탈퇴할 수 없습니다.");
-        }
-        this.getProjectUserList().forEach(projectUser -> {
-            if (projectUser.getUser().getId().equals(userId) && !projectUser.isEnable()) {
-                throw new CustomException(CustomErrorCode.BAD_REQUEST, "이미 탈퇴한 프로젝트입니다.");
-            }
-            projectUser.disable();
-        });
     }
 }
