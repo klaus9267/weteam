@@ -9,6 +9,8 @@ import org.springframework.data.domain.Sort;
 public enum PaginationSortType {
     DONE("done"),
     STARTED_AT("startedAt"),
+    PROJECT_ID("projectId"),
+    IS_READ("isRead"),
     EMPTY(null);
 
     private final String field;
