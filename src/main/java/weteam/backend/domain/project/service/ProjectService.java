@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import weteam.backend.application.handler.exception.CustomErrorCode;
 import weteam.backend.application.auth.SecurityUtil;
+import weteam.backend.application.handler.exception.CustomErrorCode;
 import weteam.backend.application.handler.exception.CustomException;
 import weteam.backend.domain.alarm.AlarmService;
 import weteam.backend.domain.alarm.AlarmStatus;
@@ -39,8 +39,8 @@ public class ProjectService {
         return projectRepository.findByIdAndUserId(projectId, securityUtil.getId()).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND_PROJECT));
     }
 
-    public ProjectPaginationDto findProjects(final ProjectPaginationParam paginationParam) {
-        final Page<Project> projectPage = projectRepository.findAllByHostIdAndDone(paginationParam.toPageable(), securityUtil.getId(), paginationParam.isDone());
+    public ProjectPaginationDto findProjects(final ProjectPaginationParam paginationParam, final Long userId) {
+        final Page<Project> projectPage = projectRepository.findAllByHostIdAndDone(paginationParam.toPageable(), userId, paginationParam.isDone());
         return ProjectPaginationDto.from(projectPage);
     }
 
