@@ -3,10 +3,9 @@ package weteam.backend.domain.profile;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import weteam.backend.application.CustomErrorCode;
+import weteam.backend.application.handler.exception.CustomErrorCode;
 import weteam.backend.application.auth.SecurityUtil;
 import weteam.backend.application.handler.exception.CustomException;
-import weteam.backend.domain.profile.dto.ProfileDto;
 import weteam.backend.domain.user.UserRepository;
 import weteam.backend.domain.user.entity.User;
 
@@ -20,6 +19,9 @@ public class ProfileService {
     @Transactional
     public void addProfileImage(final Long imageIdx) {
         User user = userRepository.findById(securityUtil.getId()).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND));
+        if (user.getProfileImage() != null) {
+            throw new CustomException(CustomErrorCode.DUPLICATE);
+        }
         final ProfileImage image = ProfileImage.from(imageIdx, user);
         profileRepository.save(image);
     }

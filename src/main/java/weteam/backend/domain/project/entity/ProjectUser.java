@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import weteam.backend.application.handler.exception.CustomErrorCode;
+import weteam.backend.application.handler.exception.CustomException;
 import weteam.backend.domain.meeting.entity.MeetingUser;
 import weteam.backend.domain.user.entity.User;
 
@@ -50,6 +52,12 @@ public class ProjectUser {
     }
 
     public void disable() {
+        if (!this.enable) {
+            throw new CustomException(CustomErrorCode.BAD_REQUEST, "이미 탈퇴한 프로젝트입니다.");
+        }
+        if (this.getProject().getHost().getId().equals(this.user.getId())) {
+            throw new CustomException(CustomErrorCode.BAD_REQUEST, "호스트를 넘기기전에 탈퇴할 수 없습니다.");
+        }
         this.enable = !enable;
     }
 }

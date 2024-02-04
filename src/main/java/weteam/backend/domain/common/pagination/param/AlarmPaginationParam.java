@@ -9,34 +9,25 @@ import weteam.backend.domain.common.pagination.PaginationSortGroup;
 import weteam.backend.domain.common.pagination.PaginationSortType;
 import weteam.backend.domain.common.pagination.PaginationValidation;
 
-
 @Getter
-public class ProjectPaginationParam extends AbstractPaginationParam {
+public class AlarmPaginationParam extends AbstractPaginationParam {
     @Parameter(example = "0", required = true)
     private final Integer page;
 
     @Parameter(example = "10", required = true)
     private final Integer size;
 
-    @Parameter(example = "false")
-    private final boolean done;
-
-    @Parameter(example = "1")
-    private final Long userId;
-
-    @Parameter(name = "direction", description = "default desc")
+    @Parameter(name = "direction", description = "default asc")
     private final Sort.Direction direction;
 
-    @PaginationValidation(sortGroup = PaginationSortGroup.PROJECT)
+    @PaginationValidation(sortGroup = PaginationSortGroup.ALARM)
     private final PaginationSortType field;
 
-    public ProjectPaginationParam(final Integer page, final Integer size, final boolean done, final Long userId, final PaginationSortType field, final Sort.Direction direction, final String test) {
+    public AlarmPaginationParam(final Integer page, final Integer size, final PaginationSortType field, final Sort.Direction direction) {
         this.page = Math.max(page, 0);
         this.size = Math.max(size, 10);
-        this.done = done;
-        this.userId = userId;
-        this.field = field == null ? PaginationSortType.DONE : field;
-        this.direction = direction == null ? Sort.Direction.DESC : direction;
+        this.field = field == null ? PaginationSortType.IS_READ : field;
+        this.direction = direction == null ? Sort.Direction.ASC : direction;
     }
 
     public Pageable toPageable() {

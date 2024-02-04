@@ -3,7 +3,7 @@ package weteam.backend.domain.user;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import weteam.backend.application.CustomErrorCode;
+import weteam.backend.application.handler.exception.CustomErrorCode;
 import weteam.backend.application.auth.SecurityUtil;
 import weteam.backend.application.handler.exception.CustomException;
 import weteam.backend.domain.project.repository.ProjectRepository;

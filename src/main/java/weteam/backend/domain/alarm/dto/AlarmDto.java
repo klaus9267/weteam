@@ -18,16 +18,12 @@ public class AlarmDto {
     private final UserDto user;
     private final ProjectDto project;
 
-    public AlarmDto(Alarm alarm) {
+    public AlarmDto(final Alarm alarm) {
         this.id = alarm.getId();
         this.isRead = alarm.isRead();
         this.user = UserDto.from(alarm.getUser());
         this.project = ProjectDto.from(alarm.getProject());
         this.status = alarm.getStatus();
         this.date = alarm.getDate();
-    }
-
-    public static List<AlarmDto> from(final List<Alarm> alarmList) {
-        return alarmList.stream().map(AlarmDto::new).toList();
     }
 }

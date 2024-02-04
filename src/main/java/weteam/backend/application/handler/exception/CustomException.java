@@ -1,7 +1,6 @@
 package weteam.backend.application.handler.exception;
 
 import lombok.Getter;
-import weteam.backend.application.CustomErrorCode;
 
 @Getter
 public class CustomException extends RuntimeException {

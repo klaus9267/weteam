@@ -8,8 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import weteam.backend.application.auth.SecurityUtil;
-import weteam.backend.application.swagger.SwaggerNoContent;
-import weteam.backend.application.swagger.SwaggerOK;
+import weteam.backend.domain.common.swagger.SwaggerNoContent;
+import weteam.backend.domain.common.swagger.SwaggerOK;
 import weteam.backend.domain.user.dto.UserWithProfileImageDto;
 
 @RestController

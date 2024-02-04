@@ -3,8 +3,8 @@ package weteam.backend.domain.project.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import weteam.backend.application.CustomErrorCode;
 import weteam.backend.application.auth.SecurityUtil;
+import weteam.backend.application.handler.exception.CustomErrorCode;
 import weteam.backend.application.handler.exception.CustomException;
 import weteam.backend.domain.alarm.AlarmService;
 import weteam.backend.domain.alarm.AlarmStatus;
@@ -53,15 +53,15 @@ public class ProjectUserService {
 
     @Transactional
     public void kickUsers(final List<Long> projectUserIdList) {
-        List<ProjectUser> projectUser = projectUserRepository.findAllById(projectUserIdList).stream().filter(user -> !user.isEnable()).toList();
+        List<ProjectUser> projectUser = projectUserRepository.findAllById(projectUserIdList).stream().filter(ProjectUser::isEnable).toList();
         projectUser.forEach(ProjectUser::disable);
-        alarmService.addAlarmList(projectUser);
+        alarmService.addAlarmList(projectUser, AlarmStatus.KICK);
     }
 
     @Transactional
     public void exitProject(final Long projectId) {
-        Project project = projectRepository.findById(projectId).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND_PROJECT));
-        project.exitProject(securityUtil.getId());
-        alarmService.addAlarmWithTargetUser(project, AlarmStatus.EXIT, securityUtil.getId());
+        ProjectUser projectUser = projectUserRepository.findByProjectIdAndUserId(projectId, securityUtil.getId()).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND_PROJECT));
+        projectUser.disable();
+        alarmService.addAlarmWithTargetUser(projectUser.getProject(), AlarmStatus.EXIT, securityUtil.getId());
     }
 }
