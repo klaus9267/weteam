@@ -19,6 +19,9 @@ public class ProfileService {
     @Transactional
     public void addProfileImage(final Long imageIdx) {
         User user = userRepository.findById(securityUtil.getId()).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND));
+        if (user.getProfileImage() != null) {
+            throw new CustomException(CustomErrorCode.DUPLICATE);
+        }
         final ProfileImage image = ProfileImage.from(imageIdx, user);
         profileRepository.save(image);
     }
