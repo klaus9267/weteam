@@ -21,16 +21,20 @@ public class ProjectPaginationParam extends AbstractPaginationParam {
     @Parameter(example = "false")
     private final boolean done;
 
+    @Parameter(example = "1")
+    private final Long userId;
+
     @Parameter(name = "direction", description = "default desc")
     private final Sort.Direction direction;
 
     @PaginationValidation(sortGroup = PaginationSortGroup.PROJECT)
     private final PaginationSortType field;
 
-    public ProjectPaginationParam(final Integer page, final Integer size, final boolean done, final PaginationSortType field, final Sort.Direction direction, final String test) {
+    public ProjectPaginationParam(final Integer page, final Integer size, final boolean done, final Long userId, final PaginationSortType field, final Sort.Direction direction, final String test) {
         this.page = Math.max(page, 0);
         this.size = Math.max(size, 10);
         this.done = done;
+        this.userId = userId;
         this.field = field == null ? PaginationSortType.DONE : field;
         this.direction = direction == null ? Sort.Direction.DESC : direction;
     }

@@ -11,6 +11,7 @@ import weteam.backend.domain.alarm.AlarmService;
 import weteam.backend.domain.alarm.AlarmStatus;
 import weteam.backend.domain.common.pagination.param.ProjectPaginationParam;
 import weteam.backend.domain.project.dto.CreateProjectDto;
+import weteam.backend.domain.project.dto.ProjectDto;
 import weteam.backend.domain.project.dto.ProjectPaginationDto;
 import weteam.backend.domain.project.dto.UpdateProjectDto;
 import weteam.backend.domain.project.entity.Project;
@@ -39,9 +40,14 @@ public class ProjectService {
         return projectRepository.findByIdAndUserId(projectId, securityUtil.getId()).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND_PROJECT));
     }
 
-    public ProjectPaginationDto findProjects(final ProjectPaginationParam paginationParam, final Long userId) {
-        final Page<Project> projectPage = projectRepository.findAllByHostIdAndDone(paginationParam.toPageable(), userId, paginationParam.isDone());
+    public ProjectPaginationDto findProjects(final ProjectPaginationParam paginationParam) {
+        final Page<Project> projectPage = projectRepository.findAllByUserIdAndDone(paginationParam.toPageable(), paginationParam.getUserId(), paginationParam.isDone());
         return ProjectPaginationDto.from(projectPage);
+    }
+
+    public ProjectDto findProject(final Long projectId) {
+        final Project project = projectRepository.findById(projectId).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND_PROJECT));
+        return ProjectDto.from(project);
     }
 
     @Transactional

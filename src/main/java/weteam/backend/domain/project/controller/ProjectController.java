@@ -1,7 +1,6 @@
 package weteam.backend.domain.project.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +13,9 @@ import weteam.backend.application.auth.SecurityUtil;
 import weteam.backend.domain.common.pagination.param.ProjectPaginationParam;
 import weteam.backend.domain.common.swagger.SwaggerCreated;
 import weteam.backend.domain.common.swagger.SwaggerNoContent;
+import weteam.backend.domain.common.swagger.SwaggerOK;
 import weteam.backend.domain.project.dto.CreateProjectDto;
+import weteam.backend.domain.project.dto.ProjectDto;
 import weteam.backend.domain.project.dto.ProjectPaginationDto;
 import weteam.backend.domain.project.dto.UpdateProjectDto;
 import weteam.backend.domain.project.service.ProjectService;
@@ -34,16 +35,19 @@ public class ProjectController {
         projectService.addProject(projectDto);
     }
 
-    @GetMapping("{userId}")
-    @Operation(summary = "팀플 목록 조회", description = "done으로 종료, 진행 분류해서 조회")
-    @ApiResponse(responseCode = "200", useReturnTypeSchema = true)
+    @GetMapping
+    @SwaggerOK(summary = "팀플 목록 조회", description = "done으로 종료, 진행 분류해서 조회")
     @PageableAsQueryParam
-    public ResponseEntity<ProjectPaginationDto> readProjectList(
-            @ParameterObject @Valid final ProjectPaginationParam paginationParam,
-            @PathVariable("userId") final Long userId
-    ) {
-        final ProjectPaginationDto paginationDto = projectService.findProjects(paginationParam, userId);
+    public ResponseEntity<ProjectPaginationDto> readProjectList(@ParameterObject @Valid final ProjectPaginationParam paginationParam) {
+        final ProjectPaginationDto paginationDto = projectService.findProjects(paginationParam);
         return ResponseEntity.ok(paginationDto);
+    }
+
+    @GetMapping("{projectId}")
+    @SwaggerOK(summary = "팀플 단건 조회")
+    public ResponseEntity<ProjectDto> readProject(@PathVariable("projectId") final Long projectId) {
+        final ProjectDto projectDto = projectService.findProject(projectId);
+        return ResponseEntity.ok(projectDto);
     }
 
     @PatchMapping("{projectId}/done")
