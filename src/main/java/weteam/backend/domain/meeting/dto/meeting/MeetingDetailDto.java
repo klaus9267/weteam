@@ -1,5 +1,6 @@
 package weteam.backend.domain.meeting.dto.meeting;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import weteam.backend.domain.meeting.dto.meeting_user.MeetingUserDto;
@@ -13,17 +14,24 @@ import java.util.List;
 @AllArgsConstructor
 public class MeetingDetailDto {
     private final Long id;
+
+    @Schema(example = "클라이밍 정모", type = "string")
     private final String title;
+
+    @Schema(example = "2024-02-05T10:00:00", type = "string")
     private final LocalDateTime startedAt;
+
+    @Schema(example = "2024-02-05T10:00:00", type = "string")
     private final LocalDateTime endedAt;
+
     private final ProjectDto project;
     private final List<MeetingUserDto> meetingUserList;
 
     private MeetingDetailDto(final Meeting meeting) {
-        this.id= meeting.getId();
-        this.title=meeting.getTitle();
-        this.startedAt=meeting.getStartedAt();
-        this.endedAt=meeting.getEndedAt();
+        this.id = meeting.getId();
+        this.title = meeting.getTitle();
+        this.startedAt = meeting.getStartedAt();
+        this.endedAt = meeting.getEndedAt();
         this.project = ProjectDto.from(meeting.getProject());
         this.meetingUserList = MeetingUserDto.from(meeting.getMeetingUserList());
     }

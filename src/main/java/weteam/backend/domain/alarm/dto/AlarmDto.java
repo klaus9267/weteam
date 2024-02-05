@@ -15,6 +15,7 @@ public class AlarmDto {
     private final boolean isRead;
     private final AlarmStatus status;
     private final LocalDate date;
+    private final UserDto targetUser;
     private final UserDto user;
     private final ProjectDto project;
 
@@ -22,6 +23,7 @@ public class AlarmDto {
         this.id = alarm.getId();
         this.isRead = alarm.isRead();
         this.user = UserDto.from(alarm.getUser());
+        this.targetUser = UserDto.from(alarm.getTargetUser());
         this.project = ProjectDto.from(alarm.getProject());
         this.status = alarm.getStatus();
         this.date = alarm.getDate();

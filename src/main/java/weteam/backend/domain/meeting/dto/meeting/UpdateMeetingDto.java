@@ -1,5 +1,6 @@
 package weteam.backend.domain.meeting.dto.meeting;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
@@ -9,8 +10,10 @@ public record UpdateMeetingDto(
         @NotEmpty(message = "title is required")
         String title,
         @NotNull
+        @Schema(example = "2024-02-05T10:00:00", type = "string")
         LocalDateTime startedAt,
         @NotNull
+        @Schema(example = "2024-02-05T10:00:00", type = "string")
         LocalDateTime endedAt
 ) {
 }
