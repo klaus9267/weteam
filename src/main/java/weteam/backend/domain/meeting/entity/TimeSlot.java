@@ -5,8 +5,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import weteam.backend.domain.meeting.dto.RequestTimeSlotDto;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity(name = "timeslots")
 @NoArgsConstructor
@@ -21,4 +23,14 @@ public class TimeSlot {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private MeetingUser meetingUser;
+
+    private TimeSlot(final RequestTimeSlotDto timeSlotDto, final MeetingUser meetingUser) {
+        this.startedAt = timeSlotDto.startedAt();
+        this.endedAt = timeSlotDto.endedAt();
+        this.meetingUser = meetingUser;
+    }
+
+    public static List<TimeSlot> from(final List<RequestTimeSlotDto> timeSlotDtoList, final MeetingUser meetingUser) {
+        return timeSlotDtoList.stream().map(timeSlotDto -> new TimeSlot(timeSlotDto, meetingUser)).toList();
+    }
 }

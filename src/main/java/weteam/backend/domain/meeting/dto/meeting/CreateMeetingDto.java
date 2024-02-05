@@ -11,10 +11,10 @@ public record CreateMeetingDto(
         @Schema(example = "성현이 말년 휴가 파티")
         String title,
         @NotNull
-        @Schema(example = "9999-12-31T23:59:59")
+        @Schema(example = "9999-12-31T23:59:59", type = "string")
         LocalDateTime startedAt,
         @NotNull
-        @Schema(example = "9999-12-31T23:59:59")
+        @Schema(example = "9999-12-31T23:59:59", type = "string")
         LocalDateTime endedAt,
         @NotNull
         @Schema(example = "1")
