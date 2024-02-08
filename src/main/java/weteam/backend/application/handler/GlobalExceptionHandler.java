@@ -43,5 +43,6 @@ public class GlobalExceptionHandler {
     
     log.error("Request {} '{}' who {}", method, fullRequestPath, sessionId);
     log.error(e.toString());
+    log.error("-------------------------------------------------------------------------------------------------------------------");
   }
 }
