@@ -1,15 +1,16 @@
 spring:
   profiles:
     active: db, server, firebase
-  jpa:
-    defer-datasource-initialization: true
-    properties:
-      hibernate:
-        show_sql: true
-  #        format_sql: true
   jackson:
     serialization:
       indent-output: true
-  sql:
-    init:
-      mode: always
+logging:
+  level:
+    root: error
+    org:
+      springframework:
+        jdbc:
+          core:
+            org.springframework.jdbc.core.JdbcTemplate: error
+      hibernate:
+        sql: error

@@ -15,16 +15,14 @@ public class GlobalExceptionHandler {
   @ExceptionHandler(RuntimeException.class)
   @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
   protected ExceptionError handleRuntime(final RuntimeException e, HttpServletRequest request) {
-    logRequestDetails(request);
-    log.warn(e.toString());
-    e.printStackTrace();
+    logRequestDetails(request, e);
     return buildExceptionError(e, HttpStatus.INTERNAL_SERVER_ERROR);
   }
   
   @ExceptionHandler(MethodArgumentNotValidException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
-  protected ExceptionError handleMethodArgumentNotValid(final MethodArgumentNotValidException e) {
-    log.warn(e.getMessage());
+  protected ExceptionError handleMethodArgumentNotValid(final MethodArgumentNotValidException e, HttpServletRequest request) {
+    logRequestDetails(request, e);
     return buildExceptionError(e, HttpStatus.BAD_REQUEST);
   }
   
@@ -36,14 +34,14 @@ public class GlobalExceptionHandler {
                          .build();
   }
   
-  private void logRequestDetails(HttpServletRequest request) {
+  private void logRequestDetails(HttpServletRequest request, Exception e) {
     String method = request.getMethod();
     String requestURI = request.getRequestURI();
     String queryString = request.getQueryString();
-    String clientIP = request.getRemoteAddr();
     String sessionId = request.getRemoteUser();
     String fullRequestPath = queryString != null ? requestURI + "?" + queryString : requestURI;
     
-    log.info("Request {} '{}' from {} who {}", method, fullRequestPath, clientIP, sessionId);
+    log.error("Request {} '{}' who {}", method, fullRequestPath, sessionId);
+    log.error(e.toString());
   }
 }
