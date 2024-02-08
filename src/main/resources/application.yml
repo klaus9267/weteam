@@ -6,7 +6,7 @@ spring:
       indent-output: true
 logging:
   level:
-    root: error
+    root: info
     org:
       springframework:
         jdbc:

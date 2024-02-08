@@ -8,6 +8,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -21,6 +22,7 @@ import java.io.IOException;
 import java.util.List;
 
 @AllArgsConstructor
+@Slf4j
 public class FirebaseTokenFilter extends OncePerRequestFilter {
   private final UserDetailCustomService userDetailCustomService;
   private final FirebaseAuth firebaseAuth;
@@ -42,7 +44,9 @@ public class FirebaseTokenFilter extends OncePerRequestFilter {
       return;
     }
     
+    log.info("------------------------------ login ------------------------------");
     UserDto user = userDetailCustomService.loadUser(decodedToken);
+    log.info("-------------------------------------------------------------------");
     UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user, null, List.of(new SimpleGrantedAuthority(UserRole.USER.getKey())));
     SecurityContextHolder.getContext().setAuthentication(authentication);
     
