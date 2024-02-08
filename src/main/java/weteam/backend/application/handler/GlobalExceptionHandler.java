@@ -41,8 +41,10 @@ public class GlobalExceptionHandler {
     String sessionId = request.getRemoteUser();
     String fullRequestPath = queryString != null ? requestURI + "?" + queryString : requestURI;
     
+    log.error("");
     log.error("Request {} '{}' who {}", method, fullRequestPath, sessionId);
     log.error(e.toString());
+    log.error("");
     log.error("-------------------------------------------------------------------------------------------------------------------");
   }
 }
