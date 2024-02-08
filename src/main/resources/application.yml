@@ -1,24 +1,15 @@
-
 spring:
   profiles:
-    active: db, server, oauth, firebase
+    active: db, server, firebase
   jpa:
     defer-datasource-initialization: true
     properties:
       hibernate:
         show_sql: true
-#        format_sql: true
+  #        format_sql: true
   jackson:
     serialization:
       indent-output: true
   sql:
     init:
       mode: always
-
-#springdoc:
-#  default-consumes-media-type: application/json
-#  swagger-ui:
-#    operations-sorter: method
-#    tags-sorter: alpha
-#  use-fqn: true
-
