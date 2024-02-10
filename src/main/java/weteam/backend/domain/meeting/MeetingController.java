@@ -13,7 +13,7 @@ import weteam.backend.domain.common.pagination.param.MeetingPaginationParam;
 import weteam.backend.domain.common.swagger.SwaggerCreated;
 import weteam.backend.domain.common.swagger.SwaggerNoContent;
 import weteam.backend.domain.common.swagger.SwaggerOK;
-import weteam.backend.domain.meeting.dto.RequestTimeSlotDto;
+import weteam.backend.domain.meeting.dto.time_slot.RequestTimeSlotDto;
 import weteam.backend.domain.meeting.dto.meeting.CreateMeetingDto;
 import weteam.backend.domain.meeting.dto.meeting.MeetingDetailDto;
 import weteam.backend.domain.meeting.dto.meeting.MeetingPaginationDto;

@@ -8,7 +8,7 @@ import weteam.backend.application.auth.SecurityUtil;
 import weteam.backend.application.handler.exception.CustomErrorCode;
 import weteam.backend.application.handler.exception.CustomException;
 import weteam.backend.domain.common.pagination.param.MeetingPaginationParam;
-import weteam.backend.domain.meeting.dto.RequestTimeSlotDto;
+import weteam.backend.domain.meeting.dto.time_slot.RequestTimeSlotDto;
 import weteam.backend.domain.meeting.dto.meeting.*;
 import weteam.backend.domain.meeting.entity.Meeting;
 import weteam.backend.domain.meeting.entity.MeetingUser;

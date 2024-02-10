@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import weteam.backend.domain.meeting.dto.RequestTimeSlotDto;
+import weteam.backend.domain.meeting.dto.time_slot.RequestTimeSlotDto;
 
 import java.time.LocalDateTime;
 import java.util.List;

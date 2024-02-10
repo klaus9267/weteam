@@ -1,4 +1,4 @@
-package weteam.backend.domain.meeting.dto;
+package weteam.backend.domain.meeting.dto.time_slot;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
