@@ -41,6 +41,13 @@ jobs:
           echo "${{ secrets.SERVER }}" >> ./application-server.yml
         shell: bash
 
+      - name: make application-firebase.yml
+        run: |
+          cd ./src/main/resources
+          touch ./application-firebase.yml
+          echo "${{ secrets.FIREBASE }}" >> ./application-firebase.yml
+        shell: bash
+
       - name: chmod
         run: sudo chmod +x ./gradlew
 
