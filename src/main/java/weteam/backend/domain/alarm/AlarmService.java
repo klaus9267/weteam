@@ -7,7 +7,6 @@ import org.springframework.transaction.annotation.Transactional;
 import weteam.backend.application.auth.SecurityUtil;
 import weteam.backend.application.handler.exception.CustomErrorCode;
 import weteam.backend.application.handler.exception.CustomException;
-import weteam.backend.domain.alarm.dto.AlarmDto;
 import weteam.backend.domain.alarm.dto.AlarmPaginationDto;
 import weteam.backend.domain.common.pagination.param.AlarmPaginationParam;
 import weteam.backend.domain.project.entity.Project;
@@ -25,7 +24,7 @@ public class AlarmService {
     private final SecurityUtil securityUtil;
 
     public AlarmPaginationDto readAlarmList(final AlarmPaginationParam paginationParam) {
-        Page<AlarmDto> alarmPage = alarmRepository.findAll(paginationParam.toPageable(), securityUtil.getId());
+        Page<Alarm> alarmPage = alarmRepository.findAllByUserId(paginationParam.toPageable(), securityUtil.getId());
         return AlarmPaginationDto.from(alarmPage);
     }
 

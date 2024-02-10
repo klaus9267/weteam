@@ -19,6 +19,8 @@ import weteam.backend.domain.project.repository.ProjectRepository;
 import weteam.backend.domain.user.UserRepository;
 import weteam.backend.domain.user.entity.User;
 
+import java.lang.reflect.Method;
+
 @Service
 @RequiredArgsConstructor
 public class ProjectService {
@@ -46,7 +48,17 @@ public class ProjectService {
     }
 
     public ProjectDto findProject(final Long projectId) {
-        final Project project = projectRepository.findById(projectId).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND_PROJECT));
+        final Project project = projectRepository.findById(projectId).orElseThrow(() -> {
+            Class<?> myclass = ProjectRepository.class;
+            
+            try {
+                Method myMethod = myclass.getMethod("findById", String.class);
+            } catch (NoSuchMethodException e) {
+                throw new RuntimeException(e);
+            }
+            
+            return new  CustomException(CustomErrorCode.NOT_FOUND_PROJECT);
+        });
         return ProjectDto.from(project);
     }
 

@@ -2,7 +2,7 @@ package weteam.backend.domain.meeting.dto.meeting_user;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import weteam.backend.domain.meeting.dto.TimeSlotDto;
+import weteam.backend.domain.meeting.dto.time_slot.TimeSlotDto;
 import weteam.backend.domain.meeting.entity.MeetingUser;
 import weteam.backend.domain.project.dto.ProjectUserDto;
 
