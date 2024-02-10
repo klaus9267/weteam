@@ -20,6 +20,7 @@ public class AlarmPaginationParam extends AbstractPaginationParam {
     @Parameter(name = "direction", description = "default asc")
     private final Sort.Direction direction;
 
+    @Parameter(name = "field", description = "default is_read | is_read, project_id 사용 가능")
     @PaginationValidation(sortGroup = PaginationSortGroup.ALARM)
     private final PaginationSortType field;
 
