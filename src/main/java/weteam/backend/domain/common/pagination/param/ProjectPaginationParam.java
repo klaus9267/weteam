@@ -27,6 +27,7 @@ public class ProjectPaginationParam extends AbstractPaginationParam {
     @Parameter(name = "direction", description = "default desc")
     private final Sort.Direction direction;
 
+    @Parameter(name = "field",description = "default done | done만 사용 가능")
     @PaginationValidation(sortGroup = PaginationSortGroup.PROJECT)
     private final PaginationSortType field;
 

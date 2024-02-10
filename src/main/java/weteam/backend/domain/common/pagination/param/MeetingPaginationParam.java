@@ -20,6 +20,7 @@ public class MeetingPaginationParam extends AbstractPaginationParam {
     @Parameter(name = "direction", description = "default desc")
     private final Sort.Direction direction;
 
+    @Parameter(name = "field", description = "default started_at | started_at만 사용 가능")
     @PaginationValidation(sortGroup = PaginationSortGroup.MEETING)
     private final PaginationSortType field;
 
