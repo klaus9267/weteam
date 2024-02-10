@@ -12,6 +12,10 @@ public class SecurityUtil {
     public Long getId() {
         return getCustomUserDetails().id();
     }
+    
+//    public UserDto getUser() {
+//
+//    }
 
     private UserDto getCustomUserDetails() {
         final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
