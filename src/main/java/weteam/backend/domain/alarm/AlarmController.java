@@ -1,20 +1,18 @@
 package weteam.backend.domain.alarm;
 
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springdoc.core.converters.models.PageableAsQueryParam;
-import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import weteam.backend.domain.alarm.dto.AlarmPaginationDto;
 import weteam.backend.domain.common.pagination.param.AlarmPaginationParam;
-import weteam.backend.domain.common.pagination.param.MeetingPaginationParam;
 import weteam.backend.domain.common.swagger.SwaggerNoContent;
 import weteam.backend.domain.common.swagger.SwaggerOK;
-import weteam.backend.domain.alarm.dto.AlarmPaginationDto;
 import weteam.backend.domain.user.dto.UserDto;
 
 @RestController
@@ -34,6 +32,7 @@ public class AlarmController {
 
     @PatchMapping("{alarmId}")
     @SwaggerNoContent(summary = "알람 단건 읽음 처리")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void makeAlarmAsRead(
             @PathVariable("alarmId") final Long alarmId,
             @AuthenticationPrincipal final UserDto user
@@ -43,6 +42,7 @@ public class AlarmController {
 
     @PatchMapping
     @SwaggerNoContent(summary = "알람 전체 읽음 처리")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void makeAllAlarmAsRead(@AuthenticationPrincipal final UserDto user) {
         alarmService.makeAllAlarmAsRead(user.id());
     }

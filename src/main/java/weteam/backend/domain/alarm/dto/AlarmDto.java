@@ -23,9 +23,13 @@ public class AlarmDto {
         this.id = alarm.getId();
         this.isRead = alarm.isRead();
         this.user = UserDto.from(alarm.getUser());
-        this.targetUser = UserDto.from(alarm.getTargetUser());
+        this.targetUser = alarm.getTargetUser() == null ? null : UserDto.from(alarm.getTargetUser());
         this.project = ProjectDto.from(alarm.getProject());
         this.status = alarm.getStatus();
         this.date = alarm.getDate();
+    }
+
+    public static List<AlarmDto> from(final List<Alarm> alarmList) {
+        return alarmList.stream().map(AlarmDto::new).toList();
     }
 }
