@@ -24,77 +24,67 @@ import java.lang.reflect.Method;
 @Service
 @RequiredArgsConstructor
 public class ProjectService {
-    private final ProjectRepository projectRepository;
-    private final UserRepository userRepository;
-    private final AlarmService alarmService;
-    private final SecurityUtil securityUtil;
-
-    @Transactional
-    public void addProject(final CreateProjectDto projectDto) {
-        if (projectRepository.findByHostIdAndNameAndExplanation(securityUtil.getId(), projectDto.name(), projectDto.explanation()).isPresent()) {
-            throw new CustomException(CustomErrorCode.DUPLICATE);
-        }
-        final Project project = Project.from(projectDto, securityUtil.getId());
-        projectRepository.save(project);
+  private final ProjectRepository projectRepository;
+  private final UserRepository userRepository;
+  private final AlarmService alarmService;
+  private final SecurityUtil securityUtil;
+  
+  @Transactional
+  public void addProject(final CreateProjectDto projectDto) {
+    if (projectRepository.findByHostIdAndNameAndExplanation(securityUtil.getId(), projectDto.name(), projectDto.explanation()).isPresent()) {
+      throw new CustomException(CustomErrorCode.DUPLICATE);
     }
-
-    private Project findOneByUserIdAndProjectId(final Long projectId) {
-        return projectRepository.findByIdAndUserId(projectId, securityUtil.getId()).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND_PROJECT));
+    final Project project = Project.from(projectDto, securityUtil.getId());
+    projectRepository.save(project);
+  }
+  
+  private Project findOneByUserIdAndProjectId(final Long projectId) {
+    return projectRepository.findByIdAndUserId(projectId, securityUtil.getId()).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND_PROJECT));
+  }
+  
+  public ProjectPaginationDto findProjects(final ProjectPaginationParam paginationParam) {
+    final Page<Project> projectPage = projectRepository.findAllByUserIdAndDone(paginationParam.toPageable(), paginationParam.getUserId(), paginationParam.isDone());
+    return ProjectPaginationDto.from(projectPage);
+  }
+  
+  public ProjectDto findProject(final Long projectId) {
+    final Project project = projectRepository.findById(projectId).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND_PROJECT));
+    return ProjectDto.from(project);
+  }
+  
+  @Transactional
+  public void updateDone(final Long projectId) {
+    Project project = this.checkHost(projectId);
+    project.updateDone();
+    alarmService.addAlarm(project, AlarmStatus.DONE);
+  }
+  
+  @Transactional
+  public void updateProject(final UpdateProjectDto projectDto, final Long projectId) {
+    Project project = this.checkHost(projectId);
+    project.updateProject(projectDto);
+    alarmService.addAlarm(project, AlarmStatus.UPDATE_PROJECT);
+  }
+  
+  @Transactional
+  public void updateHost(final Long projectId, final Long newHostId) {
+    final User newHost = userRepository.findById(newHostId).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND_USER));
+    Project project = this.checkHost(projectId);
+    project.updateHost(newHost);
+    alarmService.addAlarmWithTargetUser(project, AlarmStatus.CHANGE_HOST, newHostId);
+  }
+  
+  @Transactional
+  public void deleteProject(final Long projectId) {
+    Project project = this.checkHost(projectId);
+    projectRepository.delete(project);
+  }
+  
+  private Project checkHost(final Long projectId) {
+    Project project = this.findOneByUserIdAndProjectId(projectId);
+    if (!project.getHost().getId().equals(securityUtil.getId())) {
+      throw new CustomException(CustomErrorCode.INVALID_HOST);
     }
-
-    public ProjectPaginationDto findProjects(final ProjectPaginationParam paginationParam) {
-        final Page<Project> projectPage = projectRepository.findAllByUserIdAndDone(paginationParam.toPageable(), paginationParam.getUserId(), paginationParam.isDone());
-        return ProjectPaginationDto.from(projectPage);
-    }
-
-    public ProjectDto findProject(final Long projectId) {
-        final Project project = projectRepository.findById(projectId).orElseThrow(() -> {
-            Class<?> myclass = ProjectRepository.class;
-            
-            try {
-                Method myMethod = myclass.getMethod("findById", String.class);
-            } catch (NoSuchMethodException e) {
-                throw new RuntimeException(e);
-            }
-            
-            return new  CustomException(CustomErrorCode.NOT_FOUND_PROJECT);
-        });
-        return ProjectDto.from(project);
-    }
-
-    @Transactional
-    public void updateDone(final Long projectId) {
-        Project project = this.checkHost(projectId);
-        project.updateDone();
-        alarmService.addAlarm(project, AlarmStatus.DONE);
-    }
-
-    @Transactional
-    public void updateProject(final UpdateProjectDto projectDto, final Long projectId) {
-        Project project = this.checkHost(projectId);
-        project.updateProject(projectDto);
-        alarmService.addAlarm(project, AlarmStatus.UPDATE_PROJECT);
-    }
-
-    @Transactional
-    public void updateHost(final Long projectId, final Long newHostId) {
-        User newHost = userRepository.findById(newHostId).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND_USER));
-        Project project = this.checkHost(projectId);
-        project.updateHost(newHost);
-        alarmService.addAlarmWithTargetUser(project, AlarmStatus.CHANGE_HOST, newHostId);
-    }
-
-    @Transactional
-    public void deleteProject(final Long projectId) {
-        Project project = this.checkHost(projectId);
-        projectRepository.delete(project);
-    }
-
-    private Project checkHost(final Long projectId) {
-        Project project = this.findOneByUserIdAndProjectId(projectId);
-        if (!project.getHost().getId().equals(securityUtil.getId())) {
-            throw new CustomException(CustomErrorCode.INVALID_HOST);
-        }
-        return project;
-    }
+    return project;
+  }
 }
