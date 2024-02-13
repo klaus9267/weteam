@@ -10,15 +10,22 @@ import weteam.backend.domain.meeting.entity.Meeting;
 import java.util.Optional;
 
 public interface MeetingRepository extends JpaRepository<Meeting, Long> {
-    Optional<Meeting> findByTitle(final String title);
-
-    @Query("""
-           SELECT new weteam.backend.domain.meeting.dto.meeting.MeetingDto(m)
-           FROM meetings m
-                LEFT JOIN FETCH projects p ON m.project.id = p.id
-                LEFT JOIN FETCH meeting_users mu ON mu.meeting.id = m.id
-                LEFT JOIN FETCH project_users pu ON mu.projectUser.id = pu.id
-           WHERE pu.user.id = :userId
-           """)
-    Page<MeetingDto> findAllByUserId(final Pageable pageable, final Long userId);
+  @Query("""
+         SELECT m
+         FROM meetings m
+            LEFT JOIN FETCH meeting_users mu ON mu.meeting.id = m.id
+         WHERE m.id = :meetingId
+            AND mu.user.id = :userId
+            AND mu.accept = true
+         """)
+  Optional<Meeting> findByIdAndUserId(final Long meetingId, final Long userId);
+  
+  @Query("""
+         SELECT new weteam.backend.domain.meeting.dto.meeting.MeetingDto(m)
+         FROM meetings m
+              LEFT JOIN FETCH meeting_users mu ON mu.meeting.id = m.id
+         WHERE mu.user.id = :userId
+            AND mu.accept = true
+         """)
+  Page<MeetingDto> findAllByUserId(final Pageable pageable, final Long userId);
 }
