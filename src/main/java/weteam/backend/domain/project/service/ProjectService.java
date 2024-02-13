@@ -48,7 +48,7 @@ public class ProjectService {
   }
   
   public ProjectDto findProject(final Long projectId) {
-    final Project project = projectRepository.findById(projectId).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND_PROJECT));
+    final Project project = this.findOneByUserIdAndProjectId(projectId);
     return ProjectDto.from(project);
   }
   

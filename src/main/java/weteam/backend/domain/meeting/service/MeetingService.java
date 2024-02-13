@@ -21,6 +21,7 @@ import weteam.backend.domain.project.repository.ProjectRepository;
 import weteam.backend.domain.user.entity.User;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -41,8 +42,7 @@ public class MeetingService {
   
   @Transactional
   public void addMeeting(final CreateMeetingDto meetingDto) {
-    final Project project = projectRepository.findById(meetingDto.projectId()).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND_PROJECT));
-    final Meeting meeting = Meeting.from(meetingDto, securityUtil.getId(), project);
+    final Meeting meeting = Meeting.from(meetingDto, securityUtil.getId(), meetingDto.projectId());
     meetingRepository.save(meeting);
   }
   

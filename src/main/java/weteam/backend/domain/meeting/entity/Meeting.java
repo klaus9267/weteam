@@ -11,6 +11,7 @@ import weteam.backend.domain.user.entity.User;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Entity(name = "meetings")
 @NoArgsConstructor
@@ -48,14 +49,29 @@ public class Meeting extends BaseEntity {
     this.title = meetingDto.title();
     this.startedAt = meetingDto.startedAt();
     this.endedAt = meetingDto.endedAt();
-    this.project = new Project(meetingDto.projectId());
+    this.project = Project.from(meetingDto.projectId());
     this.host = user;
     this.meetingUserList = meetingUsers;
   }
   
-  public static Meeting from(final CreateMeetingDto meetingDto, final Long userId, final Project project) {
-    return new Meeting(meetingDto, userId, project);
+  private Meeting(final CreateMeetingDto meetingDto, final Long userId, final Long projectId) {
+    ArrayList<MeetingUser> meetingUsers = new ArrayList<>();
+    final User user = User.from(userId);
+    final MeetingUser meetingUser = MeetingUser.builder().meeting(this).accept(true).user(user).build();
+    meetingUsers.add(meetingUser);
+    
+    this.title = meetingDto.title();
+    this.startedAt = meetingDto.startedAt();
+    this.endedAt = meetingDto.endedAt();
+    this.host = user;
+    this.project = projectId == null ? null : Project.from(projectId);
+    this.meetingUserList = meetingUsers;
   }
+  
+  public static Meeting from(final CreateMeetingDto meetingDto, final Long userId, final Long projectId) {
+    return new Meeting(meetingDto, userId, projectId);
+  }
+  
   
   public static Meeting from(final Long meetingId) {
     return new Meeting(meetingId);
