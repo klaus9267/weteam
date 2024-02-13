@@ -42,8 +42,12 @@ public class User extends BaseEntity {
     @OneToMany(mappedBy = "host", cascade = CascadeType.ALL)
     private List<Meeting> meetingList = new ArrayList<>();
 
-    public User(final Long id) {
+    private User(final Long id) {
         this.id = id;
+    }
+    
+    public static User from(final Long userId) {
+        return new User(userId);
     }
 
     public static User from(final UserDto userDto) {

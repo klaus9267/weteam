@@ -45,7 +45,7 @@ public class Project extends BaseEntity {
     private List<Meeting> meetingList = new ArrayList<>();
 
     public Project(CreateProjectDto projectDto, Long userId) {
-        User user = new User(userId);
+        User user = User.from(userId);
         ProjectUser projectUser = ProjectUser.from(user, this);
 
         this.name = projectDto.name();
