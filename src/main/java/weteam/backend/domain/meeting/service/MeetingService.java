@@ -17,6 +17,7 @@ import weteam.backend.domain.meeting.repository.MeetingRepository;
 import weteam.backend.domain.meeting.repository.MeetingUserRepository;
 import weteam.backend.domain.meeting.repository.TimeSlotRepository;
 import weteam.backend.domain.project.entity.Project;
+import weteam.backend.domain.project.entity.ProjectUser;
 import weteam.backend.domain.project.repository.ProjectRepository;
 import weteam.backend.domain.user.entity.User;
 
@@ -36,15 +37,18 @@ public class MeetingService {
   }
   
   public MeetingPaginationDto readMeetingList(final MeetingPaginationParam paginationParam) {
-    final Page<MeetingDto> meetingPage = meetingRepository.findAllByUserId(paginationParam.toPageable(), securityUtil.getId());
+    final Page<Meeting> meetingPage = meetingRepository.findAllByUserId(paginationParam.toPageable(), securityUtil.getId());
     return MeetingPaginationDto.from(meetingPage);
   }
   
   @Transactional
   public void addMeeting(final CreateMeetingDto meetingDto) {
-    final Meeting meeting = Meeting.from(meetingDto, securityUtil.getId(), meetingDto.projectId());
+    Optional<Project> project = meetingDto.projectId() != null ? projectRepository.findById(meetingDto.projectId()) : Optional.empty();
+    Meeting meeting = project.map(p -> Meeting.from(meetingDto, securityUtil.getId(), p))
+                             .orElseGet(() -> Meeting.from(meetingDto, securityUtil.getId()));
     meetingRepository.save(meeting);
   }
+  
   
   @Transactional
   public void updateMeeting(final UpdateMeetingDto meetingDto, final Long meetingId) {
