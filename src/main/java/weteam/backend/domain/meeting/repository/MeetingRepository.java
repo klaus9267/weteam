@@ -21,11 +21,11 @@ public interface MeetingRepository extends JpaRepository<Meeting, Long> {
   Optional<Meeting> findByIdAndUserId(final Long meetingId, final Long userId);
   
   @Query("""
-         SELECT new weteam.backend.domain.meeting.dto.meeting.MeetingDto(m)
+         SELECT m
          FROM meetings m
               LEFT JOIN FETCH meeting_users mu ON mu.meeting.id = m.id
          WHERE mu.user.id = :userId
             AND mu.accept = true
          """)
-  Page<MeetingDto> findAllByUserId(final Pageable pageable, final Long userId);
+  Page<Meeting> findAllByUserId(final Pageable pageable, final Long userId);
 }

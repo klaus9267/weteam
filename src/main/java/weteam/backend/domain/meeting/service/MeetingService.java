@@ -37,21 +37,18 @@ public class MeetingService {
   }
   
   public MeetingPaginationDto readMeetingList(final MeetingPaginationParam paginationParam) {
-    final Page<MeetingDto> meetingPage = meetingRepository.findAllByUserId(paginationParam.toPageable(), securityUtil.getId());
+    final Page<Meeting> meetingPage = meetingRepository.findAllByUserId(paginationParam.toPageable(), securityUtil.getId());
     return MeetingPaginationDto.from(meetingPage);
   }
   
   @Transactional
   public void addMeeting(final CreateMeetingDto meetingDto) {
-    if (meetingDto.projectId() != null) {
-      final Meeting meeting = Meeting.from(meetingDto, securityUtil.getId());
-      meetingRepository.save(meeting);
-    } else {
-      //    final Optional<Project> project = projectRepository.findById(meetingDto.projectId());
-      final Meeting meeting = meetingDto.projectId() == null ? Meeting.from(meetingDto, securityUtil.getId()) : Meeting.from(meetingDto, securityUtil.getId(), meetingDto.projectId());
-      meetingRepository.save(meeting);
-    }
+    Optional<Project> project = meetingDto.projectId() != null ? projectRepository.findById(meetingDto.projectId()) : Optional.empty();
+    Meeting meeting = project.map(p -> Meeting.from(meetingDto, securityUtil.getId(), p))
+                             .orElseGet(() -> Meeting.from(meetingDto, securityUtil.getId()));
+    meetingRepository.save(meeting);
   }
+  
   
   @Transactional
   public void updateMeeting(final UpdateMeetingDto meetingDto, final Long meetingId) {
