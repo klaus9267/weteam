@@ -17,6 +17,7 @@ import weteam.backend.domain.meeting.repository.MeetingRepository;
 import weteam.backend.domain.meeting.repository.MeetingUserRepository;
 import weteam.backend.domain.meeting.repository.TimeSlotRepository;
 import weteam.backend.domain.project.entity.Project;
+import weteam.backend.domain.project.entity.ProjectUser;
 import weteam.backend.domain.project.repository.ProjectRepository;
 import weteam.backend.domain.user.entity.User;
 
@@ -42,8 +43,14 @@ public class MeetingService {
   
   @Transactional
   public void addMeeting(final CreateMeetingDto meetingDto) {
-    final Meeting meeting = Meeting.from(meetingDto, securityUtil.getId(), meetingDto.projectId());
-    meetingRepository.save(meeting);
+    if (meetingDto.projectId() != null) {
+      final Meeting meeting = Meeting.from(meetingDto, securityUtil.getId());
+      meetingRepository.save(meeting);
+    } else {
+      //    final Optional<Project> project = projectRepository.findById(meetingDto.projectId());
+      final Meeting meeting = meetingDto.projectId() == null ? Meeting.from(meetingDto, securityUtil.getId()) : Meeting.from(meetingDto, securityUtil.getId(), meetingDto.projectId());
+      meetingRepository.save(meeting);
+    }
   }
   
   @Transactional

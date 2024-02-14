@@ -6,6 +6,7 @@ import weteam.backend.application.BaseEntity;
 import weteam.backend.domain.meeting.dto.meeting.CreateMeetingDto;
 import weteam.backend.domain.meeting.dto.meeting.UpdateMeetingDto;
 import weteam.backend.domain.project.entity.Project;
+import weteam.backend.domain.project.entity.ProjectUser;
 import weteam.backend.domain.user.entity.User;
 
 import java.time.LocalDateTime;
@@ -41,35 +42,29 @@ public class Meeting extends BaseEntity {
   }
   
   private Meeting(final CreateMeetingDto meetingDto, final Long userId, final Project project) {
-    ArrayList<MeetingUser> meetingUsers = new ArrayList<>();
-    final User user = User.from(userId);
-    final MeetingUser meetingUser = MeetingUser.builder().meeting(this).accept(true).user(user).build();
-    meetingUsers.add(meetingUser);
-    
     this.title = meetingDto.title();
     this.startedAt = meetingDto.startedAt();
     this.endedAt = meetingDto.endedAt();
-    this.project = Project.from(meetingDto.projectId());
-    this.host = user;
-    this.meetingUserList = meetingUsers;
+    this.host = User.from(userId);
+    this.project = project;
+    this.meetingUserList = MeetingUser.from(project.getProjectUserList(), this);
   }
   
-  private Meeting(final CreateMeetingDto meetingDto, final Long userId, final Long projectId) {
-    ArrayList<MeetingUser> meetingUsers = new ArrayList<>();
+  private Meeting(final CreateMeetingDto meetingDto, final Long userId) {
     final User user = User.from(userId);
-    final MeetingUser meetingUser = MeetingUser.builder().meeting(this).accept(true).user(user).build();
-    meetingUsers.add(meetingUser);
-    
     this.title = meetingDto.title();
     this.startedAt = meetingDto.startedAt();
     this.endedAt = meetingDto.endedAt();
     this.host = user;
-    this.project = projectId == null ? null : Project.from(projectId);
-    this.meetingUserList = meetingUsers;
+    this.meetingUserList = MeetingUser.from(user, this);
   }
   
-  public static Meeting from(final CreateMeetingDto meetingDto, final Long userId, final Long projectId) {
-    return new Meeting(meetingDto, userId, projectId);
+  public static Meeting from(final CreateMeetingDto meetingDto, final Long userId, final Project project) {
+    return new Meeting(meetingDto, userId, project);
+  }
+  
+  public static Meeting from(final CreateMeetingDto meetingDto, final Long userId) {
+    return new Meeting(meetingDto, userId);
   }
   
   

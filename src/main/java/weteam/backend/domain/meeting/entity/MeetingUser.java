@@ -38,12 +38,22 @@ public class MeetingUser {
     this.user = user;
   }
   
-  public static MeetingUser from(final User user, final Meeting meeting) {
-    return new MeetingUser(user, meeting);
+  private MeetingUser(final ProjectUser projectUser, final Meeting meeting) {
+    this.user = projectUser.getUser();
+    this.accept = false;
+    this.meeting = meeting;
+  }
+  
+  public static List<MeetingUser> from(final User user, final Meeting meeting) {
+    return List.of(new MeetingUser(user, meeting));
   }
   
   public static MeetingUser from(final Long userId, final Long meetingId) {
     return new MeetingUser(User.from(userId), Meeting.from(meetingId));
+  }
+  
+  public static List<MeetingUser> from(final List<ProjectUser> projectUserList, final Meeting meeting) {
+    return projectUserList.stream().map(projectUser -> new MeetingUser(projectUser, meeting)).toList();
   }
   
   public void acceptMeeting() {
