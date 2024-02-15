@@ -28,7 +28,7 @@ public class ProjectUserController {
     @GetMapping("{projectId}")
     @SwaggerOK(summary = "팀원 목록 조회")
     public ResponseEntity<List<ProjectUserDto>> findProjectMemberList(@PathVariable("projectId") final Long projectId) {
-        return ResponseEntity.ok(projectUserService.findUsersByProjectId(projectId));
+        return ResponseEntity.ok(projectUserService.findProjectUserListByProjectId(projectId));
     }
 
     @PatchMapping

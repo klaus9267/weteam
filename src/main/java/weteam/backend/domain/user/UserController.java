@@ -39,13 +39,13 @@ public class UserController {
     @Operation(summary = "사용자 소속 변경", description = "응답 없음")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void changeOrganization(@PathVariable("organization") final String organization) {
-        memberService.updateOrganization(organization);
+        memberService.updateOne(organization);
     }
 
     @DeleteMapping
     @SwaggerNoContent(summary = "사용자 탈퇴")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteUser() {
-        memberService.delete();
+        memberService.deleteOne();
     }
 }

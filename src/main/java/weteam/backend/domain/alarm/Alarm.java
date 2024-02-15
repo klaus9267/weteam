@@ -50,8 +50,8 @@ public class Alarm {
   public static List<Alarm> from(final Project project, final AlarmStatus status) {
     return project.getProjectUserList()
                   .stream()
-                  .filter(ProjectUser::isEnable
-                  ).map(projectUser -> new Alarm(project, status, projectUser.getUser()))
+                  .filter(ProjectUser::isEnable)
+                  .map(projectUser -> new Alarm(project, status, projectUser.getUser()))
                   .toList();
   }
   
