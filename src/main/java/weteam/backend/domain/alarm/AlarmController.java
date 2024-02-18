@@ -37,13 +37,13 @@ public class AlarmController {
             @PathVariable("alarmId") final Long alarmId,
             @AuthenticationPrincipal final UserDto user
     ) {
-        alarmService.makeAlarmAsRead(alarmId, user.id());
+        alarmService.updateOneRead(alarmId, user.id());
     }
 
     @PatchMapping
     @SwaggerNoContent(summary = "알람 전체 읽음 처리")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void makeAllAlarmAsRead(@AuthenticationPrincipal final UserDto user) {
-        alarmService.makeAllAlarmAsRead(user.id());
+        alarmService.updateAllRead(user.id());
     }
 }

@@ -1,5 +1,6 @@
 package weteam.backend.domain.project.service;
 
+import com.google.firebase.messaging.FirebaseMessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
@@ -19,8 +20,6 @@ import weteam.backend.domain.project.repository.ProjectRepository;
 import weteam.backend.domain.user.UserRepository;
 import weteam.backend.domain.user.entity.User;
 
-import java.lang.reflect.Method;
-
 @Service
 @RequiredArgsConstructor
 public class ProjectService {
@@ -30,7 +29,7 @@ public class ProjectService {
   private final SecurityUtil securityUtil;
   
   @Transactional
-  public void addProject(final CreateProjectDto projectDto) {
+  public void addOne(final CreateProjectDto projectDto) {
     if (projectRepository.findByHostIdAndNameAndExplanation(securityUtil.getId(), projectDto.name(), projectDto.explanation()).isPresent()) {
       throw new CustomException(CustomErrorCode.DUPLICATE);
     }
@@ -38,17 +37,17 @@ public class ProjectService {
     projectRepository.save(project);
   }
   
-  private Project findOneByUserIdAndProjectId(final Long projectId) {
-    return projectRepository.findByIdAndUserId(projectId, securityUtil.getId()).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND_PROJECT));
+  private Project findOneByProjectId(final Long projectId) {
+    return projectRepository.findByIdAndUserId(projectId, securityUtil.getId()).orElseThrow(CustomException.notFound(CustomErrorCode.NOT_FOUND_PROJECT));
   }
   
-  public ProjectPaginationDto findProjects(final ProjectPaginationParam paginationParam) {
+  public ProjectPaginationDto findListWithPagination(final ProjectPaginationParam paginationParam) {
     final Page<Project> projectPage = projectRepository.findAllByUserIdAndDone(paginationParam.toPageable(), paginationParam.getUserId(), paginationParam.isDone());
     return ProjectPaginationDto.from(projectPage);
   }
   
-  public ProjectDto findProject(final Long projectId) {
-    final Project project = this.findOneByUserIdAndProjectId(projectId);
+  public ProjectDto findOne(final Long projectId) {
+    final Project project = this.findOneByProjectId(projectId);
     return ProjectDto.from(project);
   }
   
@@ -56,32 +55,32 @@ public class ProjectService {
   public void updateDone(final Long projectId) {
     Project project = this.checkHost(projectId);
     project.updateDone();
-    alarmService.addAlarm(project, AlarmStatus.DONE);
+    alarmService.addList(project, AlarmStatus.DONE);
   }
   
   @Transactional
-  public void updateProject(final UpdateProjectDto projectDto, final Long projectId) {
+  public void updateOne(final UpdateProjectDto projectDto, final Long projectId){
     Project project = this.checkHost(projectId);
     project.updateProject(projectDto);
-    alarmService.addAlarm(project, AlarmStatus.UPDATE_PROJECT);
+    alarmService.addList(project, AlarmStatus.UPDATE_PROJECT);
   }
   
   @Transactional
   public void updateHost(final Long projectId, final Long newHostId) {
-    final User newHost = userRepository.findById(newHostId).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND_USER));
+    final User newHost = userRepository.findById(newHostId).orElseThrow(CustomException.notFound(CustomErrorCode.NOT_FOUND_USER));
     Project project = this.checkHost(projectId);
     project.updateHost(newHost);
-    alarmService.addAlarmWithTargetUser(project, AlarmStatus.CHANGE_HOST, newHostId);
+    alarmService.addListWithTargetUser(project, AlarmStatus.CHANGE_HOST, newHostId);
   }
   
   @Transactional
-  public void deleteProject(final Long projectId) {
+  public void deleteOne(final Long projectId) {
     Project project = this.checkHost(projectId);
     projectRepository.delete(project);
   }
   
   private Project checkHost(final Long projectId) {
-    Project project = this.findOneByUserIdAndProjectId(projectId);
+    Project project = this.findOneByProjectId(projectId);
     if (!project.getHost().getId().equals(securityUtil.getId())) {
       throw new CustomException(CustomErrorCode.INVALID_HOST);
     }

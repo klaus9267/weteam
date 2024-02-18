@@ -32,21 +32,21 @@ public class ProjectController {
   @SwaggerCreated(summary = "팀플 생성")
   @ResponseStatus(HttpStatus.CREATED)
   public void addProject(@RequestBody @Valid final CreateProjectDto projectDto) {
-    projectService.addProject(projectDto);
+    projectService.addOne(projectDto);
   }
   
   @GetMapping
   @SwaggerOK(summary = "팀플 목록 조회", description = "done으로 종료, 진행 분류해서 조회")
   @PageableAsQueryParam
   public ResponseEntity<ProjectPaginationDto> readProjectList(@ParameterObject @Valid final ProjectPaginationParam paginationParam) {
-    final ProjectPaginationDto paginationDto = projectService.findProjects(paginationParam);
+    final ProjectPaginationDto paginationDto = projectService.findListWithPagination(paginationParam);
     return ResponseEntity.ok(paginationDto);
   }
   
   @GetMapping("{projectId}")
   @SwaggerOK(summary = "팀플 단건 조회")
   public ResponseEntity<ProjectDto> readProject(@PathVariable("projectId") final Long projectId) {
-    final ProjectDto projectDto = projectService.findProject(projectId);
+    final ProjectDto projectDto = projectService.findOne(projectId);
     return ResponseEntity.ok(projectDto);
   }
   
@@ -64,7 +64,7 @@ public class ProjectController {
       @PathVariable("projectId") final Long projectId,
       @RequestBody @Valid final UpdateProjectDto projectDto
   ) {
-    projectService.updateProject(projectDto, projectId);
+    projectService.updateOne(projectDto, projectId);
   }
   
   @PatchMapping("{projectId}/{userId}")
@@ -81,6 +81,6 @@ public class ProjectController {
   @ResponseStatus(HttpStatus.NO_CONTENT)
   @SwaggerNoContent(summary = "팀플 삭제")
   public void removeProject(@PathVariable("projectId") final Long projectId) {
-    projectService.deleteProject(projectId);
+    projectService.deleteOne(projectId);
   }
 }

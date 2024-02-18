@@ -1,6 +1,5 @@
 package weteam.backend.domain.project.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,11 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import weteam.backend.application.handler.exception.CustomErrorCode;
 import weteam.backend.application.handler.exception.CustomException;
-import weteam.backend.domain.meeting.entity.MeetingUser;
 import weteam.backend.domain.user.entity.User;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity(name = "project_users")
 @NoArgsConstructor
@@ -39,8 +34,8 @@ public class ProjectUser {
     return ProjectUser.builder().user(user).project(project).enable(true).build();
   }
   
-  public static ProjectUser from(Project project, Long userId) {
-    return ProjectUser.builder().project(project).user(User.from(userId)).enable(true).build();
+  public static ProjectUser from(final Project project, final Long userId, final boolean enable) {
+    return ProjectUser.builder().project(project).user(User.from(userId)).enable(enable).build();
   }
   
   public void updateRole(final String role) {
@@ -55,5 +50,9 @@ public class ProjectUser {
       throw new CustomException(CustomErrorCode.BAD_REQUEST, "호스트를 넘기기전에 탈퇴할 수 없습니다.");
     }
     this.enable = !enable;
+  }
+  
+  public void able() {
+    this.enable = true;
   }
 }

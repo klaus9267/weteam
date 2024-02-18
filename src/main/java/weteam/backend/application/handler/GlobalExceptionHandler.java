@@ -1,5 +1,6 @@
 package weteam.backend.application.handler;
 
+import com.google.firebase.messaging.FirebaseMessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -24,6 +25,13 @@ public class GlobalExceptionHandler {
   protected ExceptionError handleMethodArgumentNotValid(final MethodArgumentNotValidException e, HttpServletRequest request) {
     logRequestDetails(request, e);
     return buildExceptionError(e, HttpStatus.BAD_REQUEST);
+  }
+  
+  @ExceptionHandler(FirebaseMessagingException.class)
+  @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+  protected ExceptionError handleFirebaseMessaging(final FirebaseMessagingException e, HttpServletRequest request) {
+    logRequestDetails(request, e);
+    return buildExceptionError(e, HttpStatus.INTERNAL_SERVER_ERROR);
   }
   
   private ExceptionError buildExceptionError(Exception exception, HttpStatus status) {

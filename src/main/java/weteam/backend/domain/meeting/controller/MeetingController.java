@@ -2,7 +2,6 @@ package weteam.backend.domain.meeting.controller;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springdoc.core.converters.models.PageableAsQueryParam;
@@ -14,14 +13,10 @@ import weteam.backend.domain.common.swagger.SwaggerCreated;
 import weteam.backend.domain.common.swagger.SwaggerNoContent;
 import weteam.backend.domain.common.swagger.SwaggerOK;
 import weteam.backend.domain.meeting.service.MeetingService;
-import weteam.backend.domain.meeting.dto.time_slot.RequestTimeSlotDto;
 import weteam.backend.domain.meeting.dto.meeting.CreateMeetingDto;
 import weteam.backend.domain.meeting.dto.meeting.MeetingDetailDto;
 import weteam.backend.domain.meeting.dto.meeting.MeetingPaginationDto;
 import weteam.backend.domain.meeting.dto.meeting.UpdateMeetingDto;
-import weteam.backend.domain.meeting.service.MeetingUserService;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/meetings")
@@ -34,21 +29,21 @@ public class MeetingController {
   @ResponseStatus(HttpStatus.CREATED)
   @SwaggerCreated(summary = "약속 생성")
   public void addMeeting(@Valid @RequestBody final CreateMeetingDto meetingDto) {
-    meetingService.addMeeting(meetingDto);
+    meetingService.addOne(meetingDto);
   }
   
   @GetMapping
   @SwaggerOK(summary = "약속 목록 조회")
   @PageableAsQueryParam
   public ResponseEntity<MeetingPaginationDto> readMeetingList(@ParameterObject @Valid final MeetingPaginationParam paginationParam) {
-    final MeetingPaginationDto meetingDtoList = meetingService.readMeetingList(paginationParam);
+    final MeetingPaginationDto meetingDtoList = meetingService.readListWithPagination(paginationParam);
     return ResponseEntity.ok(meetingDtoList);
   }
   
   @GetMapping("{meetingId}")
   @SwaggerOK(summary = "약속 상세 조회")
   public ResponseEntity<MeetingDetailDto> readMeeting(@PathVariable("meetingId") final Long meetingId) {
-    final MeetingDetailDto meetingDetailDto = meetingService.readMeeting(meetingId);
+    final MeetingDetailDto meetingDetailDto = meetingService.readOne(meetingId);
     return ResponseEntity.ok(meetingDetailDto);
   }
   
@@ -59,13 +54,13 @@ public class MeetingController {
       @PathVariable("meetingId") final Long meetingId,
       @Valid @RequestBody final UpdateMeetingDto meetingDto
   ) {
-    meetingService.updateMeeting(meetingDto, meetingId);
+    meetingService.updateOne(meetingDto, meetingId);
   }
   
   @DeleteMapping("{meetingId}")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   @SwaggerNoContent(summary = "약속 삭제")
   public void updateMeeting(@PathVariable("meetingId") final Long meetingId) {
-    meetingService.deleteMeeting(meetingId);
+    meetingService.deleteOne(meetingId);
   }
 }

@@ -8,20 +8,15 @@ import weteam.backend.application.auth.SecurityUtil;
 import weteam.backend.application.handler.exception.CustomErrorCode;
 import weteam.backend.application.handler.exception.CustomException;
 import weteam.backend.domain.common.pagination.param.MeetingPaginationParam;
-import weteam.backend.domain.meeting.dto.time_slot.RequestTimeSlotDto;
-import weteam.backend.domain.meeting.dto.meeting.*;
+import weteam.backend.domain.meeting.dto.meeting.CreateMeetingDto;
+import weteam.backend.domain.meeting.dto.meeting.MeetingDetailDto;
+import weteam.backend.domain.meeting.dto.meeting.MeetingPaginationDto;
+import weteam.backend.domain.meeting.dto.meeting.UpdateMeetingDto;
 import weteam.backend.domain.meeting.entity.Meeting;
-import weteam.backend.domain.meeting.entity.MeetingUser;
-import weteam.backend.domain.meeting.entity.TimeSlot;
 import weteam.backend.domain.meeting.repository.MeetingRepository;
-import weteam.backend.domain.meeting.repository.MeetingUserRepository;
-import weteam.backend.domain.meeting.repository.TimeSlotRepository;
 import weteam.backend.domain.project.entity.Project;
-import weteam.backend.domain.project.entity.ProjectUser;
 import weteam.backend.domain.project.repository.ProjectRepository;
-import weteam.backend.domain.user.entity.User;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -31,18 +26,18 @@ public class MeetingService {
   private final ProjectRepository projectRepository;
   private final SecurityUtil securityUtil;
   
-  public MeetingDetailDto readMeeting(final Long meetingId) {
-    final Meeting meeting = meetingRepository.findByIdAndUserId(meetingId, securityUtil.getId()).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND_MEETING));
+  public MeetingDetailDto readOne(final Long meetingId) {
+    final Meeting meeting = meetingRepository.findByIdAndUserId(meetingId, securityUtil.getId()).orElseThrow(CustomException.notFound(CustomErrorCode.NOT_FOUND_MEETING));
     return MeetingDetailDto.from(meeting);
   }
   
-  public MeetingPaginationDto readMeetingList(final MeetingPaginationParam paginationParam) {
+  public MeetingPaginationDto readListWithPagination(final MeetingPaginationParam paginationParam) {
     final Page<Meeting> meetingPage = meetingRepository.findAllByUserId(paginationParam.toPageable(), securityUtil.getId());
     return MeetingPaginationDto.from(meetingPage);
   }
   
   @Transactional
-  public void addMeeting(final CreateMeetingDto meetingDto) {
+  public void addOne(final CreateMeetingDto meetingDto) {
     Optional<Project> project = meetingDto.projectId() != null ? projectRepository.findById(meetingDto.projectId()) : Optional.empty();
     Meeting meeting = project.map(p -> Meeting.from(meetingDto, securityUtil.getId(), p))
                              .orElseGet(() -> Meeting.from(meetingDto, securityUtil.getId()));
@@ -51,8 +46,8 @@ public class MeetingService {
   
   
   @Transactional
-  public void updateMeeting(final UpdateMeetingDto meetingDto, final Long meetingId) {
-    Meeting meeting = meetingRepository.findById(meetingId).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND_MEETING));
+  public void updateOne(final UpdateMeetingDto meetingDto, final Long meetingId) {
+    Meeting meeting = meetingRepository.findById(meetingId).orElseThrow(CustomException.notFound(CustomErrorCode.NOT_FOUND_MEETING));
     if (!meeting.getHost().getId().equals(securityUtil.getId())) {
       throw new CustomException(CustomErrorCode.INVALID_HOST);
     }
@@ -60,8 +55,8 @@ public class MeetingService {
   }
   
   @Transactional
-  public void deleteMeeting(final Long meetingId) {
-    final Meeting meeting = meetingRepository.findById(meetingId).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND_MEETING));
+  public void deleteOne(final Long meetingId) {
+    final Meeting meeting = meetingRepository.findById(meetingId).orElseThrow(CustomException.notFound(CustomErrorCode.NOT_FOUND_MEETING));
     if (!meeting.getHost().getId().equals(securityUtil.getId())) {
       throw new CustomException(CustomErrorCode.INVALID_HOST);
     }

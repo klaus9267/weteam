@@ -25,7 +25,7 @@ public class ProjectUserService {
   private final AlarmService alarmService;
   private final SecurityUtil securityUtil;
   
-  public List<ProjectUserDto> findUsersByProjectId(final Long projectId) {
+  public List<ProjectUserDto> findProjectUserListByProjectId(final Long projectId) {
     final List<ProjectUser> projectUserList = projectUserRepository.findByProjectId(projectId);
     if (projectUserList.isEmpty()) {
       throw new CustomException(CustomErrorCode.NOT_FOUND_PROJECT_USER);
@@ -35,33 +35,45 @@ public class ProjectUserService {
   
   @Transactional
   public void acceptInvite(final Long projectId) {
-    Project project = projectRepository.findById(projectId).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND_PROJECT));
+    final ProjectUser projectUser = projectUserRepository.findByProjectIdAndUserId(projectId, securityUtil.getId()).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND_PROJECT_USER));
+    projectUser.able();
+    alarmService.addListWithTargetUser(projectUser.getProject(), AlarmStatus.JOIN, securityUtil.getId());
+  }
+  
+  @Transactional
+  public void inviteProject(final Long projectId, final Long targetUserId) {
+    final Project project = projectRepository.findById(projectId).orElseThrow(CustomException.notFound(CustomErrorCode.NOT_FOUND_PROJECT));
     project.getProjectUserList().forEach(projectUser -> {
-      if (projectUser.getUser().getId().equals(securityUtil.getId())) {
-        throw new CustomException(CustomErrorCode.DUPLICATE, "이미 참가한 프로젝트입니다.");
+      if (projectUser.getUser().getId().equals(targetUserId)) {
+        throw new CustomException(CustomErrorCode.DUPLICATE, "이미 초대한 프로젝트입니다.");
       }
     });
-    ProjectUser projectUser = projectUserRepository.save(ProjectUser.from(project, securityUtil.getId()));
-    alarmService.addAlarmWithTargetUser(projectUser.getProject(), AlarmStatus.JOIN, securityUtil.getId());
+    final ProjectUser projectUser = ProjectUser.from(project, targetUserId, false);
+    projectUserRepository.save(projectUser);
   }
   
   @Transactional
   public void updateProjectRole(final UpdateProjectRoleParam param) {
-    ProjectUser projectUser = projectUserRepository.findByProjectIdAndUserId(param.getProjectId(), securityUtil.getId()).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND_PROJECT_USER));
+    ProjectUser projectUser = projectUserRepository.findByProjectIdAndUserId(param.getProjectId(), securityUtil.getId()).orElseThrow(CustomException.notFound(CustomErrorCode.NOT_FOUND_PROJECT_USER));
     projectUser.updateRole(param.getRole());
   }
   
   @Transactional
   public void kickUsers(final List<Long> projectUserIdList) {
     List<ProjectUser> projectUser = projectUserRepository.findAllById(projectUserIdList).stream().filter(ProjectUser::isEnable).toList();
-    projectUser.forEach(ProjectUser::disable);
-    alarmService.addAlarmList(projectUser, AlarmStatus.KICK);
+    if (projectUser.isEmpty()) {
+      throw new CustomException(CustomErrorCode.BAD_REQUEST, "프로젝트에 참가한 유저가 없습니다.");
+    }
+    projectUser.forEach(user -> {
+      user.disable();
+      alarmService.addListWithTargetUser(user.getProject(), AlarmStatus.KICK, user.getId());
+    });
   }
   
   @Transactional
   public void exitProject(final Long projectId) {
-    ProjectUser projectUser = projectUserRepository.findByProjectIdAndUserId(projectId, securityUtil.getId()).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND_PROJECT));
+    ProjectUser projectUser = projectUserRepository.findByProjectIdAndUserId(projectId, securityUtil.getId()).orElseThrow(CustomException.notFound(CustomErrorCode.NOT_FOUND_PROJECT));
     projectUser.disable();
-    alarmService.addAlarmWithTargetUser(projectUser.getProject(), AlarmStatus.EXIT, securityUtil.getId());
+    alarmService.addListWithTargetUser(projectUser.getProject(), AlarmStatus.EXIT, securityUtil.getId());
   }
 }
