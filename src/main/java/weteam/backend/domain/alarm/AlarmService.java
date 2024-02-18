@@ -9,6 +9,7 @@ import weteam.backend.application.handler.exception.CustomErrorCode;
 import weteam.backend.application.handler.exception.CustomException;
 import weteam.backend.domain.alarm.dto.AlarmPaginationDto;
 import weteam.backend.domain.common.pagination.param.AlarmPaginationParam;
+import weteam.backend.domain.firebase.FirebaseService;
 import weteam.backend.domain.project.entity.Project;
 import weteam.backend.domain.project.repository.ProjectRepository;
 
@@ -20,6 +21,7 @@ public class AlarmService {
   private final AlarmRepository alarmRepository;
   private final ProjectRepository projectRepository;
   private final SecurityUtil securityUtil;
+  private final FirebaseService firebaseService;
   
   public AlarmPaginationDto readAlarmList(final AlarmPaginationParam paginationParam) {
     final Page<Alarm> alarmPage = alarmRepository.findAllByUserId(paginationParam.toPageable(), securityUtil.getId());
@@ -30,12 +32,15 @@ public class AlarmService {
   public void addList(final Project project, final AlarmStatus status) {
     final List<Alarm> alarmList = Alarm.from(project, status);
     alarmRepository.saveAll(alarmList);
+    firebaseService.sendNotification(alarmList);
+    
   }
   
   @Transactional
   public void addListWithTargetUser(final Project project, final AlarmStatus status, final Long targetUserId) {
     final List<Alarm> alarmList = Alarm.from(project, status, targetUserId);
     alarmRepository.saveAll(alarmList);
+    firebaseService.sendNotification(alarmList);
   }
   
   @Transactional

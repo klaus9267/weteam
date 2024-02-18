@@ -1,5 +1,6 @@
 package weteam.backend.domain.project.service;
 
+import com.google.firebase.messaging.FirebaseMessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
@@ -58,7 +59,7 @@ public class ProjectService {
   }
   
   @Transactional
-  public void updateOne(final UpdateProjectDto projectDto, final Long projectId) {
+  public void updateOne(final UpdateProjectDto projectDto, final Long projectId){
     Project project = this.checkHost(projectId);
     project.updateProject(projectDto);
     alarmService.addList(project, AlarmStatus.UPDATE_PROJECT);

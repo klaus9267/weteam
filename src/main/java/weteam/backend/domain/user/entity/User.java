@@ -7,7 +7,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import weteam.backend.application.BaseEntity;
 import weteam.backend.domain.meeting.entity.Meeting;
-import weteam.backend.domain.meeting.entity.MeetingUser;
 import weteam.backend.domain.profile.ProfileImage;
 import weteam.backend.domain.project.entity.Project;
 import weteam.backend.domain.project.entity.ProjectUser;
@@ -25,7 +24,7 @@ public class User extends BaseEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
-  private String username, organization, uid, email;
+  private String username, organization, uid, email, deviceToken;
   
   @Enumerated(EnumType.STRING)
   private UserRole role;
@@ -61,5 +60,9 @@ public class User extends BaseEntity {
   
   public void updateOrganization(String organization) {
     this.organization = organization;
+  }
+  
+  public void updateDevice(final String deviceToken) {
+    this.deviceToken = deviceToken;
   }
 }

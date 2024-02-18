@@ -57,8 +57,10 @@ public class ProjectUserService {
     if (projectUser.isEmpty()) {
       throw new CustomException(CustomErrorCode.BAD_REQUEST, "프로젝트에 참가한 유저가 없습니다.");
     }
-    projectUser.forEach(ProjectUser::disable);
-    alarmService.addList(projectUser.get(0).getProject(), AlarmStatus.KICK);
+    projectUser.forEach(user -> {
+      user.disable();
+      alarmService.addListWithTargetUser(user.getProject(), AlarmStatus.KICK, user.getId());
+    });
   }
   
   @Transactional

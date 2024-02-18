@@ -1,6 +1,7 @@
 package weteam.backend.application.auth.jwt;
 
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import weteam.backend.domain.user.dto.UserDto;
@@ -8,6 +9,7 @@ import weteam.backend.domain.user.dto.UserDto;
 import java.util.Collection;
 
 @AllArgsConstructor
+@Getter
 public class UserDetailCustom implements UserDetails {
     private final UserDto user;
 
