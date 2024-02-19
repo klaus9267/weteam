@@ -32,7 +32,6 @@ public class FirebaseTokenFilter extends OncePerRequestFilter {
     FirebaseToken decodedToken;
     String header = request.getHeader("Authorization");
     if (header == null || !header.startsWith("Bearer ")) {
-      log.error("-----------------------------------");
       log.error("invalid header");
       log.error("-----------------------------------");
       setUnauthorizedResponse(response, "INVALID_HEADER");
@@ -43,16 +42,14 @@ public class FirebaseTokenFilter extends OncePerRequestFilter {
     try {
       decodedToken = firebaseAuth.verifyIdToken(token);
     } catch (FirebaseAuthException e) {
-      log.error("-----------------------------------");
       log.error("invalid token");
       log.error("-----------------------------------");
       setUnauthorizedResponse(response, "INVALID_TOKEN");
       return;
     }
     
-    log.info("------------------------------ login ------------------------------");
     UserDto user = userDetailCustomService.loadUser(decodedToken);
-    log.info("-------------------------------------------------------------------");
+    log.info("------------------------------ login : " + request.getRemoteUser() + " ------------------------------");
     UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user, null, List.of(new SimpleGrantedAuthority(UserRole.USER.getKey())));
     SecurityContextHolder.getContext().setAuthentication(authentication);
     
