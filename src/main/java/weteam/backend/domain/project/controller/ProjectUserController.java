@@ -10,7 +10,6 @@ import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
 import weteam.backend.domain.common.swagger.SwaggerCreated;
 import weteam.backend.domain.common.swagger.SwaggerNoContent;
 import weteam.backend.domain.common.swagger.SwaggerOK;
@@ -30,8 +29,7 @@ public class ProjectUserController {
   @PostMapping("{projectId}")
   @SwaggerCreated(summary = "팀원 초대용 주소 생성")
   public ResponseEntity<String> inviteProject(@PathVariable("projectId") final Long projectId) {
-    final String hashedId = projectUserService.createInviteUrl(projectId);
-    final String url = UriComponentsBuilder.fromPath("/").path(hashedId).toUriString();
+    final String url = projectUserService.createInviteUrl(projectId);
     return ResponseEntity.ok(url);
   }
   
@@ -48,11 +46,18 @@ public class ProjectUserController {
     projectUserService.updateProjectRole(updateProjectRoleParam);
   }
   
-  @PatchMapping("{projectId}")
+  @PatchMapping("{projectId}/develop")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  @SwaggerNoContent(summary = "초대 수락(개발용)", description = "응답 없음")
+  public void acceptInvite4Develop(@PathVariable("projectId") final Long projectId) {
+    projectUserService.acceptInvite4Develop(projectId);
+  }
+  
+  @PatchMapping("{hashedProjectId}")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   @SwaggerNoContent(summary = "초대 수락", description = "응답 없음")
-  public void acceptInvite(@PathVariable("projectId") final Long projectId) {
-    projectUserService.acceptInvite(projectId);
+  public void acceptInvite(@PathVariable("hashedProjectId") final String hashedProjectId) {
+    projectUserService.acceptInvite(hashedProjectId);
   }
   
   @DeleteMapping

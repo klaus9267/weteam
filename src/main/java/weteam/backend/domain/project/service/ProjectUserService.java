@@ -3,6 +3,7 @@ package weteam.backend.domain.project.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.util.UriComponentsBuilder;
 import weteam.backend.application.auth.SecurityUtil;
 import weteam.backend.application.handler.exception.CustomErrorCode;
 import weteam.backend.application.handler.exception.CustomException;
@@ -15,9 +16,8 @@ import weteam.backend.domain.project.param.UpdateProjectRoleParam;
 import weteam.backend.domain.project.repository.ProjectRepository;
 import weteam.backend.domain.project.repository.ProjectUserRepository;
 
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.List;
 
 @Service
@@ -37,8 +37,16 @@ public class ProjectUserService {
   }
   
   @Transactional
-  public void acceptInvite(final Long projectId) {
+  public void acceptInvite4Develop(final Long projectId) {
     final Project project = projectRepository.findById(projectId).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND_PROJECT));
+    final ProjectUser projectUser = ProjectUser.from(project, securityUtil.getId());
+    project.addProjectUser(projectUser);
+    alarmService.addListWithTargetUser(projectUser.getProject(), AlarmStatus.JOIN, securityUtil.getId());
+  }
+  
+  @Transactional
+  public void acceptInvite(final String hashedProjectId) {
+    final Project project = projectRepository.findByHashedId(hashedProjectId).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND_PROJECT));
     final ProjectUser projectUser = ProjectUser.from(project, securityUtil.getId());
     project.addProjectUser(projectUser);
     alarmService.addListWithTargetUser(projectUser.getProject(), AlarmStatus.JOIN, securityUtil.getId());
@@ -47,21 +55,10 @@ public class ProjectUserService {
   @Transactional
   public String createInviteUrl(final Long projectId) {
     try {
-      // 숫자를 문자열로 변환하고 MD5 해시 생성
-      MessageDigest digest = MessageDigest.getInstance("MD5");
-      byte[] encodedHash = digest.digest(Long.toString(projectId).getBytes(StandardCharsets.UTF_8));
-      
-      // byte 배열을 Hex 문자열로 변환
-      StringBuilder hexString = new StringBuilder(2 * encodedHash.length);
-      for (byte b : encodedHash) {
-        String hex = Integer.toHexString(0xff & b);
-        if (hex.length() == 1) {
-          hexString.append('0');
-        }
-        hexString.append(hex);
-      }
-      return hexString.toString();
-    } catch (NoSuchAlgorithmException e) {
+      final String hostAddress = InetAddress.getLocalHost().getHostAddress() + "/api/project-users";
+      final Project project = projectRepository.findById(projectId).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND_PROJECT));
+      return UriComponentsBuilder.fromPath("/").scheme("http").host(hostAddress).port(8080).path(project.getHashedId()).toUriString();
+    } catch (UnknownHostException e) {
       throw new CustomException(CustomErrorCode.BAD_REQUEST, e.getMessage());
     }
   }

@@ -26,7 +26,7 @@ public class Project extends BaseEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
-  private String name, explanation;
+  private String name, explanation, hashedId;
   private LocalDate startedAt, endedAt;
   
   @Column(columnDefinition = "boolean default false")
@@ -88,5 +88,9 @@ public class Project extends BaseEntity {
   
   public void addProjectUser(final ProjectUser projectUser) {
     this.getProjectUserList().add(projectUser);
+  }
+  
+  public void addHashedId(final String hashedId) {
+    this.hashedId = hashedId;
   }
 }

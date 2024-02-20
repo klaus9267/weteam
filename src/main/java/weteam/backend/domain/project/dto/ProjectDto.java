@@ -14,6 +14,7 @@ import java.util.List;
 public class ProjectDto {
   private final Long id;
   private final String name;
+  private final String hashedId;
   private final String explanation;
   private final Long headCount;
   private final boolean done;
@@ -24,6 +25,7 @@ public class ProjectDto {
   private ProjectDto(final Project project) {
     this.id = project.getId();
     this.name = project.getName();
+    this.hashedId = project.getHashedId();
     this.explanation = project.getExplanation();
     this.headCount = project.getProjectUserList().stream().filter(ProjectUser::isEnable).count();
     this.done = project.isDone();

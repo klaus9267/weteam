@@ -1,6 +1,5 @@
 package weteam.backend.domain.project.service;
 
-import com.google.firebase.messaging.FirebaseMessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
@@ -20,6 +19,10 @@ import weteam.backend.domain.project.repository.ProjectRepository;
 import weteam.backend.domain.user.UserRepository;
 import weteam.backend.domain.user.entity.User;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
 @Service
 @RequiredArgsConstructor
 public class ProjectService {
@@ -33,8 +36,27 @@ public class ProjectService {
     if (projectRepository.findByHostIdAndNameAndExplanation(securityUtil.getId(), projectDto.name(), projectDto.explanation()).isPresent()) {
       throw new CustomException(CustomErrorCode.DUPLICATE);
     }
+    
     final Project project = Project.from(projectDto, securityUtil.getId());
-    projectRepository.save(project);
+    Project addedProject = projectRepository.save(project);
+    
+    try {
+      MessageDigest digest = MessageDigest.getInstance("MD5");
+      byte[] encodedHash = digest.digest(Long.toString(addedProject.getId()).getBytes(StandardCharsets.UTF_8));
+      
+      StringBuilder hexString = new StringBuilder(2 * encodedHash.length);
+      for (byte b : encodedHash) {
+        String hex = Integer.toHexString(0xff & b);
+        if (hex.length() == 1) {
+          hexString.append('0');
+        }
+        hexString.append(hex);
+      }
+      
+      addedProject.addHashedId(hexString.toString());
+    } catch (NoSuchAlgorithmException e) {
+      throw new CustomException(CustomErrorCode.BAD_REQUEST, e.getMessage());
+    }
   }
   
   private Project findOneByProjectId(final Long projectId) {
@@ -59,7 +81,7 @@ public class ProjectService {
   }
   
   @Transactional
-  public void updateOne(final UpdateProjectDto projectDto, final Long projectId){
+  public void updateOne(final UpdateProjectDto projectDto, final Long projectId) {
     Project project = this.checkHost(projectId);
     project.updateProject(projectDto);
     alarmService.addList(project, AlarmStatus.UPDATE_PROJECT);
