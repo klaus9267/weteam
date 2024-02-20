@@ -9,14 +9,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import weteam.backend.domain.common.pagination.param.MeetingPaginationParam;
-import weteam.backend.domain.common.swagger.SwaggerCreated;
 import weteam.backend.domain.common.swagger.SwaggerNoContent;
 import weteam.backend.domain.common.swagger.SwaggerOK;
+import weteam.backend.domain.meeting.dto.meeting.*;
 import weteam.backend.domain.meeting.service.MeetingService;
-import weteam.backend.domain.meeting.dto.meeting.CreateMeetingDto;
-import weteam.backend.domain.meeting.dto.meeting.MeetingDetailDto;
-import weteam.backend.domain.meeting.dto.meeting.MeetingPaginationDto;
-import weteam.backend.domain.meeting.dto.meeting.UpdateMeetingDto;
 
 @RestController
 @RequestMapping("/api/meetings")
@@ -26,10 +22,10 @@ public class MeetingController {
   private final MeetingService meetingService;
   
   @PostMapping
-  @ResponseStatus(HttpStatus.CREATED)
-  @SwaggerCreated(summary = "약속 생성")
-  public void addMeeting(@Valid @RequestBody final CreateMeetingDto meetingDto) {
-    meetingService.addOne(meetingDto);
+  @SwaggerOK(summary = "약속 생성")
+  public ResponseEntity<MeetingDto> addMeeting(@Valid @RequestBody final CreateMeetingDto meetingDto) {
+    final MeetingDto meeting = meetingService.addOne(meetingDto);
+    return ResponseEntity.ok(meeting);
   }
   
   @GetMapping

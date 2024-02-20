@@ -6,13 +6,11 @@ import weteam.backend.application.BaseEntity;
 import weteam.backend.domain.meeting.dto.meeting.CreateMeetingDto;
 import weteam.backend.domain.meeting.dto.meeting.UpdateMeetingDto;
 import weteam.backend.domain.project.entity.Project;
-import weteam.backend.domain.project.entity.ProjectUser;
 import weteam.backend.domain.user.entity.User;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Entity(name = "meetings")
 @NoArgsConstructor
@@ -42,12 +40,13 @@ public class Meeting extends BaseEntity {
   }
   
   private Meeting(final CreateMeetingDto meetingDto, final Long userId, final Project project) {
+    final User user = User.from(userId);
     this.title = meetingDto.title();
     this.startedAt = meetingDto.startedAt();
     this.endedAt = meetingDto.endedAt();
     this.host = User.from(userId);
     this.project = project;
-    this.meetingUserList = MeetingUser.from(project.getProjectUserList(), this);
+    this.meetingUserList = MeetingUser.from(user, this);
   }
   
   private Meeting(final CreateMeetingDto meetingDto, final Long userId) {
