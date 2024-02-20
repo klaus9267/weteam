@@ -35,7 +35,7 @@ public class ProjectUser {
   }
   
   public static ProjectUser from(final Project project, final Long userId) {
-    return ProjectUser.builder().project(project).user(User.from(userId)).build();
+    return ProjectUser.builder().project(project).user(User.from(userId)).enable(true).build();
   }
   
   public void updateRole(final String role) {

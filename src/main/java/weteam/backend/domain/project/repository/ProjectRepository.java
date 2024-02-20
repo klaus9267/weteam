@@ -32,4 +32,6 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
     Page<Project> findAllByUserIdAndDone(final Pageable pageable, final Long userId, final boolean done);
 
     Optional<Project> findByHostIdAndNameAndExplanation(final Long hostId, final String name, final String explanation);
+    
+    Optional<Project> findByHashedId(final String hashedId);
 }
