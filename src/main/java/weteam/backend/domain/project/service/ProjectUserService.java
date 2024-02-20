@@ -35,21 +35,15 @@ public class ProjectUserService {
   
   @Transactional
   public void acceptInvite(final Long projectId) {
-    final ProjectUser projectUser = projectUserRepository.findByProjectIdAndUserId(projectId, securityUtil.getId()).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND_PROJECT_USER));
-    projectUser.able();
+    final Project project = projectRepository.findById(projectId).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND_PROJECT));
+    final ProjectUser projectUser = ProjectUser.from(project, securityUtil.getId());
+    project.addProjectUser(projectUser);
     alarmService.addListWithTargetUser(projectUser.getProject(), AlarmStatus.JOIN, securityUtil.getId());
   }
   
   @Transactional
-  public void inviteProject(final Long projectId, final Long targetUserId) {
-    final Project project = projectRepository.findById(projectId).orElseThrow(CustomException.notFound(CustomErrorCode.NOT_FOUND_PROJECT));
-    project.getProjectUserList().forEach(projectUser -> {
-      if (projectUser.getUser().getId().equals(targetUserId)) {
-        throw new CustomException(CustomErrorCode.DUPLICATE, "이미 초대한 프로젝트입니다.");
-      }
-    });
-    final ProjectUser projectUser = ProjectUser.from(project, targetUserId, false);
-    projectUserRepository.save(projectUser);
+  public String inviteProject(final Long projectId) {
+  
   }
   
   @Transactional

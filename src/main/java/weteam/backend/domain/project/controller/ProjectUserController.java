@@ -26,13 +26,10 @@ import java.util.List;
 public class ProjectUserController {
   private final ProjectUserService projectUserService;
   
-  @PostMapping("{projectId}/{userId}")
-  @SwaggerCreated(summary = "팀원 초대")
-  public void inviteProject(
-      @PathVariable("projectId") final Long projectId,
-      @PathVariable("userId") final Long userId
-  ) {
-    projectUserService.inviteProject(projectId, userId);
+  @PostMapping("{projectId}")
+  @SwaggerCreated(summary = "팀원 초대용 주소 생성")
+  public void inviteProject(@PathVariable("projectId") final Long projectId) {
+    projectUserService.inviteProject(projectId);
   }
   
   @GetMapping("{projectId}")

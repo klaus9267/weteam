@@ -34,8 +34,8 @@ public class ProjectUser {
     return ProjectUser.builder().user(user).project(project).enable(true).build();
   }
   
-  public static ProjectUser from(final Project project, final Long userId, final boolean enable) {
-    return ProjectUser.builder().project(project).user(User.from(userId)).enable(enable).build();
+  public static ProjectUser from(final Project project, final Long userId) {
+    return ProjectUser.builder().project(project).user(User.from(userId)).build();
   }
   
   public void updateRole(final String role) {
@@ -50,9 +50,5 @@ public class ProjectUser {
       throw new CustomException(CustomErrorCode.BAD_REQUEST, "호스트를 넘기기전에 탈퇴할 수 없습니다.");
     }
     this.enable = !enable;
-  }
-  
-  public void able() {
-    this.enable = true;
   }
 }
