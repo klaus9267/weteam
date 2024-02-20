@@ -8,10 +8,7 @@ import weteam.backend.application.auth.SecurityUtil;
 import weteam.backend.application.handler.exception.CustomErrorCode;
 import weteam.backend.application.handler.exception.CustomException;
 import weteam.backend.domain.common.pagination.param.MeetingPaginationParam;
-import weteam.backend.domain.meeting.dto.meeting.CreateMeetingDto;
-import weteam.backend.domain.meeting.dto.meeting.MeetingDetailDto;
-import weteam.backend.domain.meeting.dto.meeting.MeetingPaginationDto;
-import weteam.backend.domain.meeting.dto.meeting.UpdateMeetingDto;
+import weteam.backend.domain.meeting.dto.meeting.*;
 import weteam.backend.domain.meeting.entity.Meeting;
 import weteam.backend.domain.meeting.repository.MeetingRepository;
 import weteam.backend.domain.project.entity.Project;
@@ -37,11 +34,12 @@ public class MeetingService {
   }
   
   @Transactional
-  public void addOne(final CreateMeetingDto meetingDto) {
-    Optional<Project> project = meetingDto.projectId() != null ? projectRepository.findById(meetingDto.projectId()) : Optional.empty();
-    Meeting meeting = project.map(p -> Meeting.from(meetingDto, securityUtil.getId(), p))
-                             .orElseGet(() -> Meeting.from(meetingDto, securityUtil.getId()));
-    meetingRepository.save(meeting);
+  public MeetingDto addOne(final CreateMeetingDto meetingDto) {
+    final Optional<Project> project = meetingDto.projectId() != null ? projectRepository.findById(meetingDto.projectId()) : Optional.empty();
+    final Meeting meeting = project.map(p -> Meeting.from(meetingDto, securityUtil.getId(), p))
+                                   .orElseGet(() -> Meeting.from(meetingDto, securityUtil.getId()));
+    final Meeting addedMeeting = meetingRepository.save(meeting);
+    return MeetingDto.from(addedMeeting);
   }
   
   

@@ -35,6 +35,7 @@ public class MeetingUser {
   
   private MeetingUser(final User user, final Meeting meeting) {
     this.meeting = meeting;
+    this.accept = true;
     this.user = user;
   }
   

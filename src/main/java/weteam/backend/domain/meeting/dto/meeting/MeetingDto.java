@@ -36,4 +36,8 @@ public class MeetingDto {
   public static List<MeetingDto> from(final List<Meeting> meetingList) {
     return meetingList.stream().map(MeetingDto::new).toList();
   }
+  
+  public static MeetingDto from(final Meeting meeting) {
+    return new MeetingDto(meeting);
+  }
 }
