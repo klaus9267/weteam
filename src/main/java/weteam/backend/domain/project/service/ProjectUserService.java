@@ -15,6 +15,9 @@ import weteam.backend.domain.project.param.UpdateProjectRoleParam;
 import weteam.backend.domain.project.repository.ProjectRepository;
 import weteam.backend.domain.project.repository.ProjectUserRepository;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 @Service
@@ -42,8 +45,25 @@ public class ProjectUserService {
   }
   
   @Transactional
-  public String inviteProject(final Long projectId) {
-  
+  public String createInviteUrl(final Long projectId) {
+    try {
+      // 숫자를 문자열로 변환하고 MD5 해시 생성
+      MessageDigest digest = MessageDigest.getInstance("MD5");
+      byte[] encodedHash = digest.digest(Long.toString(projectId).getBytes(StandardCharsets.UTF_8));
+      
+      // byte 배열을 Hex 문자열로 변환
+      StringBuilder hexString = new StringBuilder(2 * encodedHash.length);
+      for (byte b : encodedHash) {
+        String hex = Integer.toHexString(0xff & b);
+        if (hex.length() == 1) {
+          hexString.append('0');
+        }
+        hexString.append(hex);
+      }
+      return hexString.toString();
+    } catch (NoSuchAlgorithmException e) {
+      throw new CustomException(CustomErrorCode.BAD_REQUEST, e.getMessage());
+    }
   }
   
   @Transactional
