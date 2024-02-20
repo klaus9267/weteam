@@ -10,6 +10,7 @@ import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 import weteam.backend.domain.common.swagger.SwaggerCreated;
 import weteam.backend.domain.common.swagger.SwaggerNoContent;
 import weteam.backend.domain.common.swagger.SwaggerOK;
@@ -26,13 +27,12 @@ import java.util.List;
 public class ProjectUserController {
   private final ProjectUserService projectUserService;
   
-  @PostMapping("{projectId}/{userId}")
-  @SwaggerCreated(summary = "팀원 초대")
-  public void inviteProject(
-      @PathVariable("projectId") final Long projectId,
-      @PathVariable("userId") final Long userId
-  ) {
-    projectUserService.inviteProject(projectId, userId);
+  @PostMapping("{projectId}")
+  @SwaggerCreated(summary = "팀원 초대용 주소 생성")
+  public ResponseEntity<String> inviteProject(@PathVariable("projectId") final Long projectId) {
+    final String hashedId = projectUserService.createInviteUrl(projectId);
+    final String url = UriComponentsBuilder.fromPath("/").path(hashedId).toUriString();
+    return ResponseEntity.ok(url);
   }
   
   @GetMapping("{projectId}")

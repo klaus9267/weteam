@@ -15,6 +15,9 @@ import weteam.backend.domain.project.param.UpdateProjectRoleParam;
 import weteam.backend.domain.project.repository.ProjectRepository;
 import weteam.backend.domain.project.repository.ProjectUserRepository;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 @Service
@@ -35,21 +38,32 @@ public class ProjectUserService {
   
   @Transactional
   public void acceptInvite(final Long projectId) {
-    final ProjectUser projectUser = projectUserRepository.findByProjectIdAndUserId(projectId, securityUtil.getId()).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND_PROJECT_USER));
-    projectUser.able();
+    final Project project = projectRepository.findById(projectId).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND_PROJECT));
+    final ProjectUser projectUser = ProjectUser.from(project, securityUtil.getId());
+    project.addProjectUser(projectUser);
     alarmService.addListWithTargetUser(projectUser.getProject(), AlarmStatus.JOIN, securityUtil.getId());
   }
   
   @Transactional
-  public void inviteProject(final Long projectId, final Long targetUserId) {
-    final Project project = projectRepository.findById(projectId).orElseThrow(CustomException.notFound(CustomErrorCode.NOT_FOUND_PROJECT));
-    project.getProjectUserList().forEach(projectUser -> {
-      if (projectUser.getUser().getId().equals(targetUserId)) {
-        throw new CustomException(CustomErrorCode.DUPLICATE, "이미 초대한 프로젝트입니다.");
+  public String createInviteUrl(final Long projectId) {
+    try {
+      // 숫자를 문자열로 변환하고 MD5 해시 생성
+      MessageDigest digest = MessageDigest.getInstance("MD5");
+      byte[] encodedHash = digest.digest(Long.toString(projectId).getBytes(StandardCharsets.UTF_8));
+      
+      // byte 배열을 Hex 문자열로 변환
+      StringBuilder hexString = new StringBuilder(2 * encodedHash.length);
+      for (byte b : encodedHash) {
+        String hex = Integer.toHexString(0xff & b);
+        if (hex.length() == 1) {
+          hexString.append('0');
+        }
+        hexString.append(hex);
       }
-    });
-    final ProjectUser projectUser = ProjectUser.from(project, targetUserId, false);
-    projectUserRepository.save(projectUser);
+      return hexString.toString();
+    } catch (NoSuchAlgorithmException e) {
+      throw new CustomException(CustomErrorCode.BAD_REQUEST, e.getMessage());
+    }
   }
   
   @Transactional
