@@ -71,20 +71,23 @@ public class ProjectUserService {
   
   @Transactional
   public void kickUsers(final List<Long> projectUserIdList) {
-    List<ProjectUser> projectUser = projectUserRepository.findAllById(projectUserIdList).stream().filter(ProjectUser::isEnable).toList();
-    if (projectUser.isEmpty()) {
-      throw new CustomException(CustomErrorCode.BAD_REQUEST, "프로젝트에 참가한 유저가 없습니다.");
+    final Project project = projectRepository.findByProjectUserListIdIn(projectUserIdList).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND_PROJECT));
+    if (!project.getHost().getId().equals(securityUtil.getId())) {
+      throw new CustomException(CustomErrorCode.INVALID_HOST);
     }
-    projectUser.forEach(user -> {
-      user.disable();
-      alarmService.addListWithTargetUser(user.getProject(), AlarmStatus.KICK, user.getId());
-    });
+    final List<ProjectUser> projectUserList = project.getProjectUserList().stream().filter(projectUser -> projectUserIdList.contains(projectUser.getId())).toList();
+    projectUserList.forEach(ProjectUser::disable);
+    projectUserList.forEach(projectUser -> alarmService.addListWithTargetUser(project, AlarmStatus.KICK, projectUser.getUser().getId()));
   }
   
   @Transactional
   public void exitProject(final Long projectId) {
     ProjectUser projectUser = projectUserRepository.findByProjectIdAndUserId(projectId, securityUtil.getId()).orElseThrow(CustomException.notFound(CustomErrorCode.NOT_FOUND_PROJECT));
+    if (projectUser.getProject().getHost().getId().equals(securityUtil.getId())) {
+      throw new CustomException(CustomErrorCode.BAD_REQUEST, "호스트를 넘기기전에 탈퇴할 수 없습니다.");
+    }
     projectUser.disable();
     alarmService.addListWithTargetUser(projectUser.getProject(), AlarmStatus.EXIT, securityUtil.getId());
   }
+  
 }

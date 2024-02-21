@@ -15,7 +15,7 @@ public record PushMessage(
     String content
 ) {
   public static List<Message> makeMessageList(List<Alarm> alarmList) {
-    if (alarmList.isEmpty()) {
+    if (alarmList == null || alarmList.size() == 0) {
       throw new CustomException(CustomErrorCode.BAD_REQUEST, "보낼 알람이 없습니다.");
     }
     if (alarmList.get(0).getTargetUser() == null) {
