@@ -46,9 +46,6 @@ public class ProjectUser {
     if (!this.enable) {
       throw new CustomException(CustomErrorCode.BAD_REQUEST, "이미 탈퇴한 프로젝트입니다.");
     }
-    if (this.getProject().getHost().getId().equals(this.user.getId())) {
-      throw new CustomException(CustomErrorCode.BAD_REQUEST, "호스트를 넘기기전에 탈퇴할 수 없습니다.");
-    }
-    this.enable = !enable;
+    this.enable = false;
   }
 }

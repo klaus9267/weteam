@@ -21,7 +21,6 @@ import java.util.List;
 @Getter
 @Builder
 @EqualsAndHashCode(callSuper = true)
-@ToString(callSuper = true)
 public class Project extends BaseEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
