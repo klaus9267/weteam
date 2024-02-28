@@ -22,4 +22,3 @@
 - docker, aws(rds, ec2), github action
 
 ## ERD
-![다이어그램](https://github.com/klaus9267/weteam/assets/90795904/e6397089-d9ad-49d0-900c-eea7ed9dc3c2)
