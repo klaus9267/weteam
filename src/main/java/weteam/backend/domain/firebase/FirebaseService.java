@@ -22,6 +22,11 @@ public class FirebaseService {
   private final UserRepository userRepository;
   private final SecurityUtil securityUtil;
   
+  public String readDeviceToken() {
+    User user = userRepository.findById(securityUtil.getId()).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND_USER));
+    return user.getDeviceToken();
+  }
+  
   @Transactional
   public void updateDevice(final String token) {
     User user = userRepository.findById(securityUtil.getId()).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND, "사용자를 조회할 수 없습니다."));

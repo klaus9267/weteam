@@ -13,6 +13,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ProjectDto {
   private final Long id;
+  private final Integer imageId;
   private final String name;
   private final String hashedId;
   private final String explanation;
@@ -24,6 +25,7 @@ public class ProjectDto {
   
   private ProjectDto(final Project project) {
     this.id = project.getId();
+    this.imageId = project.getImageId();
     this.name = project.getName();
     this.hashedId = project.getHashedId();
     this.explanation = project.getExplanation();
