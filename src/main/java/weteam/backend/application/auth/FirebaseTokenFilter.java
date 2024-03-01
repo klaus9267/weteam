@@ -49,7 +49,7 @@ public class FirebaseTokenFilter extends OncePerRequestFilter {
     }
     
     UserDto user = userDetailCustomService.loadUser(decodedToken);
-    log.info("------------------------------ login : " + user.toString() + " ------------------------------");
+    log.info("------------------------------ login : " + user.toString() + " | " + request.getMethod() + "|" + request.getRequestURI() + " ------------------------------");
     UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user, null, List.of(new SimpleGrantedAuthority(UserRole.USER.getKey())));
     SecurityContextHolder.getContext().setAuthentication(authentication);
     
