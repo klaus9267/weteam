@@ -25,6 +25,7 @@ public class Project extends BaseEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
+  private Integer imageId;
   private String name, explanation, hashedId;
   private LocalDate startedAt, endedAt;
   
@@ -48,6 +49,7 @@ public class Project extends BaseEntity {
     ProjectUser projectUser = ProjectUser.from(user, this);
     
     this.name = projectDto.name();
+    this.imageId = projectDto.imageId();
     this.explanation = projectDto.explanation();
     this.startedAt = projectDto.startedAt();
     this.endedAt = projectDto.endedAt();
@@ -80,6 +82,7 @@ public class Project extends BaseEntity {
   
   public void updateProject(final UpdateProjectDto projectDto) {
     this.name = projectDto.name() == null ? name : projectDto.name();
+    this.imageId = projectDto.imageId();
     this.startedAt = projectDto.startedAt();
     this.endedAt = projectDto.endedAt();
     this.explanation = projectDto.explanation() == null ? explanation : projectDto.explanation();

@@ -23,6 +23,7 @@ public class Meeting extends BaseEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
+  private Integer imageId;
   private String title;
   private LocalDateTime startedAt, endedAt;
   
@@ -41,6 +42,7 @@ public class Meeting extends BaseEntity {
   
   private Meeting(final CreateMeetingDto meetingDto, final Long userId, final Project project) {
     final User user = User.from(userId);
+    this.imageId = meetingDto.imageId();
     this.title = meetingDto.title();
     this.startedAt = meetingDto.startedAt();
     this.endedAt = meetingDto.endedAt();
@@ -51,6 +53,7 @@ public class Meeting extends BaseEntity {
   
   private Meeting(final CreateMeetingDto meetingDto, final Long userId) {
     final User user = User.from(userId);
+    this.imageId = meetingDto.imageId();
     this.title = meetingDto.title();
     this.startedAt = meetingDto.startedAt();
     this.endedAt = meetingDto.endedAt();
@@ -72,6 +75,7 @@ public class Meeting extends BaseEntity {
   }
   
   public void updateMeeting(final UpdateMeetingDto meetingDto) {
+    this.imageId = meetingDto.imageId();
     this.title = meetingDto.title();
     this.startedAt = meetingDto.startedAt();
     this.endedAt = meetingDto.endedAt();
