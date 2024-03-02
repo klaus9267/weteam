@@ -1,10 +1,7 @@
 package weteam.backend.domain.user.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import weteam.backend.application.BaseEntity;
 import weteam.backend.domain.meeting.entity.Meeting;
 import weteam.backend.domain.profile.ProfileImage;

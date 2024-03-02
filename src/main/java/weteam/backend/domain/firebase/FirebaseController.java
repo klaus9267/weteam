@@ -15,12 +15,6 @@ import weteam.backend.domain.common.swagger.SwaggerOK;
 public class FirebaseController {
   private final FirebaseService firebaseService;
   
-  @GetMapping
-  @SwaggerOK(summary = "디바이스 토큰 조회")
-  public ResponseEntity<String> readDeviceToken() {
-    return ResponseEntity.ok(firebaseService.readDeviceToken());
-  }
-  
   @PatchMapping("{token}")
   @SwaggerNoContent(summary = "디바이스 설정 및 변경")
   @ResponseStatus(HttpStatus.NO_CONTENT)
