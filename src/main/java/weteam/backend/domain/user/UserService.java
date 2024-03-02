@@ -21,7 +21,7 @@ public class UserService {
   private final SecurityUtil securityUtil;
   
   public List<UserDto> findAll() {
-    List<User> userList = userRepository.findAll();
+    final List<User> userList = userRepository.findAll();
     return userList.stream().map(UserDto::from).toList();
   }
   
