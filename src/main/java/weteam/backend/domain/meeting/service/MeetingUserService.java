@@ -3,15 +3,20 @@ package weteam.backend.domain.meeting.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.util.UriComponentsBuilder;
 import weteam.backend.application.auth.SecurityUtil;
 import weteam.backend.application.handler.exception.CustomErrorCode;
 import weteam.backend.application.handler.exception.CustomException;
 import weteam.backend.domain.meeting.dto.time_slot.RequestTimeSlotDto;
+import weteam.backend.domain.meeting.entity.Meeting;
 import weteam.backend.domain.meeting.entity.MeetingUser;
 import weteam.backend.domain.meeting.entity.TimeSlot;
+import weteam.backend.domain.meeting.repository.MeetingRepository;
 import weteam.backend.domain.meeting.repository.MeetingUserRepository;
 import weteam.backend.domain.meeting.repository.TimeSlotRepository;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Comparator;
 import java.util.List;
 
@@ -19,6 +24,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MeetingUserService {
   private final MeetingUserRepository meetingUserRepository;
+  private final MeetingRepository meetingRepository;
   private final TimeSlotRepository timeSlotRepository;
   private final SecurityUtil securityUtil;
   
@@ -32,12 +38,28 @@ public class MeetingUserService {
   }
   
   @Transactional
-  public void acceptMeeting(final Long meetingId) {
-    MeetingUser meetingUser = meetingUserRepository.findByMeetingIdAndUserId(meetingId, securityUtil.getId()).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND, "조회할 약속이 없습니다."));
-    if (meetingUser.isAccept()) {
-      throw new CustomException(CustomErrorCode.BAD_REQUEST, "이미 수락한 약속입니다.");
+  public String createInviteUrl(final Long meetingId) {
+    try {
+      final String hostAddress = InetAddress.getLocalHost().getHostAddress() + "/api/meetings";
+      final Meeting meeting = meetingRepository.findById(meetingId).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND_MEETING));
+      return UriComponentsBuilder.fromPath("/").scheme("http").host(hostAddress).port(8080).path(meeting.getHashedId()).toUriString();
+    } catch (UnknownHostException e) {
+      throw new CustomException(CustomErrorCode.BAD_REQUEST, e.getMessage());
     }
-    meetingUser.acceptMeeting();
+  }
+  
+  @Transactional
+  public void acceptInvite(final String hashedId) {
+    final Meeting meeting = meetingRepository.findByHashedId(hashedId).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND_MEETING));
+    final MeetingUser meetingUser = MeetingUser.from(securityUtil.getId(), meeting.getId());
+    meeting.addMeetingUser(meetingUser);
+  }
+  
+  @Transactional
+  public void acceptInvite4Develop(final Long meetingId) {
+    final Meeting meeting = meetingRepository.findById(meetingId).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND_MEETING));
+    final MeetingUser meetingUser = MeetingUser.from(securityUtil.getId(), meeting.getId());
+    meeting.addMeetingUser(meetingUser);
   }
   
   @Transactional

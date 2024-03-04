@@ -4,9 +4,12 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
+import org.springdoc.core.converters.models.PageableAsQueryParam;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import weteam.backend.domain.common.swagger.SwaggerNoContent;
+import weteam.backend.domain.common.swagger.SwaggerOK;
 import weteam.backend.domain.meeting.dto.time_slot.RequestTimeSlotDto;
 import weteam.backend.domain.meeting.service.MeetingUserService;
 
@@ -29,11 +32,26 @@ public class MeetingUserController {
     meetingUserService.inviteMeeting(meetingId, userId);
   }
   
-  @PatchMapping("{meetingId}")
+  @GetMapping("{meetingId}")
+  @SwaggerOK(summary = "약속 초대 주소 생성")
+  @PageableAsQueryParam
+  public ResponseEntity<String> inviteMeeting(@PathVariable("meetingId") final Long meetingId) {
+    final String url = meetingUserService.createInviteUrl(meetingId);
+    return ResponseEntity.ok(url);
+  }
+  
+  @PatchMapping("{hashedId}")
   @ResponseStatus(HttpStatus.NO_CONTENT)
-  @SwaggerNoContent(summary = "약속 수락")
-  public void acceptMeeting(@PathVariable("meetingId") final Long meetingId) {
-    meetingUserService.acceptMeeting(meetingId);
+  @SwaggerNoContent(summary = "약속 초대 수락")
+  public void acceptMeeting(@PathVariable("hashedId") final String hashedId) {
+    meetingUserService.acceptInvite(hashedId);
+  }
+  
+  @PatchMapping("{meetingId}/develop")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  @SwaggerNoContent(summary = "약속 초대 수락(개발용")
+  public void acceptInvite4Develop(@PathVariable("meetingId") final Long meetingId) {
+    meetingUserService.acceptInvite4Develop(meetingId);
   }
   
   @PatchMapping("{meetingId}/time")

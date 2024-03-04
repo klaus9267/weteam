@@ -4,7 +4,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import weteam.backend.domain.meeting.dto.meeting.MeetingDto;
 import weteam.backend.domain.meeting.entity.Meeting;
 
 import java.util.Optional;
@@ -28,4 +27,6 @@ public interface MeetingRepository extends JpaRepository<Meeting, Long> {
             AND mu.accept = true
          """)
   Page<Meeting> findAllByUserId(final Pageable pageable, final Long userId);
+  
+  Optional<Meeting> findByHashedId(final String hashedId);
 }

@@ -56,8 +56,4 @@ public class MeetingUser {
   public static List<MeetingUser> from(final List<ProjectUser> projectUserList, final Meeting meeting) {
     return projectUserList.stream().map(projectUser -> new MeetingUser(projectUser, meeting)).toList();
   }
-  
-  public void acceptMeeting() {
-    this.accept = !isAccept();
-  }
 }
