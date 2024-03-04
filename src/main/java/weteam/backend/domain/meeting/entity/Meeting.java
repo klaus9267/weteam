@@ -77,7 +77,6 @@ public class Meeting extends BaseEntity {
   }
   
   public void updateMeeting(final UpdateMeetingDto meetingDto) {
-    this.imageId = meetingDto.imageId();
     this.title = meetingDto.title();
     this.startedAt = meetingDto.startedAt();
     this.endedAt = meetingDto.endedAt();

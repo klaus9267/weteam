@@ -13,10 +13,6 @@ public record UpdateProjectDto(
     @Schema(example = "개재미없는 교양수업")
     String name,
     
-    @NotNull
-    @Schema(example = "1L")
-    Integer imageId,
-    
     @NotNull(message = "startedAt is required")
     @Schema(example = "2023-12-24")
     LocalDate startedAt,
