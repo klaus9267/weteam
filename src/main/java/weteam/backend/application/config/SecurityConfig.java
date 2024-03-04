@@ -21,31 +21,32 @@ import weteam.backend.application.auth.jwt.UserDetailCustomService;
 public class SecurityConfig {
   private final UserDetailCustomService userDetailCustomService;
   private final FirebaseAuth firebaseAuth;
-  
+
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     return http.csrf().disable()
-               .formLogin().disable()
-               .httpBasic().disable()
-               .sessionManagement(session -> session
-                   .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-               )
-               
-               .authorizeHttpRequests(authorize -> authorize
-                   .requestMatchers("/**").hasAnyRole("USER", "ADMIN")
-               )
-               
-               .addFilterBefore(new FirebaseTokenFilter(userDetailCustomService, firebaseAuth), UsernamePasswordAuthenticationFilter.class)
-               .build();
+        .formLogin().disable()
+        .httpBasic().disable()
+        .sessionManagement(session -> session
+            .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+        )
+
+        .authorizeHttpRequests(authorize -> authorize
+            .requestMatchers("/**").hasAnyRole("USER", "ADMIN")
+        )
+
+        .addFilterBefore(new FirebaseTokenFilter(userDetailCustomService, firebaseAuth), UsernamePasswordAuthenticationFilter.class)
+        .build();
   }
-  
+
   @Bean
   public WebSecurityCustomizer webSecurityCustomizer() {
     return web -> web.ignoring().requestMatchers(
         "/api/auths/**",
         "/api/users/all",
         "/favicon.ico",
-        "/error",
+        "/error.html",
+        "/error-weteam",
         "/swagger-ui/**",
         "/swagger-resources/**",
         "/v3/api-docs/**");
