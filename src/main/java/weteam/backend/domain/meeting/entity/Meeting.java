@@ -3,6 +3,8 @@ package weteam.backend.domain.meeting.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import weteam.backend.application.BaseEntity;
+import weteam.backend.application.handler.exception.CustomErrorCode;
+import weteam.backend.application.handler.exception.CustomException;
 import weteam.backend.domain.meeting.dto.meeting.CreateMeetingDto;
 import weteam.backend.domain.meeting.dto.meeting.UpdateMeetingDto;
 import weteam.backend.domain.project.entity.Project;
@@ -24,7 +26,7 @@ public class Meeting extends BaseEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
   private Integer imageId;
-  private String title;
+  private String title, hashedId;
   private LocalDateTime startedAt, endedAt;
   
   @ManyToOne(fetch = FetchType.LAZY)
@@ -75,9 +77,19 @@ public class Meeting extends BaseEntity {
   }
   
   public void updateMeeting(final UpdateMeetingDto meetingDto) {
-    this.imageId = meetingDto.imageId();
     this.title = meetingDto.title();
     this.startedAt = meetingDto.startedAt();
     this.endedAt = meetingDto.endedAt();
+  }
+  
+  public void addHashedId(final String hashedId) {
+    this.hashedId = hashedId;
+  }
+  
+  public void addMeetingUser(final MeetingUser meetingUser) {
+    if (this.meetingUserList.contains(meetingUser)) {
+      throw new CustomException(CustomErrorCode.BAD_REQUEST, "이미 수락한 약속입니다.");
+    }
+    this.meetingUserList.add(meetingUser);
   }
 }

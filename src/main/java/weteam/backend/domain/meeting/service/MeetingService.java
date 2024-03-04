@@ -10,10 +10,14 @@ import weteam.backend.application.handler.exception.CustomException;
 import weteam.backend.domain.common.pagination.param.MeetingPaginationParam;
 import weteam.backend.domain.meeting.dto.meeting.*;
 import weteam.backend.domain.meeting.entity.Meeting;
+import weteam.backend.domain.meeting.entity.MeetingUser;
 import weteam.backend.domain.meeting.repository.MeetingRepository;
 import weteam.backend.domain.project.entity.Project;
 import weteam.backend.domain.project.repository.ProjectRepository;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Optional;
 
 @Service
@@ -39,9 +43,25 @@ public class MeetingService {
     final Meeting meeting = project.map(p -> Meeting.from(meetingDto, securityUtil.getId(), p))
                                    .orElseGet(() -> Meeting.from(meetingDto, securityUtil.getId()));
     final Meeting addedMeeting = meetingRepository.save(meeting);
+    
+    try {
+      MessageDigest digest = MessageDigest.getInstance("MD5");
+      byte[] encodedHash = digest.digest(Long.toString(addedMeeting.getId()).getBytes(StandardCharsets.UTF_8));
+      StringBuilder hexString = new StringBuilder(2 * encodedHash.length);
+      for (byte b : encodedHash) {
+        String hex = Integer.toHexString(0xff & b);
+        if (hex.length() == 1) {
+          hexString.append('0');
+        }
+        hexString.append(hex);
+      }
+      addedMeeting.addHashedId(hexString.toString());
+    } catch (NoSuchAlgorithmException e) {
+      throw new CustomException(CustomErrorCode.BAD_REQUEST, e.getMessage());
+    }
+    
     return MeetingDto.from(addedMeeting);
   }
-  
   
   @Transactional
   public void updateOne(final UpdateMeetingDto meetingDto, final Long meetingId) {
@@ -50,6 +70,13 @@ public class MeetingService {
       throw new CustomException(CustomErrorCode.INVALID_HOST);
     }
     meeting.updateMeeting(meetingDto);
+  }
+  
+  @Transactional
+  public void acceptInvite(final String hashedProjectId) {
+    final Meeting meeting = meetingRepository.findByHashedId(hashedProjectId).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND_MEETING));
+    final MeetingUser meetingUser = MeetingUser.from(securityUtil.getId(), meeting.getId());
+    meeting.addMeetingUser(meetingUser);
   }
   
   @Transactional

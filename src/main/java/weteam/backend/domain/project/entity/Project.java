@@ -82,7 +82,6 @@ public class Project extends BaseEntity {
   
   public void updateProject(final UpdateProjectDto projectDto) {
     this.name = projectDto.name() == null ? name : projectDto.name();
-    this.imageId = projectDto.imageId();
     this.startedAt = projectDto.startedAt();
     this.endedAt = projectDto.endedAt();
     this.explanation = projectDto.explanation() == null ? explanation : projectDto.explanation();
