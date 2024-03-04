@@ -32,7 +32,7 @@ public class MeetingDetailDto {
         this.title = meeting.getTitle();
         this.startedAt = meeting.getStartedAt();
         this.endedAt = meeting.getEndedAt();
-        this.project = ProjectDto.from(meeting.getProject());
+        this.project = meeting.getProject() == null ? null : ProjectDto.from(meeting.getProject());
         this.meetingUserList = MeetingUserDto.from(meeting.getMeetingUserList());
     }
 

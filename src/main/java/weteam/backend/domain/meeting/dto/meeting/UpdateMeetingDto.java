@@ -12,10 +12,6 @@ public record UpdateMeetingDto(
     String title,
     
     @NotNull
-    @Schema(example = "1L")
-    Integer imageId,
-    
-    @NotNull
     @Schema(example = "2024-02-05T10:00:00", type = "string")
     LocalDateTime startedAt,
     @NotNull
