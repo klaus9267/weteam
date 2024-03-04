@@ -26,24 +26,24 @@ public class MeetingService {
   private final MeetingRepository meetingRepository;
   private final ProjectRepository projectRepository;
   private final SecurityUtil securityUtil;
-  
+
   public MeetingDetailDto readOne(final Long meetingId) {
     final Meeting meeting = meetingRepository.findByIdAndUserId(meetingId, securityUtil.getId()).orElseThrow(CustomException.notFound(CustomErrorCode.NOT_FOUND_MEETING));
     return MeetingDetailDto.from(meeting);
   }
-  
+
   public MeetingPaginationDto readListWithPagination(final MeetingPaginationParam paginationParam) {
     final Page<Meeting> meetingPage = meetingRepository.findAllByUserId(paginationParam.toPageable(), securityUtil.getId());
     return MeetingPaginationDto.from(meetingPage);
   }
-  
+
   @Transactional
   public MeetingDto addOne(final CreateMeetingDto meetingDto) {
     final Optional<Project> project = meetingDto.projectId() != null ? projectRepository.findById(meetingDto.projectId()) : Optional.empty();
     final Meeting meeting = project.map(p -> Meeting.from(meetingDto, securityUtil.getId(), p))
-                                   .orElseGet(() -> Meeting.from(meetingDto, securityUtil.getId()));
+        .orElseGet(() -> Meeting.from(meetingDto, securityUtil.getId()));
     final Meeting addedMeeting = meetingRepository.save(meeting);
-    
+
     try {
       MessageDigest digest = MessageDigest.getInstance("MD5");
       byte[] encodedHash = digest.digest(Long.toString(addedMeeting.getId()).getBytes(StandardCharsets.UTF_8));
@@ -59,10 +59,10 @@ public class MeetingService {
     } catch (NoSuchAlgorithmException e) {
       throw new CustomException(CustomErrorCode.BAD_REQUEST, e.getMessage());
     }
-    
+
     return MeetingDto.from(addedMeeting);
   }
-  
+
   @Transactional
   public void updateOne(final UpdateMeetingDto meetingDto, final Long meetingId) {
     Meeting meeting = meetingRepository.findById(meetingId).orElseThrow(CustomException.notFound(CustomErrorCode.NOT_FOUND_MEETING));
@@ -71,14 +71,14 @@ public class MeetingService {
     }
     meeting.updateMeeting(meetingDto);
   }
-  
+
   @Transactional
   public void acceptInvite(final String hashedProjectId) {
     final Meeting meeting = meetingRepository.findByHashedId(hashedProjectId).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND_MEETING));
     final MeetingUser meetingUser = MeetingUser.from(securityUtil.getId(), meeting.getId());
     meeting.addMeetingUser(meetingUser);
   }
-  
+
   @Transactional
   public void deleteOne(final Long meetingId) {
     final Meeting meeting = meetingRepository.findById(meetingId).orElseThrow(CustomException.notFound(CustomErrorCode.NOT_FOUND_MEETING));
