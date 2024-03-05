@@ -1,4 +1,4 @@
-package weteam.backend.application.auth.jwt;
+package weteam.backend.application.auth.user_detail;
 
 import com.google.firebase.auth.FirebaseToken;
 import lombok.AllArgsConstructor;

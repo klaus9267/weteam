@@ -1,4 +1,4 @@
-package weteam.backend.application.auth.jwt;
+package weteam.backend.application.auth.user_detail;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
