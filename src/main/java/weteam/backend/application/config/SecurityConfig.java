@@ -1,26 +1,22 @@
 package weteam.backend.application.config;
 
-import com.google.firebase.auth.FirebaseAuth;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import weteam.backend.application.auth.FirebaseTokenFilter;
-import weteam.backend.application.auth.jwt.UserDetailCustomService;
 
 @RequiredArgsConstructor
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity(securedEnabled = true)
 public class SecurityConfig {
-  private final UserDetailCustomService userDetailCustomService;
-  private final FirebaseAuth firebaseAuth;
+  private final FirebaseTokenFilter firebaseTokenFilter;
 
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -31,24 +27,19 @@ public class SecurityConfig {
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         )
 
-        .authorizeHttpRequests(authorize -> authorize
-            .requestMatchers("/**").hasAnyRole("USER", "ADMIN")
+        .authorizeHttpRequests(auth -> auth
+            .requestMatchers(
+                "/api/auths/**",
+                "/api/users/all",
+                "/error.html",
+                "/error-weteam",
+                "/swagger-ui/**",
+                "/v3/**"
+            ).permitAll()
+            .anyRequest().authenticated()
         )
 
-        .addFilterBefore(new FirebaseTokenFilter(userDetailCustomService, firebaseAuth), UsernamePasswordAuthenticationFilter.class)
+        .addFilterBefore(firebaseTokenFilter, UsernamePasswordAuthenticationFilter.class)
         .build();
-  }
-
-  @Bean
-  public WebSecurityCustomizer webSecurityCustomizer() {
-    return web -> web.ignoring().requestMatchers(
-        "/api/auths/**",
-        "/api/users/all",
-        "/favicon.ico",
-        "/error.html",
-        "/error-weteam",
-        "/swagger-ui/**",
-        "/swagger-resources/**",
-        "/v3/api-docs/**");
   }
 }

@@ -9,12 +9,12 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import weteam.backend.application.auth.jwt.UserDetailCustomService;
+import weteam.backend.application.auth.user_detail.UserDetailCustomService;
 import weteam.backend.domain.user.dto.UserDto;
 import weteam.backend.domain.user.entity.UserRole;
 
@@ -22,43 +22,33 @@ import java.io.IOException;
 import java.util.List;
 
 @AllArgsConstructor
+@Component
 @Slf4j
 public class FirebaseTokenFilter extends OncePerRequestFilter {
   private final UserDetailCustomService userDetailCustomService;
+  private final SecurityUtil securityUtil;
   private final FirebaseAuth firebaseAuth;
-  
+
   @Override
-  protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-    FirebaseToken decodedToken;
-    String header = request.getHeader("Authorization");
-    if (header == null || !header.startsWith("Bearer ")) {
-      log.error("invalid header | " + request.getRemoteAddr() + " | " + request.getMethod() + " | " + request.getRequestURI());
-      log.error("-----------------------------------");
-      setUnauthorizedResponse(response, "INVALID_HEADER");
-      return;
+  protected void doFilterInternal(final HttpServletRequest request, final HttpServletResponse response, final FilterChain filterChain) throws ServletException, IOException {
+    final String header = request.getHeader("Authorization");
+    final String token = securityUtil.resolveToken(header);
+    if (token == null) {
+      filterChain.doFilter(request, response);
+    } else {
+      FirebaseToken decodedToken = null;
+      try {
+        decodedToken = firebaseAuth.verifyIdToken(token);
+      } catch (FirebaseAuthException e) {
+        log.error("invalid token" + request.getRemoteAddr() + " | " + request.getMethod() + " | " + request.getRequestURI());
+        log.error("-----------------------------------");
+      }
+      final UserDto user = userDetailCustomService.loadUser(decodedToken);
+      log.info("------------------------------ login : " + user.toString() + " | " + request.getMethod() + "|" + request.getRequestURI() + " ------------------------------");
+      final UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user, null, List.of(new SimpleGrantedAuthority(UserRole.USER.getKey())));
+      SecurityContextHolder.getContext().setAuthentication(authentication);
+
+      filterChain.doFilter(request, response);
     }
-    
-    String token = header.substring(7);
-    try {
-      decodedToken = firebaseAuth.verifyIdToken(token);
-    } catch (FirebaseAuthException e) {
-      log.error("invalid token" + request.getRemoteAddr() + " | " + request.getMethod() + " | " + request.getRequestURI());
-      log.error("-----------------------------------");
-      setUnauthorizedResponse(response, "INVALID_TOKEN");
-      return;
-    }
-    
-    UserDto user = userDetailCustomService.loadUser(decodedToken);
-    log.info("------------------------------ login : " + user.toString() + " | " + request.getMethod() + "|" + request.getRequestURI() + " ------------------------------");
-    UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user, null, List.of(new SimpleGrantedAuthority(UserRole.USER.getKey())));
-    SecurityContextHolder.getContext().setAuthentication(authentication);
-    
-    filterChain.doFilter(request, response);
-  }
-  
-  private void setUnauthorizedResponse(HttpServletResponse response, String code) throws IOException {
-    response.setStatus(HttpStatus.SC_UNAUTHORIZED);
-    response.setContentType("application/json");
-    response.getWriter().write("{\"code\":\"" + code + "\"}");
   }
 }

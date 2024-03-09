@@ -17,41 +17,41 @@ import java.io.InputStream;
 @Configuration
 public class FirebaseConfig {
   private final String databaseUrl;
-  
+  private final ClassPathResource resource;
+
   public FirebaseConfig(@Value("${firebase.database-url}") final String databaseUrl) {
     this.databaseUrl = databaseUrl;
+    this.resource = new ClassPathResource("./firebase.json");
   }
-  
+
   @Bean
   public FirebaseAuth getFirebaseAuth() throws IOException {
-    FileInputStream serviceAccount = new FileInputStream("./firebase.json");
-    
+    InputStream serviceAccount = resource.getInputStream();
     FirebaseOptions options = new FirebaseOptions.Builder()
         .setCredentials(GoogleCredentials.fromStream(serviceAccount))
         .setDatabaseUrl(databaseUrl)
         .build();
-    
+
     FirebaseApp.initializeApp(options);
-    
+
     return FirebaseAuth.getInstance();
   }
-  
+
   @Bean
   public FirebaseMessaging firebaseMessaging() throws IOException {
-    ClassPathResource resource = new ClassPathResource("./firebase.json");
     InputStream refreshToken = resource.getInputStream();
     FirebaseApp firebaseApp = FirebaseApp.getApps()
-                                         .stream()
-                                         .filter(app -> FirebaseApp.DEFAULT_APP_NAME.equals(app.getName()))
-                                         .findFirst()
-                                         .orElseGet(() -> {
-                                           try {
-                                             final FirebaseOptions options = FirebaseOptions.builder().setCredentials(GoogleCredentials.fromStream(refreshToken)).build();
-                                             return FirebaseApp.initializeApp(options);
-                                           } catch (IOException e) {
-                                             throw new RuntimeException(e);
-                                           }
-                                         });
+        .stream()
+        .filter(app -> FirebaseApp.DEFAULT_APP_NAME.equals(app.getName()))
+        .findFirst()
+        .orElseGet(() -> {
+          try {
+            final FirebaseOptions options = FirebaseOptions.builder().setCredentials(GoogleCredentials.fromStream(refreshToken)).build();
+            return FirebaseApp.initializeApp(options);
+          } catch (IOException e) {
+            throw new RuntimeException(e);
+          }
+        });
     return FirebaseMessaging.getInstance(firebaseApp);
   }
 }
