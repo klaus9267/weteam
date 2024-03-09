@@ -55,9 +55,9 @@ public class ProjectUserService {
   @Transactional
   public String createInviteUrl(final Long projectId) {
     try {
-      final String hostAddress = InetAddress.getLocalHost().getHostAddress() + "/api/project-users";
+      final String hostAddress = InetAddress.getLocalHost().getHostAddress();
       final Project project = projectRepository.findById(projectId).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND_PROJECT));
-      return UriComponentsBuilder.fromPath("/").scheme("http").host(hostAddress).port(8080).path(project.getHashedId()).toUriString();
+      return UriComponentsBuilder.fromPath("/").scheme("http").host(hostAddress).port(8080).path("/api/project-users/" + project.getHashedId()).toUriString();
     } catch (UnknownHostException e) {
       throw new CustomException(CustomErrorCode.BAD_REQUEST, e.getMessage());
     }

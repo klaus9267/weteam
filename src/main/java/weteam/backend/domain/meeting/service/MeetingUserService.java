@@ -27,7 +27,7 @@ public class MeetingUserService {
   private final MeetingRepository meetingRepository;
   private final TimeSlotRepository timeSlotRepository;
   private final SecurityUtil securityUtil;
-  
+
   @Transactional
   public void inviteMeeting(final Long meetingId, final Long userId) {
     if (meetingUserRepository.findByMeetingIdAndUserId(meetingId, userId).isPresent()) {
@@ -36,32 +36,32 @@ public class MeetingUserService {
     final MeetingUser meetingUser = MeetingUser.from(userId, meetingId);
     meetingUserRepository.save(meetingUser);
   }
-  
+
   @Transactional
   public String createInviteUrl(final Long meetingId) {
     try {
-      final String hostAddress = InetAddress.getLocalHost().getHostAddress() + "/api/meetings";
+      final String hostAddress = InetAddress.getLocalHost().getHostAddress();
       final Meeting meeting = meetingRepository.findById(meetingId).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND_MEETING));
-      return UriComponentsBuilder.fromPath("/").scheme("http").host(hostAddress).port(8080).path(meeting.getHashedId()).toUriString();
+      return UriComponentsBuilder.fromPath("/").scheme("http").host(hostAddress).port(8080).path("/api/meetings/" + meeting.getHashedId()).toUriString();
     } catch (UnknownHostException e) {
       throw new CustomException(CustomErrorCode.BAD_REQUEST, e.getMessage());
     }
   }
-  
+
   @Transactional
   public void acceptInvite(final String hashedId) {
     final Meeting meeting = meetingRepository.findByHashedId(hashedId).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND_MEETING));
     final MeetingUser meetingUser = MeetingUser.from(securityUtil.getId(), meeting.getId());
     meeting.addMeetingUser(meetingUser);
   }
-  
+
   @Transactional
   public void acceptInvite4Develop(final Long meetingId) {
     final Meeting meeting = meetingRepository.findById(meetingId).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND_MEETING));
     final MeetingUser meetingUser = MeetingUser.from(securityUtil.getId(), meeting.getId());
     meeting.addMeetingUser(meetingUser);
   }
-  
+
   @Transactional
   public void updateTimeSlot(final List<RequestTimeSlotDto> timeSlotDtoList, final Long meetingId) {
     this.validateTimeSlot(timeSlotDtoList);
@@ -70,10 +70,10 @@ public class MeetingUserService {
     timeSlotRepository.deleteAllByMeetingUser(meetingUser);
     timeSlotRepository.saveAll(timeSlotList);
   }
-  
+
   private void validateTimeSlot(final List<RequestTimeSlotDto> timeSlotDtoList) {
     timeSlotDtoList.sort(Comparator.comparing(RequestTimeSlotDto::startedAt));
-    
+
     for (int i = 0; i < timeSlotDtoList.size() - 1; i++) {
       if (timeSlotDtoList.get(i).endedAt().isAfter(timeSlotDtoList.get(i + 1).startedAt())) {
         throw new CustomException(CustomErrorCode.BAD_REQUEST, "겹치는 시간대가 있습니다");
