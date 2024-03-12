@@ -22,22 +22,24 @@ public class SlackService {
 
   public void sendMessage(String title, HashMap<String, String> data) {
     try {
+      int color = Color.ORANGE.getRGB();
+      String hexCode = String.format("#%06X", color & 0xFFFFFF);
       slackClient.send(SLACK_WEBHOOK_URL, payload(p -> p
-          .text(title) // 메시지 제목
-          .attachments(List.of(
-              Attachment.builder().color(Color.GREEN.toString()) // 메시지 색상
-                  .fields( // 메시지 본문 내용
-                      data.keySet().stream().map(key -> generateSlackField(key, data.get(key))).collect(Collectors.toList())
-                  ).build())))
+              .text(title)
+              .attachments(List.of(
+                      Attachment.builder()
+                          .color(hexCode)
+                          .fields(data.keySet().stream().map(key -> generateSlackField(key, data.get(key))).collect(Collectors.toList()))
+                          .build()
+                  )
+              )
+          )
       );
     } catch (IOException e) {
-      e.printStackTrace();
+      throw new RuntimeException(e);
     }
   }
 
-  /**
-   * Slack Field 생성
-   **/
   private Field generateSlackField(String title, String value) {
     return Field.builder()
         .title(title)

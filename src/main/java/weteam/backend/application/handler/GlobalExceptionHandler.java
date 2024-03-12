@@ -13,6 +13,7 @@ import weteam.backend.application.handler.exception.CustomException;
 import weteam.backend.application.handler.exception.ExceptionError;
 import weteam.backend.application.slack.SlackService;
 
+import java.io.IOException;
 import java.util.HashMap;
 
 @RestControllerAdvice
@@ -32,6 +33,14 @@ public class GlobalExceptionHandler {
   @ExceptionHandler(RuntimeException.class)
   @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
   protected ExceptionError handleRuntime(final RuntimeException e, HttpServletRequest request) {
+    logRequestDetails(request, e);
+    sendSlackMessage(request, e, HttpStatus.INTERNAL_SERVER_ERROR);
+    return buildExceptionError(e, HttpStatus.INTERNAL_SERVER_ERROR);
+  }
+
+  @ExceptionHandler(IOException.class)
+  @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+  protected ExceptionError handleIO(final IOException e, HttpServletRequest request) {
     logRequestDetails(request, e);
     sendSlackMessage(request, e, HttpStatus.INTERNAL_SERVER_ERROR);
     return buildExceptionError(e, HttpStatus.INTERNAL_SERVER_ERROR);
