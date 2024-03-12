@@ -1,4 +1,4 @@
-package weteam.backend.domain.firebase;
+package weteam.backend.application.firebase;
 
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingException;
@@ -39,7 +39,7 @@ public class FirebaseService {
     try {
       firebaseMessaging.sendAll(messageList);
     } catch (FirebaseMessagingException e) {
-      throw new CustomException(CustomErrorCode.FIREBASE_MESSAGE_ERROR, e.getMessage());
+      throw new RuntimeException(e);
     }
   }
 }

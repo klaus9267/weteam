@@ -1,4 +1,4 @@
-package weteam.backend.domain.firebase;
+package weteam.backend.application.firebase;
 
 import com.google.firebase.messaging.Message;
 import weteam.backend.application.handler.exception.CustomErrorCode;
