@@ -9,11 +9,10 @@ import weteam.backend.application.handler.exception.CustomErrorCode;
 import weteam.backend.application.handler.exception.CustomException;
 import weteam.backend.domain.alarm.dto.AlarmPaginationDto;
 import weteam.backend.domain.common.pagination.param.AlarmPaginationParam;
-import weteam.backend.domain.firebase.FirebaseService;
+import weteam.backend.application.firebase.FirebaseService;
 import weteam.backend.domain.project.entity.Project;
 import weteam.backend.domain.project.repository.ProjectRepository;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service

@@ -97,7 +97,7 @@ public class GlobalExceptionHandler {
     String sessionId = request.getRemoteUser();
     String fullRequestPath = queryString != null ? requestURI + "?" + queryString : requestURI;
 
-    String title = "Request { " + method + " " + fullRequestPath + " who { " + sessionId + " }";
+    String title = method + " | " + fullRequestPath + " | " + sessionId;
     String subtitle = status.getReasonPhrase() + " | " + status.value();
     HashMap<String, String> content = new HashMap<>();
     content.put(subtitle, e.getMessage());
