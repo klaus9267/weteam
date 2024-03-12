@@ -20,7 +20,7 @@ public enum CustomErrorCode {
   ACCESS_DENIED(HttpStatus.FORBIDDEN, "접근이 거부됬습니다."),
   INVALID_USER(HttpStatus.BAD_REQUEST, "잘못된 사용자의 접근입니다."),
   INVALID_HOST(HttpStatus.BAD_REQUEST, "호스트가 아닙니다."),
-  IO_EXCEPTION(HttpStatus.BAD_REQUEST, "Failed to initialize FirebaseApp"),
+  IO_EXCEPTION(HttpStatus.BAD_REQUEST, "IOException!!"),
   FIREBASE_MESSAGE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to send notification");
   
   private final HttpStatus httpStatus;
