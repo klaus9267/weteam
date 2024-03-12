@@ -9,6 +9,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import weteam.backend.application.handler.exception.CustomException;
 import weteam.backend.application.handler.exception.ExceptionError;
 import weteam.backend.application.slack.SlackService;
 
@@ -20,6 +21,14 @@ import java.util.HashMap;
 public class GlobalExceptionHandler {
   private final SlackService slackService;
 
+  @ExceptionHandler(Exception.class)
+  @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+  protected ExceptionError handleException(final Exception e, HttpServletRequest request) {
+    logRequestDetails(request, e);
+    sendSlackMessage(request, e, HttpStatus.INTERNAL_SERVER_ERROR);
+    return buildExceptionError(e, HttpStatus.INTERNAL_SERVER_ERROR);
+  }
+
   @ExceptionHandler(RuntimeException.class)
   @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
   protected ExceptionError handleRuntime(final RuntimeException e, HttpServletRequest request) {
@@ -28,11 +37,17 @@ public class GlobalExceptionHandler {
     return buildExceptionError(e, HttpStatus.INTERNAL_SERVER_ERROR);
   }
 
+  @ExceptionHandler(CustomException.class)
+  @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+  protected ExceptionError handleCustom(final CustomException e, HttpServletRequest request) {
+    logRequestDetails(request, e);
+    return buildExceptionError(e, e.getCustomErrorCode().getHttpStatus());
+  }
+
   @ExceptionHandler(MethodArgumentNotValidException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   protected ExceptionError handleMethodArgumentNotValid(final MethodArgumentNotValidException e, HttpServletRequest request) {
     logRequestDetails(request, e);
-    sendSlackMessage(request, e, HttpStatus.BAD_REQUEST);
     return buildExceptionError(e, HttpStatus.BAD_REQUEST);
   }
 
