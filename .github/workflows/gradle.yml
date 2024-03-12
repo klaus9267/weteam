@@ -27,11 +27,11 @@ jobs:
           echo "${{ secrets.DATABASE }}" >> ./application-db.yml
         shell: bash
 
-      - name: make application-oauth.yml
+      - name: make application-slack.yml
         run: |
           cd ./src/main/resources
-          touch ./application-oauth.yml
-          echo "${{ secrets.OAUTH }}" >> ./application-oauth.yml
+          touch ./application-slack.yml
+          echo "${{ secrets.SLACK }}" >> ./application-slack.yml
         shell: bash
 
       - name: make application-server.yml
