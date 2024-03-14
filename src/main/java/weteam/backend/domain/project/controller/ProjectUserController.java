@@ -26,7 +26,7 @@ import java.util.List;
 public class ProjectUserController {
   private final ProjectUserService projectUserService;
   
-  @PostMapping("{projectId}")
+  @GetMapping("{projectId}/invite")
   @SwaggerCreated(summary = "팀원 초대용 주소 생성")
   public ResponseEntity<String> inviteProject(@PathVariable("projectId") final Long projectId) {
     final String url = projectUserService.createInviteUrl(projectId);
