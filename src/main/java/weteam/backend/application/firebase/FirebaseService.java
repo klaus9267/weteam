@@ -14,6 +14,7 @@ import weteam.backend.domain.user.UserRepository;
 import weteam.backend.domain.user.entity.User;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -21,18 +22,18 @@ public class FirebaseService {
   private final FirebaseMessaging firebaseMessaging;
   private final UserRepository userRepository;
   private final SecurityUtil securityUtil;
-  
+
   public String readDeviceToken() {
-    User user = userRepository.findById(securityUtil.getId()).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND_USER));
-    return user.getDeviceToken();
+    Optional<User> user = userRepository.findById(securityUtil.getId());
+    return user.map(User::getDeviceToken).orElse(null);
   }
-  
+
   @Transactional
   public void updateDevice(final String token) {
     User user = userRepository.findById(securityUtil.getId()).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND, "사용자를 조회할 수 없습니다."));
     user.updateDevice(token);
   }
-  
+
   @Transactional
   public void sendNotification(final List<Alarm> alarmList) {
     final List<Message> messageList = PushMessage.makeMessageList(alarmList);
