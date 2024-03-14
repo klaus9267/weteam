@@ -22,15 +22,15 @@ import java.util.List;
 public class MeetingUserController {
   private final MeetingUserService meetingUserService;
   
-  @PostMapping("{meetingId}/{userId}")
-  @ResponseStatus(HttpStatus.NO_CONTENT)
-  @SwaggerNoContent(summary = "약속 초대")
-  public void inviteMeeting(
-      @PathVariable("meetingId") final Long meetingId,
-      @PathVariable("userId") final Long userId
-  ) {
-    meetingUserService.inviteMeeting(meetingId, userId);
-  }
+//  @PostMapping("{meetingId}/{userId}")
+//  @ResponseStatus(HttpStatus.NO_CONTENT)
+//  @SwaggerNoContent(summary = "약속 초대")
+//  public void inviteMeeting(
+//      @PathVariable("meetingId") final Long meetingId,
+//      @PathVariable("userId") final Long userId
+//  ) {
+//    meetingUserService.inviteMeeting(meetingId, userId);
+//  }
   
   @GetMapping("{meetingId}")
   @SwaggerOK(summary = "약속 초대 주소 생성")
@@ -49,7 +49,7 @@ public class MeetingUserController {
   
   @PatchMapping("{meetingId}/develop")
   @ResponseStatus(HttpStatus.NO_CONTENT)
-  @SwaggerNoContent(summary = "약속 초대 수락(개발용")
+  @SwaggerNoContent(summary = "약속 초대 수락(개발용)")
   public void acceptInvite4Develop(@PathVariable("meetingId") final Long meetingId) {
     meetingUserService.acceptInvite4Develop(meetingId);
   }

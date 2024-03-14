@@ -3,10 +3,10 @@ package weteam.backend.domain.meeting.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.util.UriComponentsBuilder;
 import weteam.backend.application.auth.SecurityUtil;
 import weteam.backend.application.handler.exception.CustomErrorCode;
 import weteam.backend.application.handler.exception.CustomException;
+import weteam.backend.domain.common.UrlBuilder;
 import weteam.backend.domain.meeting.dto.time_slot.RequestTimeSlotDto;
 import weteam.backend.domain.meeting.entity.Meeting;
 import weteam.backend.domain.meeting.entity.MeetingUser;
@@ -15,8 +15,6 @@ import weteam.backend.domain.meeting.repository.MeetingRepository;
 import weteam.backend.domain.meeting.repository.MeetingUserRepository;
 import weteam.backend.domain.meeting.repository.TimeSlotRepository;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.Comparator;
 import java.util.List;
 
@@ -39,13 +37,9 @@ public class MeetingUserService {
 
   @Transactional
   public String createInviteUrl(final Long meetingId) {
-    try {
-      final String hostAddress = InetAddress.getLocalHost().getHostAddress();
-      final Meeting meeting = meetingRepository.findById(meetingId).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND_MEETING));
-      return UriComponentsBuilder.fromPath("/").scheme("http").host(hostAddress).port(8080).path("/api/meetings/" + meeting.getHashedId()).toUriString();
-    } catch (UnknownHostException e) {
-      throw new CustomException(CustomErrorCode.BAD_REQUEST, e.getMessage());
-    }
+    final Meeting meeting = meetingRepository.findById(meetingId).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND_MEETING));
+    final String endPoint = "/api/meetings/";
+    return UrlBuilder.createInviteUrl(endPoint, meeting.getHashedId());
   }
 
   @Transactional
