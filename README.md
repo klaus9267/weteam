@@ -7,9 +7,12 @@
     <h1>📚 TECH STACKS</h1>
     <ul>
       <h3>Back-end</h3>
-      <img src="https://img.shields.io/badge/Java-007396?style=flat-square&logo=Java&logoColor=white"/>
-      <img src="https://img.shields.io/badge/springboot-6DB33F?style=flat-square&logo=springboot&logoColor=white"/>
-      <img src="https://img.shields.io/badge/MariaDB-003545?style=flat-square&logo=MariaDB&logoColor=white"/>
+        <img src="https://img.shields.io/badge/Java 17-007396?style=flat-square&logo=java&logoColor=white"/>
+        <img src="https://img.shields.io/badge/Spring Boot 3.2-6DB33F?style=flat-square&logo=SpringBoot&logoColor=white" alt="spring-boot"/>
+        <img src="https://img.shields.io/badge/Spring Security-6DB33F?style=flat-square&logo=SpringSecurity&logoColor=white" alt="spring-boot"/>
+        <img src="https://img.shields.io/badge/Spring Data JPA-6DB33F?style=flat-square&logo=&logoColor=white"/>
+        <img src="https://img.shields.io/badge/Firebase-FFCA28?style=flat-square&logo=Firebase&logoColor=white alt="firebase"/>
+        <img src="https://img.shields.io/badge/MariaDB-003545?style=flat-square&logo=MariaDB&logoColor=white"/>
       </br>
       <h3>Cloud</h3>
       <img src="https://img.shields.io/badge/AmazonEC2-FF9900?style=flat-square&logo=AmazonEC2&logoColor=white"/>
