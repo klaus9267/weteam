@@ -11,7 +11,7 @@
         <img src="https://img.shields.io/badge/Spring Boot 3.2-6DB33F?style=flat-square&logo=SpringBoot&logoColor=white" alt="spring-boot"/>
         <img src="https://img.shields.io/badge/Spring Security-6DB33F?style=flat-square&logo=SpringSecurity&logoColor=white" alt="spring-boot"/>
         <img src="https://img.shields.io/badge/Spring Data JPA-6DB33F?style=flat-square&logo=&logoColor=white"/>
-        <img src="https://img.shields.io/badge/Firebase-FFCA28?style=flat-square&logo=Firebase&logoColor=white alt="firebase"/>
+        <img src="https://img.shields.io/badge/Firebase-FFCA28?style=flat-square&logo=Firebase&logoColor=white"/>
         <img src="https://img.shields.io/badge/MariaDB-003545?style=flat-square&logo=MariaDB&logoColor=white"/>
       </br>
       <h3>Cloud</h3>
