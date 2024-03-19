@@ -19,27 +19,27 @@ public class UserService {
   private final UserRepository userRepository;
   private final ProjectRepository projectRepository;
   private final SecurityUtil securityUtil;
-  
+
   public List<UserDto> findAll() {
     final List<User> userList = userRepository.findAll();
     return userList.stream().map(UserDto::from).toList();
   }
-  
-  public UserWithProfileImageDto findOneById(final Long userId, final boolean isMine) {
+
+  public UserWithProfileImageDto findOneById(final Long userId) {
     final User user = this.findOne(userId);
-    return UserWithProfileImageDto.from(user, isMine);
+    return UserWithProfileImageDto.from(user);
   }
-  
+
   private User findOne(final Long id) {
     return userRepository.findById(id).orElseThrow(CustomException.notFound(CustomErrorCode.NOT_FOUND));
   }
-  
+
   @Transactional
   public void updateOne(final String organization) {
     final User user = this.findOne(securityUtil.getId());
     user.updateOrganization(organization);
   }
-  
+
   @Transactional
   public void deleteOne() {
     final Long userId = securityUtil.getId();
@@ -48,7 +48,7 @@ public class UserService {
     }
     userRepository.deleteById(userId);
   }
-  
+
   @Transactional
   public void deleteAll() {
     userRepository.deleteAll();

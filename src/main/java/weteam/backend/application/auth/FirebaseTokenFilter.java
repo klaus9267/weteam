@@ -15,6 +15,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import weteam.backend.application.auth.user_detail.UserDetailCustomService;
+import weteam.backend.domain.user.entity.User;
 import weteam.backend.domain.user.entity.UserRole;
 
 import java.io.IOException;
@@ -42,7 +43,7 @@ public class FirebaseTokenFilter extends OncePerRequestFilter {
         log.error("invalid token" + request.getRemoteAddr() + " | " + request.getMethod() + " | " + request.getRequestURI());
         log.error("--------------------");
       }
-      final CustomUser4Log user = userDetailCustomService.loadUser(decodedToken);
+      final User user = userDetailCustomService.loadUser(decodedToken);
       log.info("---------------- login : " + user.toString() + " | " + request.getMethod() + "|" + request.getRequestURI() + " --------------");
       final UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user, null, List.of(new SimpleGrantedAuthority(UserRole.USER.getKey())));
       SecurityContextHolder.getContext().setAuthentication(authentication);

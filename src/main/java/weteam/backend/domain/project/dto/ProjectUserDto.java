@@ -13,23 +13,23 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @Getter
 public class ProjectUserDto {
-    private Long id;
-    private String role;
-    private boolean enable;
-    private UserWithProfileImageDto user;
+  private Long id;
+  private String role;
+  private boolean enable;
+  private UserWithProfileImageDto user;
 
-    private ProjectUserDto(ProjectUser projectUser) {
-        this.id = projectUser.getId();
-        this.role = projectUser.getRole();
-        this.user = UserWithProfileImageDto.from(projectUser.getUser(), false);
-        this.enable = projectUser.isEnable();
-    }
+  private ProjectUserDto(ProjectUser projectUser) {
+    this.id = projectUser.getId();
+    this.role = projectUser.getRole();
+    this.user = UserWithProfileImageDto.from(projectUser.getUser());
+    this.enable = projectUser.isEnable();
+  }
 
-    public static ProjectUserDto from(ProjectUser projectUser) {
-        return new ProjectUserDto(projectUser);
-    }
+  public static ProjectUserDto from(ProjectUser projectUser) {
+    return new ProjectUserDto(projectUser);
+  }
 
-    public static List<ProjectUserDto> from(List<ProjectUser> projectUserList) {
-        return projectUserList.stream().map(ProjectUserDto::new).collect(Collectors.toList());
-    }
+  public static List<ProjectUserDto> from(List<ProjectUser> projectUserList) {
+    return projectUserList.stream().map(ProjectUserDto::new).collect(Collectors.toList());
+  }
 }
