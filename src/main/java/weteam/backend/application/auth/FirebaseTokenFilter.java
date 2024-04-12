@@ -44,7 +44,9 @@ public class FirebaseTokenFilter extends OncePerRequestFilter {
         log.error("--------------------");
       }
       final User user = userDetailCustomService.loadUser(decodedToken);
-      log.info("---------------- login : " + user.toString() + " | " + request.getMethod() + "|" + request.getRequestURI() + " --------------");
+      final CustomUser4Log customUser = CustomUser4Log.from(user);
+
+      log.info("---------------- login : " + customUser.toString() + " | " + request.getMethod() + "|" + request.getRequestURI() + " --------------");
       final UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user, null, List.of(new SimpleGrantedAuthority(UserRole.USER.getKey())));
       SecurityContextHolder.getContext().setAuthentication(authentication);
 
