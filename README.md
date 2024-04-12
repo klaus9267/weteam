@@ -1,24 +1,25 @@
-# we-team
+<div><h1>Weteam  Back-end</h1></div>
+  프로젝트 일정 관리에 편의성을 제공하는 앱 프로젝트입니다 :)
+<br><br>
 
-대학생을 타겟으로 한 팀플 일정 관리 웹 어플리케이션입니다
-
-팀플 뿐만 아니라 여행 일정, 연인과의 데이트 일정 관리 및 기록, 개인 다이어리 등의 기록으로 활용할 수 있습니다.
-
-## 소개
-
-- 기간 : 2023.11~
-- 작업 인원
-    - **백엔드 1명**
-    - 프론트 2명
-    - 디자이너 4명
-
-## 기술 스택
-
-| spring boot | 3.0.12 |
-| --- | --- |
-| java | 17 |
-- jpa, queryDSL, swagger, OAuth
-- docker, ec2, rds
-
-## ERD
-<img width="749" alt="image" src="https://github.com/klaus9267/weteam/assets/90795904/ebf112d4-0674-483f-bc5c-930b416cda50">
+<br><br>
+<div>
+    <h1>📚 TECH STACKS</h1>
+    <ul>
+      <h3>Back-end</h3>
+        <img src="https://img.shields.io/badge/Java 17-007396?style=flat-square&logo=java&logoColor=white"/>
+        <img src="https://img.shields.io/badge/Spring Boot 3.2-6DB33F?style=flat-square&logo=SpringBoot&logoColor=white" alt="spring-boot"/>
+        <img src="https://img.shields.io/badge/Spring Security-6DB33F?style=flat-square&logo=SpringSecurity&logoColor=white" alt="spring-boot"/>
+        <img src="https://img.shields.io/badge/Spring Data JPA-6DB33F?style=flat-square&logo=&logoColor=white"/>
+        <img src="https://img.shields.io/badge/Firebase-FFCA28?style=flat-square&logo=Firebase&logoColor=white"/>
+        <img src="https://img.shields.io/badge/MariaDB-003545?style=flat-square&logo=MariaDB&logoColor=white"/>
+      </br>
+      <h3>Cloud</h3>
+      <img src="https://img.shields.io/badge/AmazonEC2-FF9900?style=flat-square&logo=AmazonEC2&logoColor=white"/>
+      <img src="https://img.shields.io/badge/AmazonRDS-527FFF?style=flat-square&logo=AmazonRDS&logoColor=white"/>
+      </br>
+      <h3>CI/CD</h3>
+      <img src="https://img.shields.io/badge/Docker-2496ED?style=flat-square&logo=docker&logoColor=white"/>
+      <img src="https://img.shields.io/badge/GitHub%20Actions-2088FF?style=flat-square&logo=GitHubActions&logoColor=white"/>
+    </ul>
+  </div>
