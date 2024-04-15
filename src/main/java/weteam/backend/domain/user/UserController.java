@@ -32,15 +32,6 @@ public class UserController {
     return ResponseEntity.ok(userDtoList);
   }
 
-  @GetMapping("test")
-  public ResponseEntity<String> testAPI() {
-    return ResponseEntity.ok("""
-        <html>
-            <meta http-equiv="refresh" content="0; url=weteam://project"></meta>
-        </html>
-        """);
-  }
-
   @GetMapping("{id}")
   @SwaggerOK(summary = "다른 사용자 조회")
   public ResponseEntity<UserWithProfileImageDto> readOne(@PathVariable("id") final Long id) {
@@ -52,8 +43,7 @@ public class UserController {
   @SwaggerOK(summary = "내 정보 조회")
   public ResponseEntity<UserWithProfileImageDto> readMyInfo() {
     final User user = securityUtil.getCurrentUser();
-    final UserWithProfileImageDto userWithProfileImageDto = UserWithProfileImageDto.from(user);
-    return ResponseEntity.ok(userWithProfileImageDto);
+    return ResponseEntity.ok(UserWithProfileImageDto.from(user));
   }
 
   @PatchMapping("{organization}")
