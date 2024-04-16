@@ -12,6 +12,7 @@ import weteam.backend.domain.common.swagger.SwaggerNoContent;
 import weteam.backend.domain.common.swagger.SwaggerOK;
 import weteam.backend.domain.user.dto.UserDto;
 import weteam.backend.domain.user.dto.UserWithProfileImageDto;
+import weteam.backend.domain.user.entity.User;
 
 import java.util.List;
 
