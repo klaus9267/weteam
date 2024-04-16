@@ -42,8 +42,8 @@ public class UserController {
   @GetMapping
   @SwaggerOK(summary = "내 정보 조회")
   public ResponseEntity<UserWithProfileImageDto> readMyInfo() {
-    final User user = securityUtil.getCurrentUser();
-    return ResponseEntity.ok(UserWithProfileImageDto.from(user));
+    final UserWithProfileImageDto user = UserWithProfileImageDto.from(securityUtil.getCurrentUser());
+    return ResponseEntity.ok(user);
   }
 
   @PatchMapping("{organization}")
