@@ -12,7 +12,6 @@ import weteam.backend.domain.common.swagger.SwaggerNoContent;
 import weteam.backend.domain.common.swagger.SwaggerOK;
 import weteam.backend.domain.user.dto.UserDto;
 import weteam.backend.domain.user.dto.UserWithProfileImageDto;
-import weteam.backend.domain.user.entity.User;
 
 import java.util.List;
 
@@ -42,8 +41,9 @@ public class UserController {
   @GetMapping
   @SwaggerOK(summary = "내 정보 조회")
   public ResponseEntity<UserWithProfileImageDto> readMyInfo() {
-    final User user = securityUtil.getCurrentUser();
-    return ResponseEntity.ok(UserWithProfileImageDto.from(user));
+    final Long id = securityUtil.getId();
+    final UserWithProfileImageDto user = userService.findOneById(id);
+    return ResponseEntity.ok(user);
   }
 
   @PatchMapping("{organization}")
