@@ -32,11 +32,11 @@ public class FirebaseTokenFilter extends OncePerRequestFilter {
   @Override
   protected void doFilterInternal(final HttpServletRequest request, final HttpServletResponse response, final FilterChain filterChain) throws ServletException, IOException {
     final String header = request.getHeader("Authorization");
-    final String token = StringUtils.hasText(header) && header.startsWith("Bearer ")
-        ? header.substring(7)
-        : null;
+    final String token = StringUtils.hasText(header) && header.startsWith("Bearer ") ? header.substring(7) : null;
 
-    if (token != null) {
+    if (token == null) {
+      filterChain.doFilter(request, response);
+    } else {
       FirebaseToken decodedToken = null;
       try {
         decodedToken = firebaseAuth.verifyIdToken(token);
@@ -47,12 +47,11 @@ public class FirebaseTokenFilter extends OncePerRequestFilter {
       final User user = userDetailCustomService.loadUser(decodedToken);
       final CustomUser4Log customUser = CustomUser4Log.from(user);
 
-      log.info("---------------- login : " + customUser.toString() + " | " + request.getMethod() + "|" + request.getRequestURI() + " --------------");
-      final UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(customUser, null, List.of(new SimpleGrantedAuthority(UserRole.USER.getKey())));
+      log.info("---------------- login : " + customUser + " | " + request.getMethod() + "|" + request.getRequestURI() + " --------------");
+      final UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user, null, List.of(new SimpleGrantedAuthority(UserRole.USER.getKey())));
       SecurityContextHolder.getContext().setAuthentication(authentication);
 
       filterChain.doFilter(request, response);
     }
-    filterChain.doFilter(request, response);
   }
 }

@@ -30,7 +30,6 @@ public class SecurityConfig {
         .authorizeHttpRequests(auth -> auth
             .requestMatchers(
                 "/api/auths/**",
-                "/api/common/**",
                 "/api/users/all",
                 "/error.html",
                 "/error-weteam",
