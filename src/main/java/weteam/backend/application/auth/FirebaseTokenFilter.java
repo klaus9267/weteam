@@ -27,32 +27,36 @@ import java.util.List;
 @Slf4j
 public class FirebaseTokenFilter extends OncePerRequestFilter {
   private final UserDetailCustomService userDetailCustomService;
+  private final SecurityUtil securityUtil;
   private final FirebaseAuth firebaseAuth;
 
   @Override
   protected void doFilterInternal(final HttpServletRequest request, final HttpServletResponse response, final FilterChain filterChain) throws ServletException, IOException {
     final String header = request.getHeader("Authorization");
-    final String token = StringUtils.hasText(header) && header.startsWith("Bearer ")
-        ? header.substring(7)
-        : null;
+    final String token = StringUtils.hasText(header) && header.startsWith("Bearer ") ? header.substring(7) : null;
 
-    if (token != null) {
+    if (token == null) {
+      filterChain.doFilter(request, response);
+    } else {
       FirebaseToken decodedToken = null;
       try {
         decodedToken = firebaseAuth.verifyIdToken(token);
       } catch (FirebaseAuthException e) {
         log.error("invalid token" + request.getRemoteAddr() + " | " + request.getMethod() + " | " + request.getRequestURI());
-        log.error(e.toString());
+        log.error("--------------------");
       }
       final User user = userDetailCustomService.loadUser(decodedToken);
       final CustomUser4Log customUser = CustomUser4Log.from(user);
 
-      log.info("---------------- login : " + customUser.toString() + " | " + request.getMethod() + "|" + request.getRequestURI() + " --------------");
-      final UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(customUser, null, List.of(new SimpleGrantedAuthority(UserRole.USER.getKey())));
+      log.info("---------------- login : " + customUser + " | " + request.getMethod() + "|" + request.getRequestURI() + " --------------");
+      final UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user, null, List.of(new SimpleGrantedAuthority(UserRole.USER.getKey())));
       SecurityContextHolder.getContext().setAuthentication(authentication);
 
       filterChain.doFilter(request, response);
     }
-    filterChain.doFilter(request, response);
   }
+
+//  private sendError() {
+
+//  }
 }
