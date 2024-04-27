@@ -27,6 +27,7 @@ import java.util.List;
 @Slf4j
 public class FirebaseTokenFilter extends OncePerRequestFilter {
   private final UserDetailCustomService userDetailCustomService;
+  private final SecurityUtil securityUtil;
   private final FirebaseAuth firebaseAuth;
 
   @Override
@@ -42,7 +43,7 @@ public class FirebaseTokenFilter extends OncePerRequestFilter {
         decodedToken = firebaseAuth.verifyIdToken(token);
       } catch (FirebaseAuthException e) {
         log.error("invalid token" + request.getRemoteAddr() + " | " + request.getMethod() + " | " + request.getRequestURI());
-        log.error(e.toString());
+        log.error("--------------------");
       }
       final User user = userDetailCustomService.loadUser(decodedToken);
       final CustomUser4Log customUser = CustomUser4Log.from(user);
@@ -54,4 +55,8 @@ public class FirebaseTokenFilter extends OncePerRequestFilter {
       filterChain.doFilter(request, response);
     }
   }
+
+//  private sendError() {
+
+//  }
 }
