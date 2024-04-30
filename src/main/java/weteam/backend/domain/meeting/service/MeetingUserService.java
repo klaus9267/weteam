@@ -6,7 +6,6 @@ import org.springframework.transaction.annotation.Transactional;
 import weteam.backend.application.auth.SecurityUtil;
 import weteam.backend.application.handler.exception.CustomErrorCode;
 import weteam.backend.application.handler.exception.CustomException;
-import weteam.backend.domain.common.UrlBuilder;
 import weteam.backend.domain.meeting.dto.time_slot.RequestTimeSlotDto;
 import weteam.backend.domain.meeting.entity.Meeting;
 import weteam.backend.domain.meeting.entity.MeetingUser;
@@ -36,10 +35,9 @@ public class MeetingUserService {
   }
 
   @Transactional
-  public String createInviteUrl(final Long meetingId) {
+  public String inviteUser(final Long meetingId) {
     final Meeting meeting = meetingRepository.findById(meetingId).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND_MEETING));
-    final String endPoint = "/api/meetings/";
-    return UrlBuilder.createInviteUrl(endPoint, meeting.getHashedId());
+    return meeting.getHashedId();
   }
 
   @Transactional

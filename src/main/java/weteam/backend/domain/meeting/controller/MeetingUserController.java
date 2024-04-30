@@ -33,10 +33,9 @@ public class MeetingUserController {
 //  }
   
   @GetMapping("{meetingId}")
-  @SwaggerOK(summary = "약속 초대 주소 생성")
-  @PageableAsQueryParam
+  @SwaggerOK(summary = "약속 초대")
   public ResponseEntity<String> inviteMeeting(@PathVariable("meetingId") final Long meetingId) {
-    final String url = meetingUserService.createInviteUrl(meetingId);
+    final String url = meetingUserService.inviteUser(meetingId);
     return ResponseEntity.ok(url);
   }
   

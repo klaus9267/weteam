@@ -55,8 +55,4 @@ public class FirebaseTokenFilter extends OncePerRequestFilter {
       filterChain.doFilter(request, response);
     }
   }
-
-//  private sendError() {
-
-//  }
 }
