@@ -1,6 +1,7 @@
 package weteam.backend.domain.project.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -18,6 +19,7 @@ public record UpdateProjectDto(
     LocalDate startedAt,
     
     @NotNull(message = "endedAt is required")
+    @FutureOrPresent
     @Schema(example = "2023-12-24")
     LocalDate endedAt,
     

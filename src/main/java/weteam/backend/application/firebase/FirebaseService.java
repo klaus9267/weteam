@@ -25,7 +25,7 @@ public class FirebaseService {
 
   public String readDeviceToken() {
     Optional<User> user = userRepository.findById(securityUtil.getId());
-    return user.map(User::getDeviceToken).orElse(null);
+    return user.map(User::getDeviceToken).orElseThrow(() -> new CustomException(CustomErrorCode.BAD_REQUEST, "디바이스 토큰을 조회할 수 없습니다."));
   }
 
   @Transactional

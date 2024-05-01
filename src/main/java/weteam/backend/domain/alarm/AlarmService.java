@@ -19,7 +19,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AlarmService {
   private final AlarmRepository alarmRepository;
-  private final ProjectRepository projectRepository;
   private final SecurityUtil securityUtil;
   private final FirebaseService firebaseService;
   
@@ -53,9 +52,9 @@ public class AlarmService {
   }
   
   @Transactional
-  public void updateAllRead(final Long userId) {
+  public void updateAllRead() {
     //TODO: query 튜닝
-    List<Alarm> alarmList = alarmRepository.findAllByUserId(userId).stream().filter(alarm -> !alarm.isRead()).toList();
+    List<Alarm> alarmList = alarmRepository.findAllByUserId(securityUtil.getId()).stream().filter(alarm -> !alarm.isRead()).toList();
     if (alarmList.isEmpty()) {
       throw new CustomException(CustomErrorCode.BAD_REQUEST, "미확인 알람이 없습니다.");
     } else {

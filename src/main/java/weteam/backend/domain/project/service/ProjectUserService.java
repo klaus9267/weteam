@@ -8,7 +8,6 @@ import weteam.backend.application.handler.exception.CustomErrorCode;
 import weteam.backend.application.handler.exception.CustomException;
 import weteam.backend.domain.alarm.AlarmService;
 import weteam.backend.domain.alarm.AlarmStatus;
-import weteam.backend.domain.common.UrlBuilder;
 import weteam.backend.domain.project.dto.ProjectUserDto;
 import weteam.backend.domain.project.entity.Project;
 import weteam.backend.domain.project.entity.ProjectUser;
@@ -51,10 +50,9 @@ public class ProjectUserService {
   }
 
   @Transactional
-  public String createInviteUrl(final Long projectId) {
+  public String readHashedId(final Long projectId) {
     final Project project = projectRepository.findById(projectId).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND_PROJECT));
-    final String endPoint = "/api/project-users/";
-    return UrlBuilder.createInviteUrl(endPoint, project.getHashedId());
+    return project.getHashedId();
   }
 
   @Transactional

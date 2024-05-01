@@ -4,13 +4,12 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import weteam.backend.domain.common.swagger.SwaggerOK;
 
-import java.util.Base64;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
+
 
 @RestController
 @Validated
@@ -18,10 +17,10 @@ import java.util.Base64;
 @RequiredArgsConstructor
 @Tag(name = "COMMON")
 public class CommonController {
-  @GetMapping("{url}")
+  @GetMapping
   @SwaggerOK(summary = "딥링크용 url 반환 API")
-  public ResponseEntity<String> returnURL(@PathVariable("url") final String url) {
-    final String decodedUrl = new String(Base64.getDecoder().decode(url));
+  public ResponseEntity<String> returnURL(@RequestParam("url") final String url) {
+    final String decodedUrl = URLDecoder.decode(url, StandardCharsets.UTF_8);
     final String html = String.format("""
         <html>
             <meta http-equiv="refresh" content="0; url=%s"></meta>

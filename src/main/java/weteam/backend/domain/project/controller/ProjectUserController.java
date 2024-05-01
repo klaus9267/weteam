@@ -27,10 +27,10 @@ public class ProjectUserController {
   private final ProjectUserService projectUserService;
   
   @GetMapping("{projectId}/invite")
-  @SwaggerCreated(summary = "팀원 초대용 주소 생성")
-  public ResponseEntity<String> inviteProject(@PathVariable("projectId") final Long projectId) {
-    final String url = projectUserService.createInviteUrl(projectId);
-    return ResponseEntity.ok(url);
+  @SwaggerCreated(summary = "팀원 초대용 hashedId 조회")
+  public ResponseEntity<String> readHashedId(@PathVariable("projectId") final Long projectId) {
+    final String hashedId = projectUserService.readHashedId(projectId);
+    return ResponseEntity.ok(hashedId);
   }
   
   @GetMapping("{projectId}")
