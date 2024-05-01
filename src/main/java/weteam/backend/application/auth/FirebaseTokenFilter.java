@@ -27,7 +27,6 @@ import java.util.List;
 @Slf4j
 public class FirebaseTokenFilter extends OncePerRequestFilter {
   private final UserDetailCustomService userDetailCustomService;
-  private final SecurityUtil securityUtil;
   private final FirebaseAuth firebaseAuth;
 
   @Override

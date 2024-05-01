@@ -43,7 +43,7 @@ public class AlarmController {
     @PatchMapping
     @SwaggerNoContent(summary = "알람 전체 읽음 처리")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void makeAllAlarmAsRead(@AuthenticationPrincipal final UserDto user) {
-        alarmService.updateAllRead(user.id());
+    public void makeAllAlarmAsRead() {
+        alarmService.updateAllRead();
     }
 }
