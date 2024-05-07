@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import weteam.backend.domain.project.entity.Project;
 import weteam.backend.domain.project.entity.ProjectUser;
 import weteam.backend.domain.user.dto.UserDto;
+import weteam.backend.domain.user.dto.UserWithProfileImageDto;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -19,7 +20,7 @@ public class ProjectDto {
   private final String explanation;
   private final Long headCount;
   private final boolean done;
-  private final UserDto host;
+  private final UserWithProfileImageDto host;
   private final LocalDate startedAt;
   private final LocalDate endedAt;
   
@@ -31,7 +32,7 @@ public class ProjectDto {
     this.explanation = project.getExplanation();
     this.headCount = project.getProjectUserList().stream().filter(ProjectUser::isEnable).count();
     this.done = project.isDone();
-    this.host = UserDto.from(project.getHost());
+    this.host = UserWithProfileImageDto.from(project.getHost());
     this.startedAt = project.getStartedAt();
     this.endedAt = project.getEndedAt();
   }
