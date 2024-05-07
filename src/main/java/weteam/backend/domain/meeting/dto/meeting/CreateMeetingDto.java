@@ -16,7 +16,7 @@ public record CreateMeetingDto(
     
     @NotNull
     @Schema(example = "1L")
-    Integer imageId,
+    Long imageId,
     @NotNull
     @Schema(example = "9999-12-31T23:59:59", type = "string")
     LocalDateTime endedAt,

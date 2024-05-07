@@ -90,8 +90,15 @@ public class Project extends BaseEntity {
     }
   }
 
-  public void addProjectUser(final ProjectUser projectUser) {
-    this.getProjectUserList().add(projectUser);
+  public void addProjectUser(final ProjectUser newProjectUser) {
+    final Long currentUserId = newProjectUser.getUser().getId();
+
+    for (ProjectUser projectUser : this.projectUserList) {
+      if (projectUser.getUser().getId().equals(currentUserId)) {
+        throw new CustomException(CustomErrorCode.BAD_REQUEST, "이미 수락한 팀플입니다.");
+      }
+    }
+    this.getProjectUserList().add(newProjectUser);
   }
 
   public void addHashedId(final String hashedId) {

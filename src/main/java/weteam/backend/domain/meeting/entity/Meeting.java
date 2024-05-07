@@ -25,23 +25,23 @@ public class Meeting extends BaseEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
-  private Integer imageId;
+  private Long imageId;
   private String title, hashedId;
   private LocalDateTime startedAt, endedAt;
-  
+
   @ManyToOne(fetch = FetchType.LAZY)
   private User host;
-  
+
   @ManyToOne(fetch = FetchType.LAZY)
   private Project project;
-  
+
   @OneToMany(mappedBy = "meeting", cascade = CascadeType.ALL)
   private List<MeetingUser> meetingUserList = new ArrayList<>();
-  
+
   private Meeting(final Long meetingId) {
     this.id = meetingId;
   }
-  
+
   private Meeting(final CreateMeetingDto meetingDto, final Long userId, final Project project) {
     final User user = User.from(userId);
     this.imageId = meetingDto.imageId();
@@ -52,7 +52,7 @@ public class Meeting extends BaseEntity {
     this.project = project;
     this.meetingUserList = MeetingUser.from(user, this);
   }
-  
+
   private Meeting(final CreateMeetingDto meetingDto, final Long userId) {
     final User user = User.from(userId);
     this.imageId = meetingDto.imageId();
@@ -62,34 +62,39 @@ public class Meeting extends BaseEntity {
     this.host = user;
     this.meetingUserList = MeetingUser.from(user, this);
   }
-  
+
   public static Meeting from(final CreateMeetingDto meetingDto, final Long userId, final Project project) {
     return new Meeting(meetingDto, userId, project);
   }
-  
+
   public static Meeting from(final CreateMeetingDto meetingDto, final Long userId) {
     return new Meeting(meetingDto, userId);
   }
-  
-  
+
+
   public static Meeting from(final Long meetingId) {
     return new Meeting(meetingId);
   }
-  
+
   public void updateMeeting(final UpdateMeetingDto meetingDto) {
     this.title = meetingDto.title();
     this.startedAt = meetingDto.startedAt();
     this.endedAt = meetingDto.endedAt();
   }
-  
+
   public void addHashedId(final String hashedId) {
     this.hashedId = hashedId;
   }
-  
-  public void addMeetingUser(final MeetingUser meetingUser) {
-    if (this.meetingUserList.contains(meetingUser)) {
-      throw new CustomException(CustomErrorCode.BAD_REQUEST, "이미 수락한 약속입니다.");
+
+  public void addMeetingUser(final MeetingUser newMeetingUser) {
+    final Long currentUserId = newMeetingUser.getUser().getId();
+
+    for (final MeetingUser meetingUser : this.meetingUserList) {
+      if (meetingUser.getUser().getId().equals(currentUserId)) {
+        throw new CustomException(CustomErrorCode.BAD_REQUEST, "이미 수락한 약속입니다.");
+      }
     }
-    this.meetingUserList.add(meetingUser);
+
+    this.meetingUserList.add(newMeetingUser);
   }
 }

@@ -18,6 +18,9 @@ public class MeetingDetailDto {
     @Schema(example = "클라이밍 정모", type = "string")
     private final String title;
 
+    private final String hashedId;
+    private final Long imageId;
+
     @Schema(example = "2024-02-05T10:00:00", type = "string")
     private final LocalDateTime startedAt;
 
@@ -30,6 +33,8 @@ public class MeetingDetailDto {
     private MeetingDetailDto(final Meeting meeting) {
         this.id = meeting.getId();
         this.title = meeting.getTitle();
+        this.hashedId = meeting.getHashedId();
+        this.imageId = meeting.getImageId();
         this.startedAt = meeting.getStartedAt();
         this.endedAt = meeting.getEndedAt();
         this.project = meeting.getProject() == null ? null : ProjectDto.from(meeting.getProject());
