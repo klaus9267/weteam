@@ -21,6 +21,7 @@ public class DataInitializer {
 
   @PostConstruct
   public void setContext() {
+    this.saveUsers();
     final UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(users.get(0), null, List.of(new SimpleGrantedAuthority(UserRole.USER.getKey())));
     SecurityContextHolder.getContext().setAuthentication(authentication);
   }
