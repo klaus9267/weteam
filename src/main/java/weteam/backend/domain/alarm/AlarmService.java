@@ -11,7 +11,6 @@ import weteam.backend.domain.alarm.dto.AlarmPaginationDto;
 import weteam.backend.domain.common.pagination.param.AlarmPaginationParam;
 import weteam.backend.application.firebase.FirebaseService;
 import weteam.backend.domain.project.entity.Project;
-import weteam.backend.domain.project.repository.ProjectRepository;
 import weteam.backend.domain.user.entity.User;
 
 import java.util.List;
@@ -44,7 +43,7 @@ public class AlarmService {
   }
   
   @Transactional
-  public void updateOneRead(final Long alarmId, final Long userId) {
+  public void updateIsRead(final Long alarmId, final Long userId) {
     Alarm alarm = alarmRepository.findByIdAndUserId(alarmId, userId).orElseThrow(CustomException.notFound(CustomErrorCode.NOT_FOUND));
     if (alarm.isRead()) {
       throw new CustomException(CustomErrorCode.DUPLICATE, "읽은 알람입니다.");
@@ -53,8 +52,7 @@ public class AlarmService {
   }
   
   @Transactional
-  public void updateAllRead() {
-    //TODO: query 튜닝
+  public void updateAllIsRead() {
     List<Alarm> alarmList = alarmRepository.findAllByUserId(securityUtil.getId()).stream().filter(alarm -> !alarm.isRead()).toList();
     if (alarmList.isEmpty()) {
       throw new CustomException(CustomErrorCode.BAD_REQUEST, "미확인 알람이 없습니다.");
