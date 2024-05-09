@@ -38,7 +38,7 @@ public class ProjectUserService {
     final Project project = projectRepository.findById(projectId).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND_PROJECT));
     final ProjectUser projectUser = ProjectUser.from(project, securityUtil.getId());
     project.addProjectUser(projectUser);
-    alarmService.addListWithTargetUser(projectUser.getProject(), AlarmStatus.JOIN, securityUtil.getId());
+    alarmService.addListWithTargetUser(projectUser.getProject(), AlarmStatus.JOIN, securityUtil.getCurrentUser());
   }
 
   @Transactional
@@ -46,7 +46,7 @@ public class ProjectUserService {
     final Project project = projectRepository.findByHashedId(hashedProjectId).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND_PROJECT));
     final ProjectUser projectUser = ProjectUser.from(project, securityUtil.getId());
     project.addProjectUser(projectUser);
-    alarmService.addListWithTargetUser(projectUser.getProject(), AlarmStatus.JOIN, securityUtil.getId());
+    alarmService.addListWithTargetUser(projectUser.getProject(), AlarmStatus.JOIN, securityUtil.getCurrentUser());
   }
 
   @Transactional
@@ -69,7 +69,7 @@ public class ProjectUserService {
     }
     final List<ProjectUser> projectUserList = project.getProjectUserList().stream().filter(projectUser -> projectUserIdList.contains(projectUser.getId())).toList();
     projectUserList.forEach(ProjectUser::disable);
-    projectUserList.forEach(projectUser -> alarmService.addListWithTargetUser(project, AlarmStatus.KICK, projectUser.getUser().getId()));
+    projectUserList.forEach(projectUser -> alarmService.addListWithTargetUser(project, AlarmStatus.KICK, projectUser.getUser()));
   }
 
   @Transactional
@@ -79,7 +79,7 @@ public class ProjectUserService {
       throw new CustomException(CustomErrorCode.BAD_REQUEST, "호스트를 넘기기전에 탈퇴할 수 없습니다.");
     }
     projectUser.disable();
-    alarmService.addListWithTargetUser(projectUser.getProject(), AlarmStatus.EXIT, securityUtil.getId());
+    alarmService.addListWithTargetUser(projectUser.getProject(), AlarmStatus.EXIT, securityUtil.getCurrentUser());
   }
 
 }

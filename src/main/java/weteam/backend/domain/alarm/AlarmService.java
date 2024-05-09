@@ -12,6 +12,7 @@ import weteam.backend.domain.common.pagination.param.AlarmPaginationParam;
 import weteam.backend.application.firebase.FirebaseService;
 import weteam.backend.domain.project.entity.Project;
 import weteam.backend.domain.project.repository.ProjectRepository;
+import weteam.backend.domain.user.entity.User;
 
 import java.util.List;
 
@@ -36,8 +37,8 @@ public class AlarmService {
   }
   
   @Transactional
-  public void addListWithTargetUser(final Project project, final AlarmStatus status, final Long targetUserId) {
-    final List<Alarm> alarmList = Alarm.from(project, status, targetUserId);
+  public void addListWithTargetUser(final Project project, final AlarmStatus status, final User targetUser) {
+    final List<Alarm> alarmList = Alarm.from(project, status, targetUser);
     alarmRepository.saveAll(alarmList);
     firebaseService.sendNotification(alarmList);
   }
