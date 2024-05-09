@@ -50,6 +50,12 @@ public class UserService {
   }
 
   @Transactional
+  public void logOut() {
+    final User user = securityUtil.getCurrentUser();
+    user.logout();
+  }
+
+  @Transactional
   public void deleteAll() {
     userRepository.deleteAll();
   }

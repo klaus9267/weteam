@@ -15,12 +15,15 @@ public class UserDetailCustomService {
 
   @Transactional
   public User loadUser(FirebaseToken token) {
-    return userRepository.findByUid(token.getUid()).orElseGet(() -> userRepository.save(
+    final User user = userRepository.findByUid(token.getUid()).orElseGet(() -> userRepository.save(
         User.builder()
             .uid(token.getUid())
             .email(token.getEmail())
             .username(token.getName())
             .role(UserRole.USER)
-            .build()));
+            .build())
+    );
+    user.login();
+    return user;
   }
 }
