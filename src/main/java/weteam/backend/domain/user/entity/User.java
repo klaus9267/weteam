@@ -29,6 +29,9 @@ public class User extends BaseEntity {
   @Column(columnDefinition = "boolean default false")
   private boolean isLogin;
 
+  @Column(columnDefinition = "boolean default true")
+  private boolean receivePermission;
+
   @Enumerated(EnumType.STRING)
   private UserRole role;
 
@@ -67,6 +70,10 @@ public class User extends BaseEntity {
 
   public void updateDevice(final String deviceToken) {
     this.deviceToken = deviceToken;
+  }
+
+  public void updateReceivePermission() {
+    this.receivePermission = !receivePermission;
   }
 
   public void logout() {

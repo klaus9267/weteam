@@ -10,9 +10,10 @@ public record UserDto(
     String deviceToken,
     String organization,
     String uid,
-    UserRole role
+    UserRole role,
+    boolean receivePermission
 ) {
   public static UserDto from(final User user) {
-    return new UserDto(user.getId(), user.getUsername(), user.getEmail(), user.getDeviceToken(), user.getOrganization(), user.getUid(), user.getRole());
+    return new UserDto(user.getId(), user.getUsername(), user.getEmail(), user.getDeviceToken(), user.getOrganization(), user.getUid(), user.getRole(), user.isReceivePermission());
   }
 }

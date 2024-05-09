@@ -49,7 +49,7 @@ public class Alarm {
   public static List<Alarm> from(final Project project, final AlarmStatus status) {
     return project.getProjectUserList()
         .stream()
-        .filter(projectUser -> projectUser.isEnable() && projectUser.getUser().isLogin())
+        .filter(projectUser -> projectUser.isEnable() && projectUser.getUser().isLogin() && projectUser.getUser().isReceivePermission())
         .map(projectUser -> new Alarm(project, status, projectUser.getUser()))
         .toList();
   }
@@ -58,10 +58,12 @@ public class Alarm {
     return project.getProjectUserList()
         .stream()
         .filter(projectUser -> {
-              if (AlarmStatus.CHANGE_HOST.equals(status)) return projectUser.isEnable() && projectUser.getUser().isLogin();
-              return !projectUser.getUser().getId().equals(targetUser.getId())
-                  && projectUser.getUser().isLogin()
-                  && projectUser.isEnable();
+              final User user = projectUser.getUser();
+
+              return user.isLogin()
+                  && user.isReceivePermission()
+                  && projectUser.isEnable()
+                  && (status.equals(AlarmStatus.CHANGE_HOST) || !user.getId().equals(targetUser.getId()));
             }
         )
         .map(projectUser -> new Alarm(project, status, projectUser.getUser(), targetUser))

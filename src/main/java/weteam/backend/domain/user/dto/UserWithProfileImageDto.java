@@ -13,6 +13,7 @@ public class UserWithProfileImageDto {
   private final String username;
   private final String email;
   private final String organization;
+  private final boolean receivePermission;
   private final UserRole role;
   private final ProfileDto profile;
 
@@ -21,6 +22,7 @@ public class UserWithProfileImageDto {
     this.username = user.getUsername();
     this.email = null;
     this.organization = user.getOrganization();
+    this.receivePermission = user.isReceivePermission();
     this.role = user.getRole();
     this.profile = user.getProfileImage() == null ? null : ProfileDto.from(user.getProfileImage());
   }

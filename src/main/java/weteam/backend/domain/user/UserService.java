@@ -41,6 +41,12 @@ public class UserService {
   }
 
   @Transactional
+  public void updateReceivePermission() {
+    final User user = this.findOne(securityUtil.getId());
+    user.updateReceivePermission();
+  }
+
+  @Transactional
   public void deleteOne() {
     final Long userId = securityUtil.getId();
     if (projectRepository.existsByHostId(userId)) {
