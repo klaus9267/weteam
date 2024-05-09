@@ -25,23 +25,23 @@ public class UserService {
     return userList.stream().map(UserDto::from).toList();
   }
 
-  public UserWithProfileImageDto findOneById(final Long userId) {
-    final User user = this.findOne(userId);
+  public UserWithProfileImageDto findUserById(final Long userId) {
+    final User user = this.findUser(userId);
     return UserWithProfileImageDto.from(user);
   }
 
-  private User findOne(final Long id) {
+  private User findUser(final Long id) {
     return userRepository.findById(id).orElseThrow(CustomException.notFound(CustomErrorCode.NOT_FOUND));
   }
 
   @Transactional
-  public void updateOne(final String organization) {
-    final User user = this.findOne(securityUtil.getId());
+  public void updateUser(final String organization) {
+    final User user = this.findUser(securityUtil.getId());
     user.updateOrganization(organization);
   }
 
   @Transactional
-  public void deleteOne() {
+  public void deleteUser() {
     final Long userId = securityUtil.getId();
     if (projectRepository.existsByHostId(userId)) {
       throw new CustomException(CustomErrorCode.BAD_REQUEST, "호스트로 진행중인 팀플이 존재합니다.");
