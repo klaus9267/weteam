@@ -20,11 +20,14 @@ spring:
     username: root
     password:
     driver-class-name: org.h2.Driver
-#  sql:
-#    init:
-#      mode: always
-#      schema-locations: classpath:table.sql # 스키마 파일 연결
+
 server:
   tomcat:
     mbeanregistry:
       enabled: true
+
+firebase:
+  database-url: "https://weteam-1968a-default-rtdb.firebaseio.com"
+webhook:
+  slack:
+    url: https://hooks.slack.com/services/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

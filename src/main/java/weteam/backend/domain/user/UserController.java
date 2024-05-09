@@ -54,6 +54,13 @@ public class UserController {
     userService.updateOne(organization);
   }
 
+  @PatchMapping("logout/{userId}")
+  @Operation(summary = "로그아웃", description = "응답 없음")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  public void logout(@PathVariable("userId") final String userId) {
+    userService.updateOne(userId);
+  }
+
   @DeleteMapping
   @SwaggerNoContent(summary = "사용자 탈퇴", description = "이거는 토큰 없어도 됨 :)")
   @ResponseStatus(HttpStatus.NO_CONTENT)
