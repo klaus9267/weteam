@@ -16,25 +16,21 @@ public record PushMessage(
     String content
 ) {
   public static List<Message> makeMessageList(List<Alarm> alarmList) {
-    if (alarmList == null || alarmList.isEmpty()) {
-      throw new CustomException(CustomErrorCode.BAD_REQUEST, "보낼 알람이 없습니다.");
-    }
-    return alarmList.stream().map(alarm -> {
-      final PushMessage pushMessage = alarmList.get(0).getTargetUser() == null
-          ? PushMessage.makeMessage(alarm.getProject(), alarm.getStatus())
-          : PushMessage.makeMessage(alarm.getProject(), alarm.getStatus(), alarm.getTargetUser());
+    final Alarm firstAlarm = alarmList.get(0);
+    final PushMessage pushMessage = firstAlarm.getTargetUser() == null
+        ? PushMessage.makeMessage(firstAlarm.getProject(), firstAlarm.getStatus())
+        : PushMessage.makeMessage(firstAlarm.getProject(), firstAlarm.getStatus(), firstAlarm.getTargetUser());
 
-      final Notification notification = Notification.builder()
-          .setTitle(pushMessage.title)
-          .setBody(pushMessage.content)
-          .build();
+    final Notification notification = Notification.builder()
+        .setTitle(pushMessage.title)
+        .setBody(pushMessage.content)
+        .build();
 
-      return Message.builder()
-          .setToken(alarm.getUser().getDeviceToken())
-          .setNotification(notification)
-//          .putData("status", pushMessage.)
-          .build();
-    }).toList();
+    return alarmList.stream().map(alarm -> Message.builder()
+        .setToken(alarm.getUser().getDeviceToken())
+        .setNotification(notification)
+        .build()
+    ).toList();
   }
 
   public static PushMessage makeMessage(final Project project, final AlarmStatus status, final User targetUser) {

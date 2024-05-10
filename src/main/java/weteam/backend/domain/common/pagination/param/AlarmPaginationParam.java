@@ -20,15 +20,15 @@ public class AlarmPaginationParam extends AbstractPaginationParam {
     @Parameter(name = "direction", description = "default asc")
     private final Sort.Direction direction;
 
-    @Parameter(name = "field", description = "default is_read | is_read, project_id 사용 가능")
+    @Parameter(name = "field", description = "default is_read | is_read, project_id , date 사용 가능")
     @PaginationValidation(sortGroup = PaginationSortGroup.ALARM)
     private final PaginationSortType field;
 
     public AlarmPaginationParam(final Integer page, final Integer size, final PaginationSortType field, final Sort.Direction direction) {
         this.page = Math.max(page, 0);
         this.size = Math.max(size, 10);
-        this.field = field == null ? PaginationSortType.IS_READ : field;
-        this.direction = direction == null ? Sort.Direction.ASC : direction;
+        this.field = field == null ? PaginationSortType.ALARM_DATE : field;
+        this.direction = direction == null ? Sort.Direction.DESC : direction;
     }
 
     public Pageable toPageable() {

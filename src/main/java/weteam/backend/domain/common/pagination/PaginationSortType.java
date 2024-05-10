@@ -11,6 +11,7 @@ public enum PaginationSortType {
     STARTED_AT("startedAt"),
     PROJECT_ID("projectId"),
     IS_READ("isRead"),
+    ALARM_DATE("date"),
     EMPTY(null);
 
     private final String field;

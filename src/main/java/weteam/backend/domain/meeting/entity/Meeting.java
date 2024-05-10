@@ -8,6 +8,7 @@ import weteam.backend.application.handler.exception.CustomException;
 import weteam.backend.domain.meeting.dto.meeting.CreateMeetingDto;
 import weteam.backend.domain.meeting.dto.meeting.UpdateMeetingDto;
 import weteam.backend.domain.project.entity.Project;
+import weteam.backend.domain.project.entity.ProjectUser;
 import weteam.backend.domain.user.entity.User;
 
 import java.time.LocalDateTime;
@@ -50,17 +51,22 @@ public class Meeting extends BaseEntity {
     this.endedAt = meetingDto.endedAt();
     this.host = User.from(userId);
     this.project = project;
-    this.meetingUserList = MeetingUser.from(user, this);
+    for (final ProjectUser projectUser : project.getProjectUserList()) {
+      final MeetingUser meetingUser = MeetingUser.from(projectUser.getUser(), this);
+      this.meetingUserList.add(meetingUser);
+    }
   }
 
   private Meeting(final CreateMeetingDto meetingDto, final Long userId) {
     final User user = User.from(userId);
+    final MeetingUser meetingUser = MeetingUser.from(user, this);
+
     this.imageId = meetingDto.imageId();
     this.title = meetingDto.title();
     this.startedAt = meetingDto.startedAt();
     this.endedAt = meetingDto.endedAt();
     this.host = user;
-    this.meetingUserList = MeetingUser.from(user, this);
+    this.meetingUserList.add(meetingUser);
   }
 
   public static Meeting from(final CreateMeetingDto meetingDto, final Long userId, final Project project) {
