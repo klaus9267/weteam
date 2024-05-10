@@ -9,6 +9,7 @@ import weteam.backend.domain.alarm.AlarmStatus;
 import weteam.backend.domain.project.entity.Project;
 import weteam.backend.domain.user.entity.User;
 
+import java.util.Calendar;
 import java.util.List;
 
 public record PushMessage(
@@ -69,6 +70,11 @@ public record PushMessage(
       case DONE -> {
         final String title = project.getName() + "가 완료되었습니다.";
         final String content = "그동안 수고하셨습니다 :)";
+        yield new PushMessage(title, content);
+      }
+      case NEW_MEETING -> {
+        final String title = project.getName() + "에서 새로운 언제보까가 생성되었습니다! 확인해주세요!";
+        final String content = "우리 언제 만날까...?";
         yield new PushMessage(title, content);
       }
       default -> throw new CustomException(CustomErrorCode.BAD_REQUEST, "잘못된 요청입니다");
