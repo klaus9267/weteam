@@ -35,7 +35,7 @@ public class UserService {
   }
 
   @Transactional
-  public void updateOne(final String organization) {
+  public void updateOrganization(final String organization) {
     final User user = this.findOne(securityUtil.getId());
     user.updateOrganization(organization);
   }
