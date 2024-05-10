@@ -1,6 +1,7 @@
 package weteam.backend.application.firebase;
 
 import com.google.firebase.messaging.Message;
+import com.google.firebase.messaging.Notification;
 import weteam.backend.application.handler.exception.CustomErrorCode;
 import weteam.backend.application.handler.exception.CustomException;
 import weteam.backend.domain.alarm.Alarm;
@@ -15,28 +16,27 @@ public record PushMessage(
     String content
 ) {
   public static List<Message> makeMessageList(List<Alarm> alarmList) {
-    if (alarmList == null || alarmList.size() == 0) {
+    if (alarmList == null || alarmList.isEmpty()) {
       throw new CustomException(CustomErrorCode.BAD_REQUEST, "보낼 알람이 없습니다.");
     }
-    if (alarmList.get(0).getTargetUser() == null) {
-      return alarmList.stream().map(alarm -> {
-        final PushMessage pushMessage = PushMessage.makeMessage(alarm.getProject(), alarm.getStatus());
-        return Message.builder()
-                      .setToken(alarm.getUser().getDeviceToken())
-                      .putData(pushMessage.title, pushMessage.content)
-                      .build();
-      }).toList();
-    } else {
-      return alarmList.stream().map(alarm -> {
-        final PushMessage pushMessage = PushMessage.makeMessage(alarm.getProject(), alarm.getStatus(), alarm.getTargetUser());
-        return Message.builder()
-                      .setToken(alarm.getUser().getDeviceToken())
-                      .putData(pushMessage.title, pushMessage.content)
-                      .build();
-      }).toList();
-    }
+    return alarmList.stream().map(alarm -> {
+      final PushMessage pushMessage = alarmList.get(0).getTargetUser() == null
+          ? PushMessage.makeMessage(alarm.getProject(), alarm.getStatus())
+          : PushMessage.makeMessage(alarm.getProject(), alarm.getStatus(), alarm.getTargetUser());
+
+      final Notification notification = Notification.builder()
+          .setTitle(pushMessage.title)
+          .setBody(pushMessage.content)
+          .build();
+
+      return Message.builder()
+          .setToken(alarm.getUser().getDeviceToken())
+          .setNotification(notification)
+//          .putData("status", pushMessage.)
+          .build();
+    }).toList();
   }
-  
+
   public static PushMessage makeMessage(final Project project, final AlarmStatus status, final User targetUser) {
     return switch (status) {
       case JOIN -> {
@@ -62,7 +62,7 @@ public record PushMessage(
       default -> throw new CustomException(CustomErrorCode.BAD_REQUEST, "잘못된 요청입니다");
     };
   }
-  
+
   public static PushMessage makeMessage(final Project project, final AlarmStatus status) {
     return switch (status) {
       case UPDATE_PROJECT -> {

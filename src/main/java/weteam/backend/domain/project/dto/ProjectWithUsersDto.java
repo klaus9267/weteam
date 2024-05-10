@@ -11,7 +11,7 @@ import java.util.List;
 
 @Getter
 @RequiredArgsConstructor
-public class ProjectDto {
+public class ProjectWithUsersDto {
   private final Long id;
   private final Integer imageId;
   private final String name;
@@ -23,7 +23,7 @@ public class ProjectDto {
   private final LocalDate startedAt;
   private final LocalDate endedAt;
 
-  private ProjectDto(final Project project) {
+  private ProjectWithUsersDto(final Project project) {
     this.id = project.getId();
     this.imageId = project.getImageId();
     this.name = project.getName();
@@ -36,11 +36,11 @@ public class ProjectDto {
     this.endedAt = project.getEndedAt();
   }
 
-  public static ProjectDto from(final Project project) {
-    return new ProjectDto(project);
+  public static ProjectWithUsersDto from(final Project project) {
+    return new ProjectWithUsersDto(project);
   }
 
-  public static List<ProjectDto> from(final List<Project> projectList) {
-    return projectList.stream().map(ProjectDto::from).toList();
+  public static List<ProjectWithUsersDto> from(final List<Project> projectList) {
+    return projectList.stream().map(ProjectWithUsersDto::from).toList();
   }
 }

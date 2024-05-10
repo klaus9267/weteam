@@ -62,7 +62,7 @@ public class ProjectService {
     }
   }
 
-  private Project findOneByProjectId(final Long projectId) {
+  private Project findProjectByIdAndUserId(final Long projectId) {
     return projectRepository.findByIdAndUserId(projectId, securityUtil.getId()).orElseThrow(CustomException.notFound(CustomErrorCode.NOT_FOUND_PROJECT));
   }
 
@@ -71,20 +71,20 @@ public class ProjectService {
     return ProjectPaginationDto.from(projectPage);
   }
 
-  public ProjectDto findOne(final Long projectId) {
-    final Project project = this.findOneByProjectId(projectId);
+  public ProjectDto findProjectDto(final Long projectId) {
+    final Project project = this.findProjectByIdAndUserId(projectId);
     return ProjectDto.from(project);
   }
 
   @Transactional
-  public void updateDone(final Long projectId) {
+  public void updateProject(final Long projectId) {
     Project project = this.checkHost(projectId);
     project.updateDone();
     alarmService.addList(project, AlarmStatus.DONE);
   }
 
   @Transactional
-  public void updateOne(final UpdateProjectDto projectDto, final Long projectId) {
+  public void updateProject(final UpdateProjectDto projectDto, final Long projectId) {
     Project project = this.checkHost(projectId);
     project.updateProject(projectDto);
     alarmService.addList(project, AlarmStatus.UPDATE_PROJECT);
@@ -95,17 +95,17 @@ public class ProjectService {
     final User newHost = userRepository.findById(newHostId).orElseThrow(CustomException.notFound(CustomErrorCode.NOT_FOUND_USER));
     Project project = this.checkHost(projectId);
     project.updateHost(newHost);
-    alarmService.addListWithTargetUser(project, AlarmStatus.CHANGE_HOST, newHostId);
+    alarmService.addListWithTargetUser(project, AlarmStatus.CHANGE_HOST, newHost);
   }
 
   @Transactional
-  public void deleteOne(final Long projectId) {
+  public void deleteProject(final Long projectId) {
     Project project = this.checkHost(projectId);
     projectRepository.delete(project);
   }
 
   private Project checkHost(final Long projectId) {
-    Project project = this.findOneByProjectId(projectId);
+    Project project = this.findProjectByIdAndUserId(projectId);
     if (!project.getHost().getId().equals(securityUtil.getId())) {
       throw new CustomException(CustomErrorCode.INVALID_HOST);
     }
@@ -114,7 +114,7 @@ public class ProjectService {
 
   @Scheduled(fixedRate = 600000) // 60 * 60 * 1000 밀리초
   @Transactional
-  public void doneProject() {
+  public void checkProject() {
     final LocalDate now = LocalDate.now();
     List<Project> projectList = projectRepository.findAllByDoneAndEndedAtBefore(false, now);
     for (Project project : projectList) {

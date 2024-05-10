@@ -46,7 +46,7 @@ public class ProjectController {
   @GetMapping("{projectId}")
   @SwaggerOK(summary = "팀플 단건 조회")
   public ResponseEntity<ProjectDto> readProject(@PathVariable("projectId") final Long projectId) {
-    final ProjectDto projectDto = projectService.findOne(projectId);
+    final ProjectDto projectDto = projectService.findProjectDto(projectId);
     return ResponseEntity.ok(projectDto);
   }
   
@@ -54,7 +54,7 @@ public class ProjectController {
   @Operation(summary = "팀플 진행 상황 변경")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   public void updateDone(@PathVariable("projectId") final Long projectId) {
-    projectService.updateDone(projectId);
+    projectService.updateProject(projectId);
   }
   
   @PatchMapping("{projectId}")
@@ -64,7 +64,7 @@ public class ProjectController {
       @PathVariable("projectId") final Long projectId,
       @RequestBody @Valid final UpdateProjectDto projectDto
   ) {
-    projectService.updateOne(projectDto, projectId);
+    projectService.updateProject(projectDto, projectId);
   }
   
   @PatchMapping("{projectId}/{userId}")
@@ -81,6 +81,6 @@ public class ProjectController {
   @ResponseStatus(HttpStatus.NO_CONTENT)
   @SwaggerNoContent(summary = "팀플 삭제")
   public void removeProject(@PathVariable("projectId") final Long projectId) {
-    projectService.deleteOne(projectId);
+    projectService.deleteProject(projectId);
   }
 }

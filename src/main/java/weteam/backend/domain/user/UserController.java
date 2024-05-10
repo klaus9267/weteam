@@ -47,11 +47,25 @@ public class UserController {
     return ResponseEntity.ok(userWithProfileImageDto);
   }
 
+  @PatchMapping
+  @Operation(summary = "푸시 알람 수신 활성화/비활성화", description = "응답 없음")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  public void changeReceivePermission() {
+    userService.updateReceivePermission();
+  }
+
   @PatchMapping("{organization}")
   @Operation(summary = "사용자 소속 변경", description = "응답 없음")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   public void changeOrganization(@PathVariable("organization") final String organization) {
     userService.updateUser(organization);
+  }
+
+  @PatchMapping("logout/{userId}")
+  @Operation(summary = "로그아웃", description = "응답 없음")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  public void logout(@PathVariable("userId") final String userId) {
+    userService.logOut();
   }
 
   @DeleteMapping
