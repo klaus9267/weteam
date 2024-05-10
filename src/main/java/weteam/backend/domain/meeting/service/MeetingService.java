@@ -7,6 +7,8 @@ import org.springframework.transaction.annotation.Transactional;
 import weteam.backend.application.auth.SecurityUtil;
 import weteam.backend.application.handler.exception.CustomErrorCode;
 import weteam.backend.application.handler.exception.CustomException;
+import weteam.backend.domain.alarm.AlarmService;
+import weteam.backend.domain.alarm.AlarmStatus;
 import weteam.backend.domain.common.pagination.param.MeetingPaginationParam;
 import weteam.backend.domain.meeting.dto.meeting.*;
 import weteam.backend.domain.meeting.entity.Meeting;
@@ -24,6 +26,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class MeetingService {
   private final MeetingRepository meetingRepository;
+  private final AlarmService alarmService;
   private final ProjectRepository projectRepository;
   private final SecurityUtil securityUtil;
 
@@ -43,6 +46,8 @@ public class MeetingService {
     final Meeting meeting = project.map(p -> Meeting.from(meetingDto, securityUtil.getId(), p))
         .orElseGet(() -> Meeting.from(meetingDto, securityUtil.getId()));
     final Meeting addedMeeting = meetingRepository.save(meeting);
+
+    project.ifPresent(value -> alarmService.addList(value, AlarmStatus.NEW_MEETING));
 
     try {
       MessageDigest digest = MessageDigest.getInstance("MD5");
