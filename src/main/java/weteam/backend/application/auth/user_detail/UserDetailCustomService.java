@@ -21,6 +21,7 @@ public class UserDetailCustomService {
             .email(token.getEmail())
             .username(token.getName())
             .role(UserRole.USER)
+            .receivePermission(true)
             .build())
     );
     user.login();

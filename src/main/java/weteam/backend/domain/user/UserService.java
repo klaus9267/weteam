@@ -35,7 +35,7 @@ public class UserService {
   }
 
   @Transactional
-  public void updateOne(final String organization) {
+  public void updateOrganization(final String organization) {
     final User user = this.findOne(securityUtil.getId());
     user.updateOrganization(organization);
   }
@@ -60,6 +60,12 @@ public class UserService {
     final User user = securityUtil.getCurrentUser();
     user.logout();
   }
+
+//  @Transactional
+//  public void login() {
+//    final User user = this.findOne(securityUtil.getId());
+//    user.login();
+//  }
 
   @Transactional
   public void deleteAll() {
