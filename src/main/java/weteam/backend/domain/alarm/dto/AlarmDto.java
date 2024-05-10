@@ -26,7 +26,7 @@ public class AlarmDto {
         this.targetUser = alarm.getTargetUser() == null ? null : UserDto.from(alarm.getTargetUser());
         this.project = ProjectDto.from(alarm.getProject());
         this.status = alarm.getStatus();
-        this.date = alarm.getDate();
+        this.date = LocalDate.from(alarm.getDate());
     }
 
     public static List<AlarmDto> from(final List<Alarm> alarmList) {

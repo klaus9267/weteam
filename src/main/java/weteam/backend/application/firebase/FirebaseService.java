@@ -36,11 +36,13 @@ public class FirebaseService {
 
   @Transactional
   public void sendNotification(final List<Alarm> alarmList) {
-    final List<Message> messageList = PushMessage.makeMessageList(alarmList);
-    try {
-      firebaseMessaging.sendAll(messageList);
-    } catch (FirebaseMessagingException e) {
-      throw new RuntimeException(e);
+    if (alarmList != null && !alarmList.isEmpty()) {
+      final List<Message> messageList = PushMessage.makeMessageList(alarmList);
+      try {
+        firebaseMessaging.sendAll(messageList);
+      } catch (FirebaseMessagingException e) {
+        throw new RuntimeException(e);
+      }
     }
   }
 }

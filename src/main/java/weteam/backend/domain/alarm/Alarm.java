@@ -7,8 +7,8 @@ import weteam.backend.domain.project.entity.Project;
 import weteam.backend.domain.user.entity.User;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Stack;
 
 @Entity(name = "alarms")
 @Getter
@@ -18,7 +18,7 @@ public class Alarm {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
   private AlarmStatus status;
-  private LocalDate date;
+  private LocalDateTime date;
 
   @Column(columnDefinition = "boolean default false")
   private boolean isRead;
@@ -36,14 +36,14 @@ public class Alarm {
     this.status = status;
     this.project = project;
     this.user = user;
-    this.date = LocalDate.now();
+    this.date = LocalDateTime.now();
   }
 
   private Alarm(final Project project, final AlarmStatus status, final User user, final User targetUser) {
     this.status = status;
     this.project = project;
     this.user = user;
-    this.date = LocalDate.now();
+    this.date = LocalDateTime.now();
     this.targetUser = targetUser;
   }
 
@@ -72,6 +72,6 @@ public class Alarm {
   }
 
   public void changeIsRead() {
-    this.isRead = !isRead;
+    this.isRead = true;
   }
 }
