@@ -61,6 +61,12 @@ public class UserService {
     user.logout();
   }
 
+//  @Transactional
+//  public void login() {
+//    final User user = this.findOne(securityUtil.getId());
+//    user.login();
+//  }
+
   @Transactional
   public void deleteAll() {
     userRepository.deleteAll();

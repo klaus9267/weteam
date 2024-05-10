@@ -29,7 +29,6 @@ public class User extends BaseEntity {
   @Column(columnDefinition = "boolean default false")
   private boolean isLogin;
 
-  @Column(columnDefinition = "boolean default true")
   private boolean receivePermission;
 
   @Enumerated(EnumType.STRING)
