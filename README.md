@@ -1,9 +1,7 @@
-<div><h1>Weteam  Back-end</h1></div>
+
+<h1>Weteam  Back-end</h1>
   프로젝트 일정 관리에 편의성을 제공하는 앱 프로젝트입니다 :)
-<br><br>
-
-<br><br>
-
+  
   <h1>📚 TECH STACKS</h1>
       <h3>Back-end</h3>
       <ul>
@@ -29,4 +27,4 @@
 </ul>
       <h3>ERD</h3>
       
-      ![d](https://github.com/klaus9267/weteam/assets/90795904/c30c4f2b-bd7f-45d5-8f69-56ef094a6771)
+![d](https://github.com/klaus9267/weteam/assets/90795904/c30c4f2b-bd7f-45d5-8f69-56ef094a6771)
