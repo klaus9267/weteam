@@ -49,9 +49,17 @@ public class UserService {
   @Transactional
   public void deleteOne() {
     final Long userId = securityUtil.getId();
-    if (projectRepository.existsByHostId(userId)) {
-      throw new CustomException(CustomErrorCode.BAD_REQUEST, "호스트로 진행중인 팀플이 존재합니다.");
-    }
+//    if (projectRepository.existsByHostId(userId)) {
+//      throw new CustomException(CustomErrorCode.BAD_REQUEST, "호스트로 진행중인 팀플이 존재합니다.");
+//    }
+    userRepository.deleteById(userId);
+  }
+
+  @Transactional
+  public void deleteOther(final Long userId) {
+//    if (projectRepository.existsByHostId(userId)) {
+//      throw new CustomException(CustomErrorCode.BAD_REQUEST, "호스트로 진행중인 팀플이 존재합니다.");
+//    }
     userRepository.deleteById(userId);
   }
 
@@ -59,17 +67,6 @@ public class UserService {
   public void logOut() {
     final User user = securityUtil.getCurrentUser();
     user.logout();
-  }
-
-//  @Transactional
-//  public void login() {
-//    final User user = this.findOne(securityUtil.getId());
-//    user.login();
-//  }
-
-  @Transactional
-  public void deleteAll() {
-    userRepository.deleteAll();
   }
 }
 

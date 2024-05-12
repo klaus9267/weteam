@@ -1,12 +1,15 @@
 package weteam.backend.domain.user.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import weteam.backend.application.BaseEntity;
+import weteam.backend.domain.alarm.Alarm;
 import weteam.backend.domain.meeting.entity.Meeting;
+import weteam.backend.domain.meeting.entity.MeetingUser;
 import weteam.backend.domain.profile.ProfileImage;
 import weteam.backend.domain.project.entity.Project;
 import weteam.backend.domain.project.entity.ProjectUser;
@@ -45,6 +48,15 @@ public class User extends BaseEntity {
 
   @OneToMany(mappedBy = "host", cascade = CascadeType.ALL)
   private List<Meeting> meetingList = new ArrayList<>();
+
+  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+  private List<MeetingUser> meetingUserList = new ArrayList<>();
+
+  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+  private List<Alarm> alarms1 = new ArrayList<>();
+
+  @OneToMany(mappedBy = "targetUser", cascade = CascadeType.ALL)
+  private List<Alarm> alarms2 = new ArrayList<>();
 
   private User(final Long id) {
     this.id = id;

@@ -64,7 +64,7 @@ public class UserController {
   @PatchMapping("logout/{userId}")
   @Operation(summary = "로그아웃", description = "응답 없음")
   @ResponseStatus(HttpStatus.NO_CONTENT)
-  public void logout(@PathVariable("userId") final String userId) {
+  public void logout() {
     userService.logOut();
   }
 
@@ -75,10 +75,10 @@ public class UserController {
     userService.deleteOne();
   }
 
-  @DeleteMapping("all")
-  @SwaggerNoContent(summary = "사용자 전체 삭제(개발용)", description = "이거는 토큰 없어도 됨 :)")
+  @DeleteMapping("{userId}")
+  @SwaggerNoContent(summary = "긴급탈출!!!!!!")
   @ResponseStatus(HttpStatus.NO_CONTENT)
-  public void deleteAll() {
-    userService.deleteAll();
+  public void deleteOtherUser(@PathVariable("userId") final Long userId) {
+    userService.deleteOne();
   }
 }
