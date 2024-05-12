@@ -3,9 +3,7 @@
 <br><br>
 
 <br><br>
-<div>
     <h1>📚 TECH STACKS</h1>
-    <ul>
       <h3>Back-end</h3>
         <img src="https://img.shields.io/badge/Java 17-007396?style=flat-square&logo=java&logoColor=white"/>
         <img src="https://img.shields.io/badge/Spring Boot 3.2-6DB33F?style=flat-square&logo=SpringBoot&logoColor=white" alt="spring-boot"/>
@@ -23,6 +21,3 @@
       <img src="https://img.shields.io/badge/GitHub%20Actions-2088FF?style=flat-square&logo=GitHubActions&logoColor=white"/>
       <h3>ERD</h3>
       ![d](https://github.com/klaus9267/weteam/assets/90795904/c30c4f2b-bd7f-45d5-8f69-56ef094a6771)
-    </ul>
-  ![d](https://github.com/klaus9267/weteam/assets/90795904/c30c4f2b-bd7f-45d5-8f69-56ef094a6771)
-  </div>
