@@ -21,5 +21,7 @@
       <h3>CI/CD</h3>
       <img src="https://img.shields.io/badge/Docker-2496ED?style=flat-square&logo=docker&logoColor=white"/>
       <img src="https://img.shields.io/badge/GitHub%20Actions-2088FF?style=flat-square&logo=GitHubActions&logoColor=white"/>
+      <h3>ERD</h3>
+      ![erd](https://github.com/klaus9267/weteam/assets/90795904/4aadf10c-38ae-4efb-a707-c40da8a3d260)
     </ul>
   </div>
