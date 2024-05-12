@@ -22,6 +22,6 @@
       <img src="https://img.shields.io/badge/Docker-2496ED?style=flat-square&logo=docker&logoColor=white"/>
       <img src="https://img.shields.io/badge/GitHub%20Actions-2088FF?style=flat-square&logo=GitHubActions&logoColor=white"/>
       <h3>ERD</h3>
-      ![erd.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/eb6198e2-028a-4222-b698-4cd8e1a5233c/8c4502e1-d181-47ab-9593-f1a9a294de04/erd.png)
+      ![d](https://github.com/klaus9267/weteam/assets/90795904/c30c4f2b-bd7f-45d5-8f69-56ef094a6771)
     </ul>
   </div>
