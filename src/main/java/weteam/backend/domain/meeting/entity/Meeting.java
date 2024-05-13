@@ -30,6 +30,9 @@ public class Meeting extends BaseEntity {
   private String title, hashedId;
   private LocalDateTime startedAt, endedAt;
 
+  @Column(columnDefinition = "boolean default false")
+  private boolean isDone;
+
   @ManyToOne(fetch = FetchType.LAZY)
   private User host;
 

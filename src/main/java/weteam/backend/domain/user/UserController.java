@@ -2,6 +2,7 @@ package weteam.backend.domain.user;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import weteam.backend.application.auth.SecurityUtil;
 import weteam.backend.domain.common.swagger.SwaggerNoContent;
 import weteam.backend.domain.common.swagger.SwaggerOK;
+import weteam.backend.domain.user.dto.RequestUserDto;
 import weteam.backend.domain.user.dto.UserDto;
 import weteam.backend.domain.user.dto.UserWithProfileImageDto;
 import weteam.backend.domain.user.entity.User;
@@ -47,18 +49,18 @@ public class UserController {
     return ResponseEntity.ok(userWithProfileImageDto);
   }
 
-  @PatchMapping
+  @PatchMapping("push")
   @Operation(summary = "푸시 알람 수신 활성화/비활성화", description = "응답 없음")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   public void changeReceivePermission() {
     userService.updateReceivePermission();
   }
 
-  @PatchMapping("{organization}")
-  @Operation(summary = "사용자 소속 변경", description = "응답 없음")
+  @PatchMapping
+  @Operation(summary = "사용자 정보 변경", description = "응답 없음")
   @ResponseStatus(HttpStatus.NO_CONTENT)
-  public void changeOrganization(@PathVariable("organization") final String organization) {
-    userService.updateOrganization(organization);
+  public void changeOrganization(@RequestBody @Valid final RequestUserDto requestUserDto) {
+    userService.updateUser(requestUserDto);
   }
 
   @PatchMapping("logout/{userId}")

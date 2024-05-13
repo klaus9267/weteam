@@ -7,6 +7,7 @@ import weteam.backend.application.auth.SecurityUtil;
 import weteam.backend.application.handler.exception.CustomErrorCode;
 import weteam.backend.application.handler.exception.CustomException;
 import weteam.backend.domain.project.repository.ProjectRepository;
+import weteam.backend.domain.user.dto.RequestUserDto;
 import weteam.backend.domain.user.dto.UserDto;
 import weteam.backend.domain.user.dto.UserWithProfileImageDto;
 import weteam.backend.domain.user.entity.User;
@@ -35,9 +36,9 @@ public class UserService {
   }
 
   @Transactional
-  public void updateOrganization(final String organization) {
+  public void updateUser(final RequestUserDto userDto) {
     final User user = this.findOne(securityUtil.getId());
-    user.updateOrganization(organization);
+    user.updateUser(userDto);
   }
 
   @Transactional
@@ -49,17 +50,9 @@ public class UserService {
   @Transactional
   public void deleteOne() {
     final Long userId = securityUtil.getId();
-//    if (projectRepository.existsByHostId(userId)) {
-//      throw new CustomException(CustomErrorCode.BAD_REQUEST, "호스트로 진행중인 팀플이 존재합니다.");
-//    }
-    userRepository.deleteById(userId);
-  }
-
-  @Transactional
-  public void deleteOther(final Long userId) {
-//    if (projectRepository.existsByHostId(userId)) {
-//      throw new CustomException(CustomErrorCode.BAD_REQUEST, "호스트로 진행중인 팀플이 존재합니다.");
-//    }
+    if (projectRepository.existsByHostId(userId)) {
+      throw new CustomException(CustomErrorCode.BAD_REQUEST, "호스트로 진행중인 팀플이 존재합니다.");
+    }
     userRepository.deleteById(userId);
   }
 

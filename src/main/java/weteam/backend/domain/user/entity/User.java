@@ -1,6 +1,5 @@
 package weteam.backend.domain.user.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,6 +12,7 @@ import weteam.backend.domain.meeting.entity.MeetingUser;
 import weteam.backend.domain.profile.ProfileImage;
 import weteam.backend.domain.project.entity.Project;
 import weteam.backend.domain.project.entity.ProjectUser;
+import weteam.backend.domain.user.dto.RequestUserDto;
 import weteam.backend.domain.user.dto.UserDto;
 
 import java.util.ArrayList;
@@ -75,8 +75,9 @@ public class User extends BaseEntity {
         .build();
   }
 
-  public void updateOrganization(String organization) {
-    this.organization = organization;
+  public void updateUser(final RequestUserDto userDto) {
+    this.organization = userDto.organization();
+    this.username = userDto.username();
   }
 
   public void updateDevice(final String deviceToken) {

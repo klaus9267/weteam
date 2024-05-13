@@ -5,14 +5,15 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import weteam.backend.application.auth.SecurityUtil;
+import weteam.backend.application.firebase.FirebaseService;
 import weteam.backend.application.handler.exception.CustomErrorCode;
 import weteam.backend.application.handler.exception.CustomException;
 import weteam.backend.domain.alarm.dto.AlarmPaginationDto;
 import weteam.backend.domain.common.pagination.param.AlarmPaginationParam;
-import weteam.backend.application.firebase.FirebaseService;
 import weteam.backend.domain.project.entity.Project;
 import weteam.backend.domain.user.entity.User;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -21,27 +22,37 @@ public class AlarmService {
   private final AlarmRepository alarmRepository;
   private final SecurityUtil securityUtil;
   private final FirebaseService firebaseService;
-  
+
   public AlarmPaginationDto readAlarmList(final AlarmPaginationParam paginationParam) {
     final Page<Alarm> alarmPage = alarmRepository.findAllByUserId(paginationParam.toPageable(), securityUtil.getId());
     return AlarmPaginationDto.from(alarmPage);
   }
-  
+
   @Transactional
   public void addList(final Project project, final AlarmStatus status) {
     final List<Alarm> alarmList = Alarm.from(project, status);
     alarmRepository.saveAll(alarmList);
     firebaseService.sendNotification(alarmList);
-    
   }
-  
+
   @Transactional
   public void addListWithTargetUser(final Project project, final AlarmStatus status, final User targetUser) {
     final List<Alarm> alarmList = Alarm.from(project, status, targetUser);
     alarmRepository.saveAll(alarmList);
     firebaseService.sendNotification(alarmList);
   }
-  
+
+  @Transactional
+  public void addListWithTargetUserList(final Project project, final AlarmStatus status, final List<User> targetUserList) {
+    final List<Alarm> newAlarmList = new ArrayList<>();
+    for (final User user : targetUserList) {
+      newAlarmList.addAll(Alarm.from(project, status, user));
+    }
+
+    alarmRepository.saveAll(newAlarmList);
+    firebaseService.sendNotification(newAlarmList);
+  }
+
   @Transactional
   public void updateIsRead(final Long alarmId, final Long userId) {
     Alarm alarm = alarmRepository.findByIdAndUserId(alarmId, userId).orElseThrow(CustomException.notFound(CustomErrorCode.NOT_FOUND));
@@ -50,7 +61,7 @@ public class AlarmService {
     }
     alarm.changeIsRead();
   }
-  
+
   @Transactional
   public void updateAllIsRead() {
     List<Alarm> alarmList = alarmRepository.findAllByUserId(securityUtil.getId()).stream().filter(alarm -> !alarm.isRead()).toList();

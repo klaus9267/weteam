@@ -104,4 +104,8 @@ public class Project extends BaseEntity {
   public void addHashedId(final String hashedId) {
     this.hashedId = hashedId;
   }
+
+  public void kickUsers(final List<ProjectUser> projectUsers) {
+    this.projectUserList.removeAll(projectUsers);
+  }
 }
