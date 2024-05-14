@@ -10,9 +10,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ProjectUserRepository extends JpaRepository<ProjectUser, Long> {
+  @Lock(LockModeType.PESSIMISTIC_WRITE)
   Optional<ProjectUser> findByProjectIdAndUserId(final Long projectId, final Long userId);
 
-  @Lock(LockModeType.PESSIMISTIC_WRITE)
   @EntityGraph(attributePaths = {"user", "user.profileImage"})
   List<ProjectUser> findByProjectId(final Long projectId);
 }

@@ -26,15 +26,6 @@ public class MeetingUserService {
   private final SecurityUtil securityUtil;
 
   @Transactional
-  public void inviteMeeting(final Long meetingId, final Long userId) {
-    if (meetingUserRepository.findByMeetingIdAndUserId(meetingId, userId).isPresent()) {
-      throw new CustomException(CustomErrorCode.DUPLICATE, "이미 초대한 사용자입니다.");
-    }
-    final MeetingUser meetingUser = MeetingUser.from(userId, meetingId);
-    meetingUserRepository.save(meetingUser);
-  }
-
-  @Transactional
   public String inviteUser(final Long meetingId) {
     final Meeting meeting = meetingRepository.findById(meetingId).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND_MEETING));
     return meeting.getHashedId();

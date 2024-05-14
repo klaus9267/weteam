@@ -1,8 +1,10 @@
 package weteam.backend.domain.project.repository;
 
+import jakarta.persistence.LockModeType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import weteam.backend.domain.project.entity.Project;
 
@@ -35,8 +37,10 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
 
   Optional<Project> findByHostIdAndNameAndExplanation(final Long hostId, final String name, final String explanation);
 
-  Optional<Project> findByHashedId(final String hashedId);
 
+  @Lock(LockModeType.PESSIMISTIC_WRITE)
+  Optional<Project> findByHashedId(final String hashedId);
+  @Lock(LockModeType.PESSIMISTIC_WRITE)
   Optional<Project> findByProjectUserListIdIn(final List<Long> projectUserIdList);
 
   List<Project> findAllByDoneAndEndedAtBefore(final boolean done, final LocalDate endedAt);
