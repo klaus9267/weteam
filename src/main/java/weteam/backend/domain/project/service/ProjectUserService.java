@@ -27,6 +27,7 @@ public class ProjectUserService {
   private final AlarmService alarmService;
   private final SecurityUtil securityUtil;
 
+  @Transactional
   public List<ProjectUserDto> findProjectUserListByProjectId(final Long projectId) {
     final List<ProjectUser> projectUserList = projectUserRepository.findByProjectId(projectId);
     if (projectUserList.isEmpty()) {
