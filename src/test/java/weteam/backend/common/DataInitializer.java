@@ -29,8 +29,8 @@ public class DataInitializer {
   private void saveUsers() {
     List<User> userList = new ArrayList<>();
     for (int i = 0; i < 100; i++) {
-      User user = new User(null, "user" + i, "password", "name" + i, "nickname" + i, "email" + i + "@email.com", UserRole.USER, null, null, null, null);
-      userList.add(user);
+//      User user = new User(null, "user" + i, "password", "name" + i, "nickname" + i, "email" + i + "@email.com", UserRole.USER, null, null, null, null);
+//      userList.add(user);
     }
     users = userRepository.saveAll(userList);
   }

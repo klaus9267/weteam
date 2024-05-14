@@ -7,6 +7,7 @@ import weteam.backend.application.auth.SecurityUtil;
 import weteam.backend.application.handler.exception.CustomErrorCode;
 import weteam.backend.application.handler.exception.CustomException;
 import weteam.backend.domain.project.repository.ProjectRepository;
+import weteam.backend.domain.user.dto.RequestUserDto;
 import weteam.backend.domain.user.dto.UserDto;
 import weteam.backend.domain.user.dto.UserWithProfileImageDto;
 import weteam.backend.domain.user.entity.User;
@@ -35,9 +36,9 @@ public class UserService {
   }
 
   @Transactional
-  public void updateOrganization(final String organization) {
+  public void updateUser(final RequestUserDto userDto) {
     final User user = this.findOne(securityUtil.getId());
-    user.updateOrganization(organization);
+    user.updateUser(userDto);
   }
 
   @Transactional
@@ -59,17 +60,6 @@ public class UserService {
   public void logOut() {
     final User user = securityUtil.getCurrentUser();
     user.logout();
-  }
-
-//  @Transactional
-//  public void login() {
-//    final User user = this.findOne(securityUtil.getId());
-//    user.login();
-//  }
-
-  @Transactional
-  public void deleteAll() {
-    userRepository.deleteAll();
   }
 }
 

@@ -14,7 +14,9 @@ import weteam.backend.domain.project.entity.ProjectUser;
 import weteam.backend.domain.project.param.UpdateProjectRoleParam;
 import weteam.backend.domain.project.repository.ProjectRepository;
 import weteam.backend.domain.project.repository.ProjectUserRepository;
+import weteam.backend.domain.user.entity.User;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -67,9 +69,14 @@ public class ProjectUserService {
     if (!project.getHost().getId().equals(securityUtil.getId())) {
       throw new CustomException(CustomErrorCode.INVALID_HOST);
     }
-    final List<ProjectUser> projectUserList = project.getProjectUserList().stream().filter(projectUser -> projectUserIdList.contains(projectUser.getId())).toList();
-    projectUserList.forEach(ProjectUser::disable);
-    projectUserList.forEach(projectUser -> alarmService.addListWithTargetUser(project, AlarmStatus.KICK, projectUser.getUser()));
+    projectUserRepository.deleteAllById(projectUserIdList);
+
+    final List<User> userList = new ArrayList<>();
+    for (final ProjectUser projectUser : project.getProjectUserList()) {
+      final User user = projectUser.getUser();
+      if (projectUserIdList.contains(user.getId())) userList.add(user);
+    }
+    alarmService.addListWithTargetUserList(project, AlarmStatus.KICK, userList);
   }
 
   @Transactional
@@ -81,5 +88,4 @@ public class ProjectUserService {
     projectUser.disable();
     alarmService.addListWithTargetUser(projectUser.getProject(), AlarmStatus.EXIT, securityUtil.getCurrentUser());
   }
-
 }
