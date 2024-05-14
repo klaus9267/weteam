@@ -41,8 +41,8 @@ public class ProjectUser {
     return ProjectUser.builder().user(user).project(project).enable(true).build();
   }
 
-  public static ProjectUser from(final Project project, final Long userId) {
-    return ProjectUser.builder().project(project).user(User.from(userId)).enable(true).build();
+  public static ProjectUser from(final Project project, final User user) {
+    return ProjectUser.builder().project(project).user(user).enable(true).build();
   }
 
   public void updateRole(final String role) {

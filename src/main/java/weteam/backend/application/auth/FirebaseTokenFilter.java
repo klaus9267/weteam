@@ -37,21 +37,20 @@ public class FirebaseTokenFilter extends OncePerRequestFilter {
     if (token == null) {
       filterChain.doFilter(request, response);
     } else {
-      FirebaseToken decodedToken = null;
       try {
-        decodedToken = firebaseAuth.verifyIdToken(token);
+        FirebaseToken decodedToken = firebaseAuth.verifyIdToken(token);
+        final User user = userDetailCustomService.loadUser(decodedToken);
+        final CustomUser4Log customUser = CustomUser4Log.from(user);
+
+        log.info("---------------- login : " + customUser + " | " + request.getMethod() + "|" + request.getRequestURI() + " --------------");
+        final UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user, null, List.of(new SimpleGrantedAuthority(UserRole.USER.getKey())));
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        filterChain.doFilter(request, response);
       } catch (FirebaseAuthException e) {
         log.error("invalid token" + request.getRemoteAddr() + " | " + request.getMethod() + " | " + request.getRequestURI());
         log.error("--------------------");
       }
-      final User user = userDetailCustomService.loadUser(decodedToken);
-      final CustomUser4Log customUser = CustomUser4Log.from(user);
-
-      log.info("---------------- login : " + customUser + " | " + request.getMethod() + "|" + request.getRequestURI() + " --------------");
-      final UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user, null, List.of(new SimpleGrantedAuthority(UserRole.USER.getKey())));
-      SecurityContextHolder.getContext().setAuthentication(authentication);
-
-      filterChain.doFilter(request, response);
     }
   }
 }

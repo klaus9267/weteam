@@ -49,8 +49,8 @@ public class MeetingUser {
     return new MeetingUser(user, meeting);
   }
 
-  public static MeetingUser from(final Long userId, final Long meetingId) {
-    return new MeetingUser(User.from(userId), Meeting.from(meetingId));
+  public static MeetingUser from(final User user, final Long meetingId) {
+    return new MeetingUser(user, Meeting.from(meetingId));
   }
 
   public static List<MeetingUser> from(final List<ProjectUser> projectUserList, final Meeting meeting) {

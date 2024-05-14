@@ -38,7 +38,7 @@ public class ProjectUserService {
   @Transactional
   public void acceptInvite4Develop(final Long projectId) {
     final Project project = projectRepository.findById(projectId).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND_PROJECT));
-    final ProjectUser projectUser = ProjectUser.from(project, securityUtil.getId());
+    final ProjectUser projectUser = ProjectUser.from(project, securityUtil.getCurrentUser());
     project.addProjectUser(projectUser);
     alarmService.addListWithTargetUser(projectUser.getProject(), AlarmStatus.JOIN, securityUtil.getCurrentUser());
   }
@@ -46,7 +46,7 @@ public class ProjectUserService {
   @Transactional
   public void acceptInvite(final String hashedProjectId) {
     final Project project = projectRepository.findByHashedId(hashedProjectId).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND_PROJECT));
-    final ProjectUser projectUser = ProjectUser.from(project, securityUtil.getId());
+    final ProjectUser projectUser = ProjectUser.from(project, securityUtil.getCurrentUser());
     project.addProjectUser(projectUser);
     alarmService.addListWithTargetUser(projectUser.getProject(), AlarmStatus.JOIN, securityUtil.getCurrentUser());
   }

@@ -34,14 +34,14 @@ public class MeetingUserService {
   @Transactional
   public void acceptInvite(final String hashedId) {
     final Meeting meeting = meetingRepository.findByHashedId(hashedId).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND_MEETING));
-    final MeetingUser meetingUser = MeetingUser.from(securityUtil.getId(), meeting.getId());
+    final MeetingUser meetingUser = MeetingUser.from(securityUtil.getCurrentUser(), meeting.getId());
     meeting.addMeetingUser(meetingUser);
   }
 
   @Transactional
   public void acceptInvite4Develop(final Long meetingId) {
     final Meeting meeting = meetingRepository.findById(meetingId).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND_MEETING));
-    final MeetingUser meetingUser = MeetingUser.from(securityUtil.getId(), meeting.getId());
+    final MeetingUser meetingUser = MeetingUser.from(securityUtil.getCurrentUser(), meeting.getId());
     meeting.addMeetingUser(meetingUser);
   }
 

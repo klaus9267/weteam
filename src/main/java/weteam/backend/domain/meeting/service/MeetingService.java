@@ -43,8 +43,8 @@ public class MeetingService {
   @Transactional
   public MeetingDto addOne(final CreateMeetingDto meetingDto) {
     final Optional<Project> project = meetingDto.projectId() != null ? projectRepository.findById(meetingDto.projectId()) : Optional.empty();
-    final Meeting meeting = project.map(p -> Meeting.from(meetingDto, securityUtil.getId(), p))
-        .orElseGet(() -> Meeting.from(meetingDto, securityUtil.getId()));
+    final Meeting meeting = project.map(p -> Meeting.from(meetingDto, securityUtil.getCurrentUser(), p))
+        .orElseGet(() -> Meeting.from(meetingDto, securityUtil.getCurrentUser()));
     final Meeting addedMeeting = meetingRepository.save(meeting);
 
     project.ifPresent(value -> alarmService.addList(value, AlarmStatus.NEW_MEETING));
@@ -80,7 +80,7 @@ public class MeetingService {
   @Transactional
   public void acceptInvite(final String hashedProjectId) {
     final Meeting meeting = meetingRepository.findByHashedId(hashedProjectId).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND_MEETING));
-    final MeetingUser meetingUser = MeetingUser.from(securityUtil.getId(), meeting.getId());
+    final MeetingUser meetingUser = MeetingUser.from(securityUtil.getCurrentUser(), meeting.getId());
     meeting.addMeetingUser(meetingUser);
   }
 

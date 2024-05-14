@@ -58,14 +58,6 @@ public class User extends BaseEntity {
   @OneToMany(mappedBy = "targetUser", cascade = CascadeType.ALL)
   private List<Alarm> alarms2 = new ArrayList<>();
 
-  private User(final Long id) {
-    this.id = id;
-  }
-
-  public static User from(final Long userId) {
-    return new User(userId);
-  }
-
   public static User from(final UserDto userDto) {
     return User.builder().id(userDto.id())
         .username(userDto.username())

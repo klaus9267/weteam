@@ -1,4 +1,4 @@
-package weteam.backend.application.firebase;
+package weteam.backend.application.firebase.common;
 
 import com.google.firebase.messaging.Message;
 import com.google.firebase.messaging.Notification;
@@ -9,7 +9,6 @@ import weteam.backend.domain.alarm.AlarmStatus;
 import weteam.backend.domain.project.entity.Project;
 import weteam.backend.domain.user.entity.User;
 
-import java.util.Calendar;
 import java.util.List;
 
 public record PushMessage(

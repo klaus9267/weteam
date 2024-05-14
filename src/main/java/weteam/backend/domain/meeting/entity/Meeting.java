@@ -46,13 +46,12 @@ public class Meeting extends BaseEntity {
     this.id = meetingId;
   }
 
-  private Meeting(final CreateMeetingDto meetingDto, final Long userId, final Project project) {
-    final User user = User.from(userId);
+  private Meeting(final CreateMeetingDto meetingDto, final User user, final Project project) {
     this.imageId = meetingDto.imageId();
     this.title = meetingDto.title();
     this.startedAt = meetingDto.startedAt();
     this.endedAt = meetingDto.endedAt();
-    this.host = User.from(userId);
+    this.host = user;
     this.project = project;
     for (final ProjectUser projectUser : project.getProjectUserList()) {
       final MeetingUser meetingUser = MeetingUser.from(projectUser.getUser(), this);
@@ -60,8 +59,7 @@ public class Meeting extends BaseEntity {
     }
   }
 
-  private Meeting(final CreateMeetingDto meetingDto, final Long userId) {
-    final User user = User.from(userId);
+  private Meeting(final CreateMeetingDto meetingDto, final User user) {
     final MeetingUser meetingUser = MeetingUser.from(user, this);
 
     this.imageId = meetingDto.imageId();
@@ -72,12 +70,12 @@ public class Meeting extends BaseEntity {
     this.meetingUserList.add(meetingUser);
   }
 
-  public static Meeting from(final CreateMeetingDto meetingDto, final Long userId, final Project project) {
-    return new Meeting(meetingDto, userId, project);
+  public static Meeting from(final CreateMeetingDto meetingDto, final User user, final Project project) {
+    return new Meeting(meetingDto, user, project);
   }
 
-  public static Meeting from(final CreateMeetingDto meetingDto, final Long userId) {
-    return new Meeting(meetingDto, userId);
+  public static Meeting from(final CreateMeetingDto meetingDto, final User user) {
+    return new Meeting(meetingDto, user);
   }
 
 

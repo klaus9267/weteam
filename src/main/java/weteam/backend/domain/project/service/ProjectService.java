@@ -40,7 +40,7 @@ public class ProjectService {
       throw new CustomException(CustomErrorCode.DUPLICATE);
     }
 
-    final Project project = Project.from(projectDto, securityUtil.getId());
+    final Project project = Project.from(projectDto, securityUtil.getCurrentUser());
     Project addedProject = projectRepository.save(project);
 
     try {
