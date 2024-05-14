@@ -10,7 +10,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -19,6 +18,8 @@ public class FirebaseConfig {
   private final String databaseUrl;
   private final ClassPathResource resource;
 
+  private static FirebaseApp firebaseApp;
+
   public FirebaseConfig(@Value("${firebase.database-url}") final String databaseUrl) {
     this.databaseUrl = databaseUrl;
     this.resource = new ClassPathResource("./firebase.json");
@@ -26,32 +27,31 @@ public class FirebaseConfig {
 
   @Bean
   public FirebaseAuth getFirebaseAuth() throws IOException {
-    InputStream serviceAccount = resource.getInputStream();
-    FirebaseOptions options = new FirebaseOptions.Builder()
-        .setCredentials(GoogleCredentials.fromStream(serviceAccount))
-        .setDatabaseUrl(databaseUrl)
-        .build();
-
-    FirebaseApp.initializeApp(options);
-
-    return FirebaseAuth.getInstance();
+    if (firebaseApp == null) {
+      initializeFirebaseApp();
+    }
+    return FirebaseAuth.getInstance(firebaseApp);
   }
 
   @Bean
   public FirebaseMessaging firebaseMessaging() throws IOException {
-    InputStream refreshToken = resource.getInputStream();
-    FirebaseApp firebaseApp = FirebaseApp.getApps()
-        .stream()
-        .filter(app -> FirebaseApp.DEFAULT_APP_NAME.equals(app.getName()))
-        .findFirst()
-        .orElseGet(() -> {
-          try {
-            final FirebaseOptions options = FirebaseOptions.builder().setCredentials(GoogleCredentials.fromStream(refreshToken)).build();
-            return FirebaseApp.initializeApp(options);
-          } catch (IOException e) {
-            throw new RuntimeException(e);
-          }
-        });
+    if (firebaseApp == null) {
+      initializeFirebaseApp();
+    }
     return FirebaseMessaging.getInstance(firebaseApp);
+  }
+
+  private synchronized void initializeFirebaseApp() throws IOException {
+    if (firebaseApp == null || FirebaseApp.getApps().isEmpty()) {
+      InputStream serviceAccount = resource.getInputStream();
+      FirebaseOptions options = FirebaseOptions.builder()
+          .setCredentials(GoogleCredentials.fromStream(serviceAccount))
+          .setDatabaseUrl(databaseUrl)
+          .build();
+
+      firebaseApp = FirebaseApp.initializeApp(options);
+    } else {
+      firebaseApp = FirebaseApp.getInstance();
+    }
   }
 }
