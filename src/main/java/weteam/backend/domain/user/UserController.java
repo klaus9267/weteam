@@ -26,7 +26,7 @@ public class UserController {
 
   @GetMapping("{id}")
   @SwaggerOK(summary = "다른 사용자 조회")
-  public ResponseEntity<UserWithProfileImageDto> readUser(@PathVariable("id") final Long id) {
+  public ResponseEntity<UserWithProfileImageDto> readOtherInfo(@PathVariable("id") final Long id) {
     final UserWithProfileImageDto user = userService.findOneById(id);
     return ResponseEntity.ok(user);
   }
@@ -53,7 +53,7 @@ public class UserController {
     userService.updateUser(requestUserDto);
   }
 
-  @PatchMapping("logout/{userId}")
+  @PatchMapping("logout")
   @Operation(summary = "로그아웃", description = "응답 없음")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   public void logout() {
@@ -61,16 +61,9 @@ public class UserController {
   }
 
   @DeleteMapping
-  @SwaggerNoContent(summary = "사용자 탈퇴", description = "이거는 토큰 없어도 됨 :)")
+  @SwaggerNoContent(summary = "사용자 탈퇴")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   public void deleteUser() {
-    userService.deleteOne();
-  }
-
-  @DeleteMapping("{userId}")
-  @SwaggerNoContent(summary = "긴급탈출!!!!!!")
-  @ResponseStatus(HttpStatus.NO_CONTENT)
-  public void deleteOtherUser(@PathVariable("userId") final Long userId) {
     userService.deleteOne();
   }
 }

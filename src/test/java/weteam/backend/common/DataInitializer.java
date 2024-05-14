@@ -34,11 +34,12 @@ public class DataInitializer {
 
   private void saveUsers() {
     List<User> userList = new ArrayList<>();
-    userList.add(User.builder().username("kim").uid("hIGOWUmXSugwCftVJ2HsF9kiqfh1").build());
+    userList.add(User.builder().receivePermission(true).username("kim").uid("hIGOWUmXSugwCftVJ2HsF9kiqfh1").build());
     for (int i = 0; i < 100; i++) {
       User user = User.builder()
           .username("username" + i)
           .deviceToken("eotadcGTO0ZIvJYQy0Jadp:APA91bGuJy-2TiuCCMEZELje1ym2i2PGl54zEtu2o35K4WjQtuZyJNmyMAdo6hU4B7y5N556C7DO6IIGyvIQ46tI8IJinr-si0ZxYQChZUbZCMbLiGo4d6GQrJ2wYmXrPNSN8Hq0brVm")
+          .receivePermission(true)
           .uid("uid" + i)
           .build();
       userList.add(user);
