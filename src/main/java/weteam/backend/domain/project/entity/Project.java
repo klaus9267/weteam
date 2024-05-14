@@ -25,7 +25,7 @@ public class Project extends BaseEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
-  private Integer imageId;
+  private Long imageId;
   private String name, explanation, hashedId;
   private LocalDate startedAt, endedAt;
 

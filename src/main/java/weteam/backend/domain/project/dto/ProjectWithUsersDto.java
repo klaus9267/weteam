@@ -13,7 +13,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ProjectWithUsersDto {
   private final Long id;
-  private final Integer imageId;
+  private final Long imageId;
   private final String name;
   private final String hashedId;
   private final String explanation;
