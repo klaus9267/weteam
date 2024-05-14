@@ -25,41 +25,41 @@ import java.util.List;
 @Tag(name = "PROJECT_USER")
 public class ProjectUserController {
   private final ProjectUserService projectUserService;
-  
+
   @GetMapping("{projectId}/invite")
   @SwaggerCreated(summary = "팀원 초대용 hashedId 조회")
   public ResponseEntity<String> readHashedId(@PathVariable("projectId") final Long projectId) {
     final String hashedId = projectUserService.readHashedId(projectId);
     return ResponseEntity.ok(hashedId);
   }
-  
+
   @GetMapping("{projectId}")
   @SwaggerOK(summary = "팀원 목록 조회")
   public ResponseEntity<List<ProjectUserDto>> findProjectMemberList(@PathVariable("projectId") final Long projectId) {
     return ResponseEntity.ok(projectUserService.findProjectUserListByProjectId(projectId));
   }
-  
+
   @PatchMapping
   @Operation(summary = "담당 역할 변경", description = "응답 없음")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   public void updateProjectRole(@ParameterObject @Valid UpdateProjectRoleParam updateProjectRoleParam) {
     projectUserService.updateProjectRole(updateProjectRoleParam);
   }
-  
+
   @PatchMapping("{projectId}/develop")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   @SwaggerNoContent(summary = "초대 수락(개발용)", description = "응답 없음")
   public void acceptInvite4Develop(@PathVariable("projectId") final Long projectId) {
     projectUserService.acceptInvite4Develop(projectId);
   }
-  
+
   @PatchMapping("{hashedProjectId}")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   @SwaggerNoContent(summary = "초대 수락", description = "응답 없음")
   public void acceptInvite(@PathVariable("hashedProjectId") final String hashedProjectId) {
     projectUserService.acceptInvite(hashedProjectId);
   }
-  
+
   @DeleteMapping
   @ResponseStatus(HttpStatus.NO_CONTENT)
   @SwaggerNoContent(summary = "팀원 강퇴", description = "응답 없음")
@@ -68,7 +68,7 @@ public class ProjectUserController {
       @NotNull @RequestParam("projectUserIdList") final List<Long> projectUserIdList) {
     projectUserService.kickUsers(projectUserIdList);
   }
-  
+
   @DeleteMapping("{projectId}")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   @SwaggerNoContent(summary = "팀플 탈퇴", description = "응답 없음")

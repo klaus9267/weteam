@@ -17,6 +17,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @Getter
+@Table(uniqueConstraints = @UniqueConstraint(name = "USER_PROJECT_UNIQUE", columnNames = {"user_id", "project_id"}))
 public class ProjectUser {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

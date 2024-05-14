@@ -59,6 +59,7 @@ public class MeetingUserService {
     this.validateTimeSlot(timeSlotDtoList);
     final MeetingUser meetingUser = meetingUserRepository.findByMeetingIdAndUserId(meetingId, securityUtil.getId()).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND));
     final List<TimeSlot> timeSlotList = TimeSlot.from(timeSlotDtoList, meetingUser);
+    System.out.println(validaAllChecked(meetingUser.getMeeting()));
     timeSlotRepository.deleteAllByMeetingUser(meetingUser);
     timeSlotRepository.saveAll(timeSlotList);
   }
@@ -71,5 +72,10 @@ public class MeetingUserService {
         throw new CustomException(CustomErrorCode.BAD_REQUEST, "겹치는 시간대가 있습니다");
       }
     }
+  }
+
+  private boolean validaAllChecked(final Meeting meeting) {
+    final long count = meeting.getMeetingUserList().stream().filter(meetingUser -> meetingUser.getTimeSlotList().isEmpty()).count();
+    return count > 0;
   }
 }

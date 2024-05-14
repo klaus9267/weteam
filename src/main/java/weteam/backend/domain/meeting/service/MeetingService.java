@@ -47,7 +47,7 @@ public class MeetingService {
         .orElseGet(() -> Meeting.from(meetingDto, securityUtil.getId()));
     final Meeting addedMeeting = meetingRepository.save(meeting);
 
-    project.ifPresent(value -> alarmService.addList(value, AlarmStatus.NEW_MEETING));
+//    project.ifPresent(value -> alarmService.addList(value, AlarmStatus.NEW_MEETING));
 
     try {
       MessageDigest digest = MessageDigest.getInstance("MD5");
