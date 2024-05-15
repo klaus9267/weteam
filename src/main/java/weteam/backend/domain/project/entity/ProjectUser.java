@@ -34,9 +34,6 @@ public class ProjectUser {
   @ManyToOne(fetch = FetchType.LAZY)
   private Project project;
 
-  @OneToMany(mappedBy = "projectUser", cascade = CascadeType.ALL)
-  List<BlackList> blackLists = new ArrayList<>();
-
   public static ProjectUser from(final User user, final Project project) {
     return ProjectUser.builder().user(user).project(project).enable(true).build();
   }
