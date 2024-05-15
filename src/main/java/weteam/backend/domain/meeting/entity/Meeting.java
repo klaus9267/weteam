@@ -93,15 +93,13 @@ public class Meeting extends BaseEntity {
     this.hashedId = hashedId;
   }
 
-  public void addMeetingUser(final MeetingUser newMeetingUser) {
-    final Long currentUserId = newMeetingUser.getUser().getId();
-
+  public void addMeetingUser(final User user) {
     for (final MeetingUser meetingUser : this.meetingUserList) {
-      if (meetingUser.getUser().getId().equals(currentUserId)) {
+      if (meetingUser.getUser().getId().equals(user.getId())) {
         throw new CustomException(CustomErrorCode.BAD_REQUEST, "이미 수락한 약속입니다.");
       }
     }
-
-    this.meetingUserList.add(newMeetingUser);
+    final MeetingUser meetingUser = MeetingUser.from(user, this);
+    this.meetingUserList.add(meetingUser);
   }
 }

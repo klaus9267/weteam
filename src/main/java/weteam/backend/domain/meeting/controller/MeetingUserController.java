@@ -12,6 +12,7 @@ import weteam.backend.domain.common.swagger.SwaggerOK;
 import weteam.backend.domain.meeting.dto.time_slot.RequestTimeSlotDto;
 import weteam.backend.domain.meeting.service.MeetingUserService;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -20,16 +21,6 @@ import java.util.List;
 @Tag(name = "MEETING_USER")
 public class MeetingUserController {
   private final MeetingUserService meetingUserService;
-
-//  @PostMapping("{meetingId}/{userId}")
-//  @ResponseStatus(HttpStatus.NO_CONTENT)
-//  @SwaggerNoContent(summary = "약속 초대")
-//  public void inviteMeeting(
-//      @PathVariable("meetingId") final Long meetingId,
-//      @PathVariable("userId") final Long userId
-//  ) {
-//    meetingUserService.inviteMeeting(meetingId, userId);
-//  }
 
   @GetMapping("{meetingId}")
   @SwaggerOK(summary = "약속 초대용 hashedId 조회")
@@ -45,13 +36,6 @@ public class MeetingUserController {
     meetingUserService.acceptInvite(hashedId);
   }
 
-  @PatchMapping("{meetingId}/develop")
-  @ResponseStatus(HttpStatus.NO_CONTENT)
-  @SwaggerNoContent(summary = "약속 초대 수락(개발용)")
-  public void acceptInvite4Develop(@PathVariable("meetingId") final Long meetingId) {
-    meetingUserService.acceptInvite4Develop(meetingId);
-  }
-
   @PatchMapping("{meetingId}/time")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   @SwaggerNoContent(summary = "시간 수정")
@@ -60,5 +44,15 @@ public class MeetingUserController {
       @Valid @NotNull @RequestBody final List<RequestTimeSlotDto> timeSlotDtoList
   ) {
     meetingUserService.updateTimeSlot(timeSlotDtoList, meetingId);
+  }
+
+  @PatchMapping("v2/{meetingId}/time")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  @SwaggerNoContent(summary = "시간 수정 v2")
+  public void updateTimeSlot2(
+      @PathVariable("meetingId") final Long meetingId,
+      @Valid @NotNull @RequestParam List<LocalDateTime> timeList
+  ) {
+    meetingUserService.updateTimeSlot2(timeList, meetingId);
   }
 }
