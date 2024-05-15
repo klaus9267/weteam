@@ -7,7 +7,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 @Retention(RetentionPolicy.RUNTIME)
-@WithSecurityContext(factory = WithMockCustomUserSecurityContextFactory.class)
+@WithSecurityContext(factory = WithMockCustomUserImpl.class)
 public @interface WithMockCustomUser {
   String uid() default "uid is required";
 

@@ -21,9 +21,10 @@ class UserControllerTest extends BaseIntegrationTest {
 
   @Test
   @DisplayName("내 정보 조회")
-  @WithMockCustomUser
+//  @WithMockCustomUser
   void readMyInfo() throws Exception {
-    mockMvc.perform(get(END_POINT))
+    mockMvc.perform(get(END_POINT)
+            .header("Authorization", idToken))
         .andExpect(status().isOk())
         .andDo(print());
   }

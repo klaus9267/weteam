@@ -15,7 +15,7 @@ import java.util.Collection;
 import java.util.Collections;
 
 @RequiredArgsConstructor
-public class WithMockCustomUserSecurityContextFactory implements WithSecurityContextFactory<WithMockCustomUser> {
+public class WithMockCustomUserImpl implements WithSecurityContextFactory<WithMockCustomUser> {
   private final UserRepository userRepository;
 
   @Override
