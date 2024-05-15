@@ -6,8 +6,10 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import weteam.backend.domain.meeting.entity.Meeting;
 import weteam.backend.domain.project.dto.CreateProjectDto;
+import weteam.backend.domain.project.entity.BlackList;
 import weteam.backend.domain.project.entity.Project;
 import weteam.backend.domain.project.entity.ProjectUser;
+import weteam.backend.domain.project.repository.BlackListRepository;
 import weteam.backend.domain.project.repository.ProjectRepository;
 import weteam.backend.domain.user.UserRepository;
 import weteam.backend.domain.user.entity.User;
@@ -23,6 +25,7 @@ import java.util.Random;
 public class DataInitializer {
   private final UserRepository userRepository;
   private final ProjectRepository projectRepository;
+  private final BlackListRepository blackListRepository;
   List<User> users = new ArrayList<>();
   List<Project> projects = new ArrayList<>();
   List<Meeting> meetings = new ArrayList<>();
@@ -31,6 +34,7 @@ public class DataInitializer {
   public void setContext() {
     this.saveUsers();
     this.saveProjects();
+    this.saveBlackLists();
   }
 
   private void saveUsers() {
@@ -62,12 +66,30 @@ public class DataInitializer {
         for (ProjectUser projectUser : project.getProjectUserList()) ids.add(projectUser.getUser().getId());
         if (ids.contains(users.get(r).getId())) continue;
 
-        ProjectUser projectUser = new ProjectUser(null, null, true, users.get(r), project, null);
-        project.addProjectUser(projectUser);
+        project.addProjectUser(users.get(r));
       }
 
       projectList.add(project);
     }
     projects = projectRepository.saveAll(projectList);
+  }
+
+  @Transactional
+  private void saveBlackLists() {
+    List<BlackList> blackLists = new ArrayList<>();
+
+    A:
+    for (Project project : projects) {
+      Random random = new Random();
+      long n = random.nextLong(0, users.size());
+
+      for (BlackList blackList : project.getBlackLists()) {
+        if (blackList.getUser().getId().equals(n)) continue A;
+      }
+      BlackList blackList = BlackList.from(project, users.get((int) n));
+      blackLists.add(blackList);
+    }
+
+    blackListRepository.saveAll(blackLists);
   }
 }

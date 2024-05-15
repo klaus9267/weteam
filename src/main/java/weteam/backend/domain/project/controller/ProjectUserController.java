@@ -46,13 +46,6 @@ public class ProjectUserController {
     projectUserService.updateProjectRole(updateProjectRoleParam);
   }
 
-  @PatchMapping("{projectId}/develop")
-  @ResponseStatus(HttpStatus.NO_CONTENT)
-  @SwaggerNoContent(summary = "초대 수락(개발용)", description = "응답 없음")
-  public void acceptInvite4Develop(@PathVariable("projectId") final Long projectId) {
-    projectUserService.acceptInvite4Develop(projectId);
-  }
-
   @PatchMapping("{hashedProjectId}")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   @SwaggerNoContent(summary = "초대 수락", description = "응답 없음")

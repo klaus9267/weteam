@@ -26,7 +26,16 @@ public class BlackList {
     this.project = projectUser.getProject();
   }
 
+  private BlackList(final Project project, final User user) {
+    this.user = user;
+    this.project = project;
+  }
+
   public static BlackList from(final ProjectUser projectUser) {
     return new BlackList(projectUser);
+  }
+
+  public static BlackList from(final Project project, final User user) {
+    return new BlackList(project, user);
   }
 }

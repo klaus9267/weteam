@@ -9,9 +9,6 @@ import weteam.backend.application.handler.exception.CustomErrorCode;
 import weteam.backend.application.handler.exception.CustomException;
 import weteam.backend.domain.user.entity.User;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Entity(name = "project_users")
 @NoArgsConstructor
 @AllArgsConstructor
@@ -47,9 +44,11 @@ public class ProjectUser {
   }
 
   public void disable() {
-    if (!this.enable) {
-      throw new CustomException(CustomErrorCode.BAD_REQUEST, "이미 탈퇴한 프로젝트입니다.");
-    }
+    if (!this.enable) throw new CustomException(CustomErrorCode.BAD_REQUEST, "이미 탈퇴한 프로젝트입니다.");
     this.enable = false;
+  }
+
+  public void enable() {
+    this.enable = true;
   }
 }

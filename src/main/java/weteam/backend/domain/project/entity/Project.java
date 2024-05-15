@@ -47,7 +47,6 @@ public class Project extends BaseEntity {
 
   public Project(CreateProjectDto projectDto, User user) {
     ProjectUser projectUser = ProjectUser.from(user, this);
-
     this.name = projectDto.name();
     this.imageId = projectDto.imageId();
     this.explanation = projectDto.explanation();
@@ -82,12 +81,16 @@ public class Project extends BaseEntity {
     this.startedAt = projectDto.startedAt();
     this.explanation = projectDto.explanation() == null ? explanation : projectDto.explanation();
     this.endedAt = projectDto.endedAt();
-    if (this.done) {
-      this.done = false;
-    }
+    if (this.done) this.done = false;
   }
 
   public void addProjectUser(final User user) {
+    for (final ProjectUser projectUser : this.projectUserList) {
+      if (projectUser.getUser().equals(user)) {
+        projectUser.enable();
+        return;
+      }
+    }
     final ProjectUser projectUser = ProjectUser.from(this, user);
     this.getProjectUserList().add(projectUser);
   }
@@ -96,7 +99,8 @@ public class Project extends BaseEntity {
     this.hashedId = hashedId;
   }
 
-  public void kickUsers(final List<ProjectUser> projectUsers) {
-    this.projectUserList.removeAll(projectUsers);
+  public void addBlackList(final User user) {
+    final BlackList blackList = BlackList.from(this, user);
+    this.blackLists.add(blackList);
   }
 }
