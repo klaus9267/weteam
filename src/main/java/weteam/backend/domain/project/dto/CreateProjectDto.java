@@ -19,7 +19,7 @@ public record CreateProjectDto(
     
     @NotNull
     @Schema(example = "1L")
-    Integer imageId,
+    Long imageId,
     
     @NotNull(message = "endedAt is required")
     @Schema(example = "2023-12-24")

@@ -10,6 +10,7 @@ import weteam.backend.domain.alarm.Alarm;
 import weteam.backend.domain.meeting.entity.Meeting;
 import weteam.backend.domain.meeting.entity.MeetingUser;
 import weteam.backend.domain.profile.ProfileImage;
+import weteam.backend.domain.project.entity.BlackList;
 import weteam.backend.domain.project.entity.Project;
 import weteam.backend.domain.project.entity.ProjectUser;
 import weteam.backend.domain.user.dto.RequestUserDto;
@@ -53,18 +54,13 @@ public class User extends BaseEntity {
   private List<MeetingUser> meetingUserList = new ArrayList<>();
 
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+  private List<BlackList> blackLists = new ArrayList<>();
+
+  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
   private List<Alarm> alarms1 = new ArrayList<>();
 
   @OneToMany(mappedBy = "targetUser", cascade = CascadeType.ALL)
   private List<Alarm> alarms2 = new ArrayList<>();
-
-  private User(final Long id) {
-    this.id = id;
-  }
-
-  public static User from(final Long userId) {
-    return new User(userId);
-  }
 
   public static User from(final UserDto userDto) {
     return User.builder().id(userDto.id())

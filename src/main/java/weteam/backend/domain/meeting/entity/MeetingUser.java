@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import weteam.backend.domain.project.entity.ProjectUser;
 import weteam.backend.domain.user.entity.User;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,6 +34,9 @@ public class MeetingUser {
   @OneToMany(mappedBy = "meetingUser", cascade = CascadeType.ALL)
   private List<TimeSlot> timeSlotList = new ArrayList<>();
 
+  @OneToMany(mappedBy = "meetingUser", cascade = CascadeType.ALL)
+  private List<TimeSlot2> timeSlotList2 = new ArrayList<>();
+
   private MeetingUser(final User user, final Meeting meeting) {
     this.meeting = meeting;
     this.accept = true;
@@ -49,11 +53,16 @@ public class MeetingUser {
     return new MeetingUser(user, meeting);
   }
 
-  public static MeetingUser from(final Long userId, final Long meetingId) {
-    return new MeetingUser(User.from(userId), Meeting.from(meetingId));
+  public static MeetingUser from(final User user, final Long meetingId) {
+    return new MeetingUser(user, Meeting.from(meetingId));
   }
 
   public static List<MeetingUser> from(final List<ProjectUser> projectUserList, final Meeting meeting) {
     return projectUserList.stream().map(projectUser -> new MeetingUser(projectUser, meeting)).toList();
+  }
+
+  public void addTimes(final List<LocalDateTime> timeList) {
+    final List<TimeSlot2> timeSlot2List = TimeSlot2.from(timeList, this);
+    this.timeSlotList2.addAll(timeSlot2List);
   }
 }

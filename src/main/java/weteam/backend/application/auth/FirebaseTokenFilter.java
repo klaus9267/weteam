@@ -1,7 +1,6 @@
 package weteam.backend.application.auth;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseToken;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -13,7 +12,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 import weteam.backend.application.auth.user_detail.UserDetailCustomService;
 import weteam.backend.domain.user.entity.User;
@@ -27,31 +25,28 @@ import java.util.List;
 @Slf4j
 public class FirebaseTokenFilter extends OncePerRequestFilter {
   private final UserDetailCustomService userDetailCustomService;
-  private final FirebaseAuth firebaseAuth;
 
   @Override
   protected void doFilterInternal(final HttpServletRequest request, final HttpServletResponse response, final FilterChain filterChain) throws ServletException, IOException {
     final String header = request.getHeader("Authorization");
-    final String token = StringUtils.hasText(header) && header.startsWith("Bearer ") ? header.substring(7) : null;
 
-    if (token == null) {
-      filterChain.doFilter(request, response);
-    } else {
-      FirebaseToken decodedToken = null;
+    if (header != null && header.startsWith("Bearer ")) {
       try {
-        decodedToken = firebaseAuth.verifyIdToken(token);
-      } catch (FirebaseAuthException e) {
-        log.error("invalid token" + request.getRemoteAddr() + " | " + request.getMethod() + " | " + request.getRequestURI());
+        final String token = header.substring(7);
+        FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(token);
+
+        final User user = userDetailCustomService.loadUser(decodedToken);
+        final CustomUser4Log customUser = CustomUser4Log.from(user);
+
+        log.info("---------------- login : " + customUser + " | " + request.getMethod() + "|" + request.getRequestURI() + " --------------");
+        final UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user, null, List.of(new SimpleGrantedAuthority(UserRole.USER.getKey())));
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+      } catch (Exception e) {
+        log.error("token verification failed", e);
         log.error("--------------------");
       }
-      final User user = userDetailCustomService.loadUser(decodedToken);
-      final CustomUser4Log customUser = CustomUser4Log.from(user);
-
-      log.info("---------------- login : " + customUser + " | " + request.getMethod() + "|" + request.getRequestURI() + " --------------");
-      final UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user, null, List.of(new SimpleGrantedAuthority(UserRole.USER.getKey())));
-      SecurityContextHolder.getContext().setAuthentication(authentication);
-
-      filterChain.doFilter(request, response);
     }
+    filterChain.doFilter(request, response);
   }
 }

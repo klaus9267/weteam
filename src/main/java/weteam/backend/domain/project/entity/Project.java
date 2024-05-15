@@ -3,8 +3,6 @@ package weteam.backend.domain.project.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import weteam.backend.application.BaseEntity;
-import weteam.backend.application.handler.exception.CustomErrorCode;
-import weteam.backend.application.handler.exception.CustomException;
 import weteam.backend.domain.alarm.Alarm;
 import weteam.backend.domain.meeting.entity.Meeting;
 import weteam.backend.domain.project.dto.CreateProjectDto;
@@ -25,7 +23,7 @@ public class Project extends BaseEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
-  private Integer imageId;
+  private Long imageId;
   private String name, explanation, hashedId;
   private LocalDate startedAt, endedAt;
 
@@ -44,10 +42,11 @@ public class Project extends BaseEntity {
   @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
   private List<Meeting> meetingList = new ArrayList<>();
 
-  public Project(CreateProjectDto projectDto, Long userId) {
-    User user = User.from(userId);
-    ProjectUser projectUser = ProjectUser.from(user, this);
+  @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
+  private List<BlackList> blackLists = new ArrayList<>();
 
+  public Project(CreateProjectDto projectDto, User user) {
+    ProjectUser projectUser = ProjectUser.from(user, this);
     this.name = projectDto.name();
     this.imageId = projectDto.imageId();
     this.explanation = projectDto.explanation();
@@ -65,8 +64,8 @@ public class Project extends BaseEntity {
     return new Project(projectId);
   }
 
-  public static Project from(CreateProjectDto projectDto, Long userId) {
-    return new Project(projectDto, userId);
+  public static Project from(CreateProjectDto projectDto, User user) {
+    return new Project(projectDto, user);
   }
 
   public void updateDone() {
@@ -74,9 +73,6 @@ public class Project extends BaseEntity {
   }
 
   public void updateHost(final User newHost) {
-    if (this.host.equals(newHost)) {
-      throw new CustomException(CustomErrorCode.BAD_REQUEST, "이미 호스트로 진행중인 프로젝트입니다.");
-    }
     this.host = newHost;
   }
 
@@ -85,27 +81,26 @@ public class Project extends BaseEntity {
     this.startedAt = projectDto.startedAt();
     this.explanation = projectDto.explanation() == null ? explanation : projectDto.explanation();
     this.endedAt = projectDto.endedAt();
-    if (this.done) {
-      this.done = false;
-    }
+    if (this.done) this.done = false;
   }
 
-  public void addProjectUser(final ProjectUser newProjectUser) {
-    final Long currentUserId = newProjectUser.getUser().getId();
-
-    for (ProjectUser projectUser : this.projectUserList) {
-      if (projectUser.getUser().getId().equals(currentUserId)) {
-        throw new CustomException(CustomErrorCode.BAD_REQUEST, "이미 수락한 팀플입니다.");
+  public void addProjectUser(final User user) {
+    for (final ProjectUser projectUser : this.projectUserList) {
+      if (projectUser.getUser().equals(user)) {
+        projectUser.enable();
+        return;
       }
     }
-    this.getProjectUserList().add(newProjectUser);
+    final ProjectUser projectUser = ProjectUser.from(this, user);
+    this.getProjectUserList().add(projectUser);
   }
 
   public void addHashedId(final String hashedId) {
     this.hashedId = hashedId;
   }
 
-  public void kickUsers(final List<ProjectUser> projectUsers) {
-    this.projectUserList.removeAll(projectUsers);
+  public void addBlackList(final User user) {
+    final BlackList blackList = BlackList.from(this, user);
+    this.blackLists.add(blackList);
   }
 }

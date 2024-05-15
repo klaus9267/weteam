@@ -9,9 +9,11 @@ import weteam.backend.application.handler.exception.CustomException;
 import weteam.backend.domain.alarm.AlarmService;
 import weteam.backend.domain.alarm.AlarmStatus;
 import weteam.backend.domain.project.dto.ProjectUserDto;
+import weteam.backend.domain.project.entity.BlackList;
 import weteam.backend.domain.project.entity.Project;
 import weteam.backend.domain.project.entity.ProjectUser;
 import weteam.backend.domain.project.param.UpdateProjectRoleParam;
+import weteam.backend.domain.project.repository.BlackListRepository;
 import weteam.backend.domain.project.repository.ProjectRepository;
 import weteam.backend.domain.project.repository.ProjectUserRepository;
 import weteam.backend.domain.user.entity.User;
@@ -24,6 +26,7 @@ import java.util.List;
 public class ProjectUserService {
   private final ProjectUserRepository projectUserRepository;
   private final ProjectRepository projectRepository;
+  private final BlackListRepository blackListRepository;
   private final AlarmService alarmService;
   private final SecurityUtil securityUtil;
 
@@ -36,19 +39,13 @@ public class ProjectUserService {
   }
 
   @Transactional
-  public void acceptInvite4Develop(final Long projectId) {
-    final Project project = projectRepository.findById(projectId).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND_PROJECT));
-    final ProjectUser projectUser = ProjectUser.from(project, securityUtil.getId());
-    project.addProjectUser(projectUser);
-    alarmService.addListWithTargetUser(projectUser.getProject(), AlarmStatus.JOIN, securityUtil.getCurrentUser());
-  }
-
-  @Transactional
   public void acceptInvite(final String hashedProjectId) {
     final Project project = projectRepository.findByHashedId(hashedProjectId).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND_PROJECT));
-    final ProjectUser projectUser = ProjectUser.from(project, securityUtil.getId());
-    project.addProjectUser(projectUser);
-    alarmService.addListWithTargetUser(projectUser.getProject(), AlarmStatus.JOIN, securityUtil.getCurrentUser());
+    if (blackListRepository.existsByUserIdAndProjectId(securityUtil.getId(), project.getId())) {
+      throw new CustomException(CustomErrorCode.BAD_REQUEST, "해당 방에 입장할 수 없습니다.");
+    }
+    project.addProjectUser(securityUtil.getCurrentUser());
+    alarmService.addListWithTargetUser(project, AlarmStatus.JOIN, securityUtil.getCurrentUser());
   }
 
   @Transactional
@@ -66,16 +63,21 @@ public class ProjectUserService {
   @Transactional
   public void kickUsers(final List<Long> projectUserIdList) {
     final Project project = projectRepository.findByProjectUserListIdIn(projectUserIdList).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND_PROJECT));
-    if (!project.getHost().getId().equals(securityUtil.getId())) {
-      throw new CustomException(CustomErrorCode.INVALID_HOST);
-    }
-    projectUserRepository.deleteAllById(projectUserIdList);
+    if (!project.getHost().getId().equals(securityUtil.getId())) throw new CustomException(CustomErrorCode.INVALID_HOST);
 
+    final List<BlackList> blackLists = new ArrayList<>();
     final List<User> userList = new ArrayList<>();
+
     for (final ProjectUser projectUser : project.getProjectUserList()) {
-      final User user = projectUser.getUser();
-      if (projectUserIdList.contains(user.getId())) userList.add(user);
+      if (projectUserIdList.contains(projectUser.getId())) {
+        blackLists.add(BlackList.from(projectUser));
+        userList.add(projectUser.getUser());
+      }
     }
+
+    projectUserRepository.deleteAllById(projectUserIdList);
+    blackListRepository.saveAll(blackLists);
+
     alarmService.addListWithTargetUserList(project, AlarmStatus.KICK, userList);
   }
 

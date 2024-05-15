@@ -10,6 +10,7 @@ import weteam.backend.application.handler.exception.CustomErrorCode;
 import weteam.backend.application.handler.exception.CustomException;
 import weteam.backend.domain.alarm.AlarmService;
 import weteam.backend.domain.alarm.AlarmStatus;
+import weteam.backend.domain.common.HashUtil;
 import weteam.backend.domain.common.pagination.param.ProjectPaginationParam;
 import weteam.backend.domain.project.dto.CreateProjectDto;
 import weteam.backend.domain.project.dto.ProjectDto;
@@ -20,11 +21,7 @@ import weteam.backend.domain.project.repository.ProjectRepository;
 import weteam.backend.domain.user.UserRepository;
 import weteam.backend.domain.user.entity.User;
 
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.time.LocalDate;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -40,26 +37,11 @@ public class ProjectService {
       throw new CustomException(CustomErrorCode.DUPLICATE);
     }
 
-    final Project project = Project.from(projectDto, securityUtil.getId());
+    final Project project = Project.from(projectDto, securityUtil.getCurrentUser());
     Project addedProject = projectRepository.save(project);
 
-    try {
-      MessageDigest digest = MessageDigest.getInstance("MD5");
-      byte[] encodedHash = digest.digest(Long.toString(addedProject.getId()).getBytes(StandardCharsets.UTF_8));
-
-      StringBuilder hexString = new StringBuilder(2 * encodedHash.length);
-      for (byte b : encodedHash) {
-        String hex = Integer.toHexString(0xff & b);
-        if (hex.length() == 1) {
-          hexString.append('0');
-        }
-        hexString.append(hex);
-      }
-
-      addedProject.addHashedId(hexString.toString());
-    } catch (NoSuchAlgorithmException e) {
-      throw new CustomException(CustomErrorCode.BAD_REQUEST, e.getMessage());
-    }
+    final String hashedId = HashUtil.hashId(addedProject.getId());
+    addedProject.addHashedId(hashedId);
   }
 
   private Project findProjectByIdAndUserId(final Long projectId) {
@@ -116,9 +98,6 @@ public class ProjectService {
   @Transactional
   public void checkProject() {
     final LocalDate now = LocalDate.now();
-    List<Project> projectList = projectRepository.findAllByDoneAndEndedAtBefore(false, now);
-    for (Project project : projectList) {
-      project.updateDone();
-    }
+    projectRepository.findAllByDoneAndEndedAtBefore(false, now).forEach(Project::updateDone);
   }
 }

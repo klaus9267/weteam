@@ -12,8 +12,10 @@ import weteam.backend.domain.meeting.entity.MeetingUser;
 import weteam.backend.domain.meeting.entity.TimeSlot;
 import weteam.backend.domain.meeting.repository.MeetingRepository;
 import weteam.backend.domain.meeting.repository.MeetingUserRepository;
+import weteam.backend.domain.meeting.repository.TimeSlot2Repository;
 import weteam.backend.domain.meeting.repository.TimeSlotRepository;
 
+import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 
@@ -23,6 +25,7 @@ public class MeetingUserService {
   private final MeetingUserRepository meetingUserRepository;
   private final MeetingRepository meetingRepository;
   private final TimeSlotRepository timeSlotRepository;
+  private final TimeSlot2Repository timeSlot2Repository;
   private final SecurityUtil securityUtil;
 
   @Transactional
@@ -34,15 +37,7 @@ public class MeetingUserService {
   @Transactional
   public void acceptInvite(final String hashedId) {
     final Meeting meeting = meetingRepository.findByHashedId(hashedId).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND_MEETING));
-    final MeetingUser meetingUser = MeetingUser.from(securityUtil.getId(), meeting.getId());
-    meeting.addMeetingUser(meetingUser);
-  }
-
-  @Transactional
-  public void acceptInvite4Develop(final Long meetingId) {
-    final Meeting meeting = meetingRepository.findById(meetingId).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND_MEETING));
-    final MeetingUser meetingUser = MeetingUser.from(securityUtil.getId(), meeting.getId());
-    meeting.addMeetingUser(meetingUser);
+    meeting.addMeetingUser(securityUtil.getCurrentUser());
   }
 
   @Transactional
@@ -50,9 +45,16 @@ public class MeetingUserService {
     this.validateTimeSlot(timeSlotDtoList);
     final MeetingUser meetingUser = meetingUserRepository.findByMeetingIdAndUserId(meetingId, securityUtil.getId()).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND));
     final List<TimeSlot> timeSlotList = TimeSlot.from(timeSlotDtoList, meetingUser);
-    System.out.println(validaAllChecked(meetingUser.getMeeting()));
+
     timeSlotRepository.deleteAllByMeetingUser(meetingUser);
     timeSlotRepository.saveAll(timeSlotList);
+  }
+
+  @Transactional
+  public void updateTimeSlot2(final List<LocalDateTime> timeList, final Long meetingId) {
+    final MeetingUser meetingUser = meetingUserRepository.findByMeetingIdAndUserId(meetingId, securityUtil.getId()).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND));
+    timeSlot2Repository.deleteAllByMeetingUserId(meetingUser.getId());
+    meetingUser.addTimes(timeList);
   }
 
   private void validateTimeSlot(final List<RequestTimeSlotDto> timeSlotDtoList) {

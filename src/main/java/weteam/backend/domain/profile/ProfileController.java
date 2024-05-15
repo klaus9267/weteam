@@ -18,13 +18,13 @@ public class ProfileController {
     @SwaggerCreated(summary = "프로필 사진 생성")
     @ResponseStatus(HttpStatus.CREATED)
     public void addProfileImage(@PathVariable("imageIdx") final Long imageIdx) {
-        profileService.addOne(imageIdx);
+        profileService.addProfile(imageIdx);
     }
 
     @PatchMapping("{imageIdx}")
     @SwaggerNoContent(summary = "프로필 사진 변경")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateProfileImage(@PathVariable("imageIdx") final Long imageIdx) {
-        profileService.updateOne(imageIdx);
+        profileService.updateProfile(imageIdx);
     }
 }

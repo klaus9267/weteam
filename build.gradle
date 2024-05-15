@@ -34,6 +34,7 @@ dependencies {
     implementation 'com.slack.api:slack-api-client:1.38.0'
     implementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: '2.2.0'
     implementation group: 'org.mariadb.jdbc', name: 'mariadb-java-client', version: '2.7.3'
+    implementation 'org.apache.httpcomponents.client5:httpclient5:5.1'
 
     compileOnly 'org.projectlombok:lombok'
     testRuntimeOnly 'com.h2database:h2'

@@ -12,11 +12,8 @@ import weteam.backend.application.auth.SecurityUtil;
 import weteam.backend.domain.common.swagger.SwaggerNoContent;
 import weteam.backend.domain.common.swagger.SwaggerOK;
 import weteam.backend.domain.user.dto.RequestUserDto;
-import weteam.backend.domain.user.dto.UserDto;
 import weteam.backend.domain.user.dto.UserWithProfileImageDto;
 import weteam.backend.domain.user.entity.User;
-
-import java.util.List;
 
 @RestController
 @Validated
@@ -27,16 +24,9 @@ public class UserController {
   private final UserService userService;
   private final SecurityUtil securityUtil;
 
-  @GetMapping("all")
-  @SwaggerOK(summary = "모든 사용자 조회(개발용)")
-  public ResponseEntity<List<UserDto>> readAll() {
-    final List<UserDto> userDtoList = userService.findAll();
-    return ResponseEntity.ok(userDtoList);
-  }
-
   @GetMapping("{id}")
   @SwaggerOK(summary = "다른 사용자 조회")
-  public ResponseEntity<UserWithProfileImageDto> readUser(@PathVariable("id") final Long id) {
+  public ResponseEntity<UserWithProfileImageDto> readOtherInfo(@PathVariable("id") final Long id) {
     final UserWithProfileImageDto user = userService.findOneById(id);
     return ResponseEntity.ok(user);
   }
@@ -59,11 +49,11 @@ public class UserController {
   @PatchMapping
   @Operation(summary = "사용자 정보 변경", description = "응답 없음")
   @ResponseStatus(HttpStatus.NO_CONTENT)
-  public void changeOrganization(@RequestBody @Valid final RequestUserDto requestUserDto) {
+  public void updateUser(@RequestBody @Valid final RequestUserDto requestUserDto) {
     userService.updateUser(requestUserDto);
   }
 
-  @PatchMapping("logout/{userId}")
+  @PatchMapping("logout")
   @Operation(summary = "로그아웃", description = "응답 없음")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   public void logout() {
@@ -71,16 +61,9 @@ public class UserController {
   }
 
   @DeleteMapping
-  @SwaggerNoContent(summary = "사용자 탈퇴", description = "이거는 토큰 없어도 됨 :)")
+  @SwaggerNoContent(summary = "사용자 탈퇴")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   public void deleteUser() {
-    userService.deleteOne();
-  }
-
-  @DeleteMapping("{userId}")
-  @SwaggerNoContent(summary = "긴급탈출!!!!!!")
-  @ResponseStatus(HttpStatus.NO_CONTENT)
-  public void deleteOtherUser(@PathVariable("userId") final Long userId) {
     userService.deleteOne();
   }
 }
