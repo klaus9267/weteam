@@ -2,7 +2,6 @@ package weteam.backend.domain.meeting.dto.meeting_user;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import weteam.backend.domain.meeting.dto.time_slot.TimeSlotDto;
 import weteam.backend.domain.meeting.entity.MeetingUser;
 import weteam.backend.domain.user.dto.UserWithProfileImageDto;
 
@@ -11,18 +10,20 @@ import java.util.stream.Collectors;
 
 @Getter
 @RequiredArgsConstructor
-public class MeetingUserDto {
+public class MeetingUserDtoV2 {
   private final Long id;
   private final UserWithProfileImageDto user;
-  private final List<TimeSlotDto> timeSlotList;
 
-  private MeetingUserDto(final MeetingUser meetingUser) {
+  private MeetingUserDtoV2(final MeetingUser meetingUser) {
     this.id = meetingUser.getId();
     this.user = UserWithProfileImageDto.from(meetingUser.getUser());
-    this.timeSlotList = TimeSlotDto.from(meetingUser.getTimeSlotList());
   }
 
-  public static List<MeetingUserDto> from(final List<MeetingUser> meetingUser) {
-    return meetingUser.stream().map(MeetingUserDto::new).collect(Collectors.toList());
+  public static List<MeetingUserDtoV2> from(final List<MeetingUser> meetingUser) {
+    return meetingUser.stream().map(MeetingUserDtoV2::new).collect(Collectors.toList());
+  }
+
+  public static MeetingUserDtoV2 from(final MeetingUser meetingUser) {
+    return new MeetingUserDtoV2(meetingUser);
   }
 }

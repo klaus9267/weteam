@@ -49,7 +49,7 @@ public class ProjectService {
   }
 
   public ProjectPaginationDto findListWithPagination(final ProjectPaginationParam paginationParam) {
-    final Page<Project> projectPage = projectRepository.findAllByUserIdAndDone(paginationParam.toPageable(), paginationParam.getUserId(), paginationParam.isDone());
+    final Page<Project> projectPage = projectRepository.findAllByUserIdAndIsDone(paginationParam.toPageable(), paginationParam.getUserId(), paginationParam.isDone());
     return ProjectPaginationDto.from(projectPage);
   }
 
@@ -98,6 +98,6 @@ public class ProjectService {
   @Transactional
   public void checkProject() {
     final LocalDate now = LocalDate.now();
-    projectRepository.findAllByDoneAndEndedAtBefore(false, now).forEach(Project::updateDone);
+    projectRepository.findAllByIsDoneAndEndedAtBefore(false, now).forEach(Project::updateDone);
   }
 }

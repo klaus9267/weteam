@@ -12,22 +12,23 @@ import java.util.Optional;
 
 public interface MeetingRepository extends JpaRepository<Meeting, Long> {
   @Query("""
-         SELECT m
-         FROM meetings m
-            LEFT JOIN FETCH meeting_users mu ON mu.meeting.id = m.id
-         WHERE m.id = :meetingId
-            AND mu.user.id = :userId
-            AND mu.accept = true
-         """)
+      SELECT m
+      FROM meetings m
+         LEFT JOIN FETCH meeting_users mu ON mu.meeting.id = m.id
+      WHERE m.id = :meetingId
+         AND mu.user.id = :userId
+         AND mu.isAccept = true
+      """)
   Optional<Meeting> findByIdAndUserId(final Long meetingId, final Long userId);
-  
+
   @Query("""
-         SELECT m
-         FROM meetings m
-              LEFT JOIN FETCH meeting_users mu ON mu.meeting.id = m.id
-         WHERE mu.user.id = :userId
-            AND mu.accept = true
-         """)
+      SELECT m
+      FROM meetings m
+           LEFT JOIN FETCH meeting_users mu ON mu.meeting.id = m.id
+      WHERE mu.user.id = :userId
+         AND mu.isAccept = true
+         AND mu.isDisplayed = true
+      """)
   Page<Meeting> findAllByUserId(final Pageable pageable, final Long userId);
 
   @Lock(LockModeType.PESSIMISTIC_WRITE)

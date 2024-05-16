@@ -23,7 +23,7 @@ public class ProjectUser {
   private String role;
 
   @Column(columnDefinition = "boolean default true")
-  private boolean enable;
+  private boolean isEnable;
 
   @ManyToOne(fetch = FetchType.LAZY)
   private User user;
@@ -32,11 +32,11 @@ public class ProjectUser {
   private Project project;
 
   public static ProjectUser from(final User user, final Project project) {
-    return ProjectUser.builder().user(user).project(project).enable(true).build();
+    return ProjectUser.builder().user(user).project(project).isEnable(true).build();
   }
 
   public static ProjectUser from(final Project project, final User user) {
-    return ProjectUser.builder().project(project).user(user).enable(true).build();
+    return ProjectUser.builder().project(project).user(user).isEnable(true).build();
   }
 
   public void updateRole(final String role) {
@@ -44,11 +44,11 @@ public class ProjectUser {
   }
 
   public void disable() {
-    if (!this.enable) throw new CustomException(CustomErrorCode.BAD_REQUEST, "이미 탈퇴한 프로젝트입니다.");
-    this.enable = false;
+    if (!this.isEnable) throw new CustomException(CustomErrorCode.BAD_REQUEST, "이미 탈퇴한 프로젝트입니다.");
+    this.isEnable = false;
   }
 
   public void enable() {
-    this.enable = true;
+    this.isEnable = true;
   }
 }

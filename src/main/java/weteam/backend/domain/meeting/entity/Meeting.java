@@ -102,4 +102,8 @@ public class Meeting extends BaseEntity {
     final MeetingUser meetingUser = MeetingUser.from(user, this);
     this.meetingUserList.add(meetingUser);
   }
+
+  public void done() {
+    this.isDone = true;
+  }
 }

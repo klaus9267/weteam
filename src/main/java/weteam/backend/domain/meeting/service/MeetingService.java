@@ -13,11 +13,14 @@ import weteam.backend.domain.common.HashUtil;
 import weteam.backend.domain.common.pagination.param.MeetingPaginationParam;
 import weteam.backend.domain.meeting.dto.meeting.*;
 import weteam.backend.domain.meeting.entity.Meeting;
+import weteam.backend.domain.meeting.entity.MeetingUser;
+import weteam.backend.domain.meeting.entity.TimeSlot2;
 import weteam.backend.domain.meeting.repository.MeetingRepository;
 import weteam.backend.domain.project.entity.Project;
 import weteam.backend.domain.project.repository.ProjectRepository;
 
-import java.util.Optional;
+import java.time.LocalDateTime;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -27,9 +30,23 @@ public class MeetingService {
   private final ProjectRepository projectRepository;
   private final SecurityUtil securityUtil;
 
-  public MeetingDetailDto readOne(final Long meetingId) {
+  public MeetingDetailDto readMeetingDetailDto(final Long meetingId) {
     final Meeting meeting = meetingRepository.findByIdAndUserId(meetingId, securityUtil.getId()).orElseThrow(CustomException.notFound(CustomErrorCode.NOT_FOUND_MEETING));
     return MeetingDetailDto.from(meeting);
+  }
+
+  public MeetingDetailDtoV2 readMeetingDetailDtoV2(final Long meetingId) {
+    final Meeting meeting = meetingRepository.findByIdAndUserId(meetingId, securityUtil.getId()).orElseThrow(CustomException.notFound(CustomErrorCode.NOT_FOUND_MEETING));
+    Map<LocalDateTime, List<String>> timeMap = new HashMap<>();
+
+    for (final MeetingUser meetingUser : meeting.getMeetingUserList()) {
+      if (meetingUser.getTimeSlotList2().isEmpty()) continue;
+      for (final TimeSlot2 timeSlot2 : meetingUser.getTimeSlotList2()) {
+        timeMap.computeIfAbsent(timeSlot2.getTime(), list -> new ArrayList<>()).add(meetingUser.getUser().getUsername());
+      }
+    }
+
+    return MeetingDetailDtoV2.from(meeting, timeMap);
   }
 
   public MeetingPaginationDto readListWithPagination(final MeetingPaginationParam paginationParam) {
@@ -38,7 +55,7 @@ public class MeetingService {
   }
 
   @Transactional
-  public MeetingDto addOne(final CreateMeetingDto meetingDto) {
+  public MeetingDto addMeeting(final CreateMeetingDto meetingDto) {
     final Optional<Project> project = meetingDto.projectId() != null ? projectRepository.findById(meetingDto.projectId()) : Optional.empty();
     final Meeting meeting = project.map(p -> Meeting.from(meetingDto, securityUtil.getCurrentUser(), p))
         .orElseGet(() -> Meeting.from(meetingDto, securityUtil.getCurrentUser()));
@@ -53,7 +70,7 @@ public class MeetingService {
   }
 
   @Transactional
-  public void updateOne(final UpdateMeetingDto meetingDto, final Long meetingId) {
+  public void updateMeeting(final UpdateMeetingDto meetingDto, final Long meetingId) {
     Meeting meeting = meetingRepository.findById(meetingId).orElseThrow(CustomException.notFound(CustomErrorCode.NOT_FOUND_MEETING));
     if (!meeting.getHost().getId().equals(securityUtil.getId())) {
       throw new CustomException(CustomErrorCode.INVALID_HOST);
@@ -68,7 +85,7 @@ public class MeetingService {
   }
 
   @Transactional
-  public void deleteOne(final Long meetingId) {
+  public void deleteMeeting(final Long meetingId) {
     final Meeting meeting = meetingRepository.findById(meetingId).orElseThrow(CustomException.notFound(CustomErrorCode.NOT_FOUND_MEETING));
     if (!meeting.getHost().getId().equals(securityUtil.getId())) {
       throw new CustomException(CustomErrorCode.INVALID_HOST);

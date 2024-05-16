@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import weteam.backend.domain.project.entity.Project;
 import weteam.backend.domain.user.entity.User;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
