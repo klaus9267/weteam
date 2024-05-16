@@ -28,7 +28,7 @@ public class User extends BaseEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
-  private String username, organization, uid, email, deviceToken;
+  private String username, organization, uid, email, deviceToken, introduction;
 
   @Column(columnDefinition = "boolean default false")
   private boolean isLogin;
@@ -74,6 +74,7 @@ public class User extends BaseEntity {
   public void updateUser(final RequestUserDto userDto) {
     this.organization = userDto.organization();
     this.username = userDto.username();
+    this.introduction = userDto.introduction();
   }
 
   public void updateDevice(final String deviceToken) {
