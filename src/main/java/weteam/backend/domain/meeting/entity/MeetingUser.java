@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import weteam.backend.domain.meeting.dto.time_slot.RequestTimeSlotDto;
 import weteam.backend.domain.meeting.dto.time_slot.RequestTimeSlotDtoV2;
 import weteam.backend.domain.user.entity.User;
 
@@ -32,10 +33,10 @@ public class MeetingUser {
   @ManyToOne(fetch = FetchType.LAZY)
   private User user;
 
-  @OneToMany(mappedBy = "meetingUser", cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "meetingUser", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<TimeSlot> timeSlotList = new ArrayList<>();
 
-  @OneToMany(mappedBy = "meetingUser", cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "meetingUser", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<TimeSlot2> timeSlotList2 = new ArrayList<>();
 
   private MeetingUser(final User user, final Meeting meeting) {
@@ -49,7 +50,13 @@ public class MeetingUser {
     return new MeetingUser(user, meeting);
   }
 
-  public void updateTimeSlots(final RequestTimeSlotDtoV2 timeSlotDtoV2) {
+  public void updateTimeSlots(final List<RequestTimeSlotDto> timeSlotDtoList) {
+    final List<TimeSlot> timeSlot2List = TimeSlot.from(timeSlotDtoList, this);
+    this.timeSlotList.clear();
+    this.timeSlotList.addAll(timeSlot2List);
+  }
+
+  public void updateTimeSlotsV2(final RequestTimeSlotDtoV2 timeSlotDtoV2) {
     final List<TimeSlot2> timeSlot2List = TimeSlot2.from(timeSlotDtoV2, this);
     this.timeSlotList2.clear();
     this.timeSlotList2.addAll(timeSlot2List);

@@ -7,6 +7,7 @@ public record UserDto(
     Long id,
     String username,
     String email,
+    String introduction,
     String deviceToken,
     String organization,
     String uid,
@@ -14,6 +15,15 @@ public record UserDto(
     boolean receivePermission
 ) {
   public static UserDto from(final User user) {
-    return new UserDto(user.getId(), user.getUsername(), user.getEmail(), user.getDeviceToken(), user.getOrganization(), user.getUid(), user.getRole(), user.isReceivePermission());
+    return new UserDto(user.getId(),
+        user.getUsername(),
+        user.getEmail(),
+        user.getIntroduction(),
+        user.getDeviceToken(),
+        user.getOrganization(),
+        user.getUid(),
+        user.getRole(),
+        user.isReceivePermission()
+    );
   }
 }

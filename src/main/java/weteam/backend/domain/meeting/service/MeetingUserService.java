@@ -10,7 +10,6 @@ import weteam.backend.domain.meeting.dto.time_slot.RequestTimeSlotDto;
 import weteam.backend.domain.meeting.dto.time_slot.RequestTimeSlotDtoV2;
 import weteam.backend.domain.meeting.entity.Meeting;
 import weteam.backend.domain.meeting.entity.MeetingUser;
-import weteam.backend.domain.meeting.entity.TimeSlot;
 import weteam.backend.domain.meeting.repository.MeetingRepository;
 import weteam.backend.domain.meeting.repository.MeetingUserRepository;
 import weteam.backend.domain.meeting.repository.TimeSlot2Repository;
@@ -44,18 +43,15 @@ public class MeetingUserService {
   public void updateTimeSlot(final List<RequestTimeSlotDto> timeSlotDtoList, final Long meetingId) {
     this.validateTimeSlot(timeSlotDtoList);
     final MeetingUser meetingUser = meetingUserRepository.findByMeetingIdAndUserId(meetingId, securityUtil.getId()).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND));
-    final List<TimeSlot> timeSlotList = TimeSlot.from(timeSlotDtoList, meetingUser);
-
-    timeSlotRepository.deleteAllByMeetingUser(meetingUser);
-    timeSlotRepository.saveAll(timeSlotList);
+    meetingUser.updateTimeSlots(timeSlotDtoList);
+    this.verifyAllChecked(meetingUser.getMeeting());
   }
 
   @Transactional
   public void updateTimeSlotV2(final RequestTimeSlotDtoV2 timeSlotDtoV2, final Long meetingId) {
     final MeetingUser meetingUser = meetingUserRepository.findByMeetingIdAndUserId(meetingId, securityUtil.getId()).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND));
-    timeSlot2Repository.deleteAllByMeetingUserId(meetingUser.getId());
-    meetingUser.updateTimeSlots(timeSlotDtoV2);
-    this.verifyAllChecked(meetingUser.getMeeting());
+    meetingUser.updateTimeSlotsV2(timeSlotDtoV2);
+    this.verifyAllCheckedV2(meetingUser.getMeeting());
   }
 
   @Transactional
@@ -75,8 +71,14 @@ public class MeetingUserService {
   }
 
   @Transactional
-  private void verifyAllChecked(final Meeting meeting) {
+  private void verifyAllCheckedV2(final Meeting meeting) {
     final long count = meeting.getMeetingUserList().stream().filter(meetingUser -> meetingUser.getTimeSlotList2().isEmpty()).count();
+    if (count == 0) meeting.done();
+  }
+
+  @Transactional
+  private void verifyAllChecked(final Meeting meeting) {
+    final long count = meeting.getMeetingUserList().stream().filter(meetingUser -> meetingUser.getTimeSlotList().isEmpty()).count();
     if (count == 0) meeting.done();
   }
 }
