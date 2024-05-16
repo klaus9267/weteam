@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import weteam.backend.domain.meeting.dto.time_slot.RequestTimeSlotDtoV2;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -28,7 +29,7 @@ public class TimeSlot2 {
     this.meetingUser = meetingUser;
   }
 
-  public static List<TimeSlot2> from(final List<LocalDateTime> timeList, final MeetingUser meetingUser) {
-    return timeList.stream().map(time -> new TimeSlot2(time, meetingUser)).toList();
+  public static List<TimeSlot2> from(final RequestTimeSlotDtoV2 timeSlotDtoV2, final MeetingUser meetingUser) {
+    return timeSlotDtoV2.timeList().stream().map(time -> new TimeSlot2(time, meetingUser)).toList();
   }
 }

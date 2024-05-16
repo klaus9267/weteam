@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.*;
 import weteam.backend.domain.common.swagger.SwaggerNoContent;
 import weteam.backend.domain.common.swagger.SwaggerOK;
 import weteam.backend.domain.meeting.dto.time_slot.RequestTimeSlotDto;
+import weteam.backend.domain.meeting.dto.time_slot.RequestTimeSlotDtoV2;
 import weteam.backend.domain.meeting.service.MeetingUserService;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -46,13 +46,20 @@ public class MeetingUserController {
     meetingUserService.updateTimeSlot(timeSlotDtoList, meetingId);
   }
 
+  @PatchMapping("{meetingId}/quit")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  @SwaggerNoContent(summary = "약속 나가기(목록 조회시 제외 기능)")
+  public void quitMeeting(@PathVariable("meetingId") final Long meetingId) {
+    meetingUserService.quitMeeting(meetingId);
+  }
+
   @PatchMapping("v2/{meetingId}/time")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   @SwaggerNoContent(summary = "시간 수정 v2")
-  public void updateTimeSlot2(
+  public void updateTimeSlotV2(
       @PathVariable("meetingId") final Long meetingId,
-      @Valid @NotNull @RequestParam List<LocalDateTime> timeList
+      @Valid @NotNull @RequestBody final RequestTimeSlotDtoV2 timeList
   ) {
-    meetingUserService.updateTimeSlot2(timeList, meetingId);
+    meetingUserService.updateTimeSlotV2(timeList, meetingId);
   }
 }

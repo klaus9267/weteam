@@ -5,10 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import weteam.backend.domain.project.entity.ProjectUser;
+import weteam.backend.domain.meeting.dto.time_slot.RequestTimeSlotDtoV2;
 import weteam.backend.domain.user.entity.User;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,7 +22,9 @@ public class MeetingUser {
   private Long id;
 
   @Column(columnDefinition = "boolean default false")
-  private boolean accept;
+  private boolean isAccept;
+
+  private boolean isDisplayed;
 
   @ManyToOne(fetch = FetchType.LAZY)
   private Meeting meeting;
@@ -39,30 +40,22 @@ public class MeetingUser {
 
   private MeetingUser(final User user, final Meeting meeting) {
     this.meeting = meeting;
-    this.accept = true;
+    this.isAccept = true;
+    this.isDisplayed = true;
     this.user = user;
-  }
-
-  private MeetingUser(final ProjectUser projectUser, final Meeting meeting) {
-    this.user = projectUser.getUser();
-    this.accept = false;
-    this.meeting = meeting;
   }
 
   public static MeetingUser from(final User user, final Meeting meeting) {
     return new MeetingUser(user, meeting);
   }
 
-  public static MeetingUser from(final User user, final Long meetingId) {
-    return new MeetingUser(user, Meeting.from(meetingId));
-  }
-
-  public static List<MeetingUser> from(final List<ProjectUser> projectUserList, final Meeting meeting) {
-    return projectUserList.stream().map(projectUser -> new MeetingUser(projectUser, meeting)).toList();
-  }
-
-  public void addTimes(final List<LocalDateTime> timeList) {
-    final List<TimeSlot2> timeSlot2List = TimeSlot2.from(timeList, this);
+  public void updateTimeSlots(final RequestTimeSlotDtoV2 timeSlotDtoV2) {
+    final List<TimeSlot2> timeSlot2List = TimeSlot2.from(timeSlotDtoV2, this);
+    this.timeSlotList2.clear();
     this.timeSlotList2.addAll(timeSlot2List);
+  }
+
+  public void quit() {
+    this.isDisplayed = false;
   }
 }

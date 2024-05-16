@@ -7,3 +7,9 @@ spring:
   jackson:
     serialization:
       indent-output: true
+
+spring-doc:
+  swagger-ui:
+    tags-sorter: alpha
+    operations-sorter : method
+    doc-expansion : none

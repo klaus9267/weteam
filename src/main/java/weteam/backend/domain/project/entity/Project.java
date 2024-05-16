@@ -28,7 +28,7 @@ public class Project extends BaseEntity {
   private LocalDate startedAt, endedAt;
 
   @Column(columnDefinition = "boolean default false")
-  private boolean done;
+  private boolean isDone;
 
   @ManyToOne(fetch = FetchType.LAZY)
   private User host;
@@ -69,7 +69,7 @@ public class Project extends BaseEntity {
   }
 
   public void updateDone() {
-    this.done = !this.isDone();
+    this.isDone = !this.isDone();
   }
 
   public void updateHost(final User newHost) {
@@ -81,7 +81,7 @@ public class Project extends BaseEntity {
     this.startedAt = projectDto.startedAt();
     this.explanation = projectDto.explanation() == null ? explanation : projectDto.explanation();
     this.endedAt = projectDto.endedAt();
-    if (this.done) this.done = false;
+    if (this.isDone) this.isDone = false;
   }
 
   public void addProjectUser(final User user) {

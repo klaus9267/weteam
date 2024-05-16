@@ -20,14 +20,14 @@ import weteam.backend.domain.meeting.service.MeetingService;
 @Tag(name = "MEETING")
 public class MeetingController {
   private final MeetingService meetingService;
-  
+
   @PostMapping
   @SwaggerOK(summary = "약속 생성")
   public ResponseEntity<MeetingDto> addMeeting(@Valid @RequestBody final CreateMeetingDto meetingDto) {
-    final MeetingDto meeting = meetingService.addOne(meetingDto);
+    final MeetingDto meeting = meetingService.addMeeting(meetingDto);
     return ResponseEntity.ok(meeting);
   }
-  
+
   @GetMapping
   @SwaggerOK(summary = "약속 목록 조회")
   @PageableAsQueryParam
@@ -35,14 +35,21 @@ public class MeetingController {
     final MeetingPaginationDto meetingDtoList = meetingService.readListWithPagination(paginationParam);
     return ResponseEntity.ok(meetingDtoList);
   }
-  
+
   @GetMapping("{meetingId}")
   @SwaggerOK(summary = "약속 상세 조회")
   public ResponseEntity<MeetingDetailDto> readMeeting(@PathVariable("meetingId") final Long meetingId) {
-    final MeetingDetailDto meetingDetailDto = meetingService.readOne(meetingId);
+    final MeetingDetailDto meetingDetailDto = meetingService.readMeetingDetailDto(meetingId);
     return ResponseEntity.ok(meetingDetailDto);
   }
-  
+
+  @GetMapping("v2/{meetingId}")
+  @SwaggerOK(summary = "약속 상세 조회 v2")
+  public ResponseEntity<MeetingDetailDtoV2> readMeetingV2(@PathVariable("meetingId") final Long meetingId) {
+    final MeetingDetailDtoV2 meetingDetailDtoV2 = meetingService.readMeetingDetailDtoV2(meetingId);
+    return ResponseEntity.ok(meetingDetailDtoV2);
+  }
+
   @PatchMapping("{meetingId}")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   @SwaggerNoContent(summary = "약속 수정")
@@ -50,13 +57,13 @@ public class MeetingController {
       @PathVariable("meetingId") final Long meetingId,
       @Valid @RequestBody final UpdateMeetingDto meetingDto
   ) {
-    meetingService.updateOne(meetingDto, meetingId);
+    meetingService.updateMeeting(meetingDto, meetingId);
   }
-  
+
   @DeleteMapping("{meetingId}")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   @SwaggerNoContent(summary = "약속 삭제")
   public void updateMeeting(@PathVariable("meetingId") final Long meetingId) {
-    meetingService.deleteOne(meetingId);
+    meetingService.deleteMeeting(meetingId);
   }
 }
