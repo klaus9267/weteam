@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import weteam.backend.application.auth.SecurityUtil;
 import weteam.backend.application.handler.exception.CustomErrorCode;
 import weteam.backend.application.handler.exception.CustomException;
+import weteam.backend.domain.alarm.AlarmService;
 import weteam.backend.domain.meeting.dto.time_slot.RequestTimeSlotDto;
 import weteam.backend.domain.meeting.dto.time_slot.RequestTimeSlotDtoV2;
 import weteam.backend.domain.meeting.entity.Meeting;
@@ -23,8 +24,7 @@ import java.util.List;
 public class MeetingUserService {
   private final MeetingUserRepository meetingUserRepository;
   private final MeetingRepository meetingRepository;
-  private final TimeSlotRepository timeSlotRepository;
-  private final TimeSlot2Repository timeSlot2Repository;
+  private final AlarmService alarmService;
   private final SecurityUtil securityUtil;
 
   @Transactional
@@ -73,7 +73,10 @@ public class MeetingUserService {
   @Transactional
   private void verifyAllCheckedV2(final Meeting meeting) {
     final long count = meeting.getMeetingUserList().stream().filter(meetingUser -> meetingUser.getTimeSlotList2().isEmpty()).count();
-    if (count == 0) meeting.done();
+    if (count == 0) {
+      meeting.done();
+//      alarmService.addList();
+    }
   }
 
   @Transactional
