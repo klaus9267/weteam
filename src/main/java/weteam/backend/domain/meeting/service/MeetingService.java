@@ -15,6 +15,7 @@ import weteam.backend.domain.meeting.dto.meeting.*;
 import weteam.backend.domain.meeting.entity.Meeting;
 import weteam.backend.domain.meeting.entity.MeetingUser;
 import weteam.backend.domain.meeting.entity.TimeSlot2;
+import weteam.backend.domain.meeting.param.MeetingDetailParam;
 import weteam.backend.domain.meeting.repository.MeetingRepository;
 import weteam.backend.domain.project.entity.Project;
 import weteam.backend.domain.project.repository.ProjectRepository;
@@ -35,8 +36,8 @@ public class MeetingService {
     return MeetingDetailDto.from(meeting);
   }
 
-  public MeetingDetailDtoV2 readMeetingDetailDtoV2(final Long meetingId) {
-    final Meeting meeting = meetingRepository.findByIdAndUserId(meetingId, securityUtil.getId()).orElseThrow(CustomException.notFound(CustomErrorCode.NOT_FOUND_MEETING));
+  public MeetingDetailDtoV2 readMeetingDetailDtoV2(final MeetingDetailParam param) {
+    final Meeting meeting = meetingRepository.findByIdAndUserId(param.getMeetingId(), securityUtil.getId()).orElseThrow(CustomException.notFound(CustomErrorCode.NOT_FOUND_MEETING));
     Map<LocalDateTime, List<String>> timeMap = new HashMap<>();
 
     for (final MeetingUser meetingUser : meeting.getMeetingUserList()) {
@@ -45,6 +46,7 @@ public class MeetingService {
         timeMap.computeIfAbsent(timeSlot2.getTime(), list -> new ArrayList<>()).add(meetingUser.getUser().getUsername());
       }
     }
+    timeMap.entrySet().removeIf(entry -> entry.getValue().size() < param.getMinimum());
 
     return MeetingDetailDtoV2.from(meeting, timeMap);
   }

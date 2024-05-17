@@ -10,6 +10,7 @@ import weteam.backend.application.handler.exception.CustomErrorCode;
 import weteam.backend.application.handler.exception.CustomException;
 import weteam.backend.domain.alarm.dto.AlarmPaginationDto;
 import weteam.backend.domain.common.pagination.param.AlarmPaginationParam;
+import weteam.backend.domain.meeting.entity.Meeting;
 import weteam.backend.domain.project.entity.Project;
 import weteam.backend.domain.user.entity.User;
 
@@ -30,7 +31,24 @@ public class AlarmService {
 
   @Transactional
   public void addList(final Project project, final AlarmStatus status) {
-    final List<Alarm> alarmList = Alarm.from(project, status);
+    final List<Alarm> alarmList = Alarm.from(project, status,null);
+    alarmRepository.saveAll(alarmList);
+    firebaseService.sendNotification(alarmList);
+  }
+
+//  @Transactional
+//  public <T> void addAlarmList(final T entity, final AlarmStatus status, final User targerUser) {
+//    if (entity instanceof Project project) {
+//      addAlarmListFromProject(project, status, targerUser);
+//    } else if (entity instanceof Meeting meeting) {
+//      createAlarmsFromMeeting(meeting, status);
+//    } else {
+//      throw new CustomException(CustomErrorCode.BAD_REQUEST, "잘못된 형식의 데이터입니다.");
+//    }
+//  }
+
+  private void addAlarmListFromProject(final Project project, final AlarmStatus status, final User targerUser) {
+    final List<Alarm> alarmList = Alarm.from(project, status, targerUser);
     alarmRepository.saveAll(alarmList);
     firebaseService.sendNotification(alarmList);
   }

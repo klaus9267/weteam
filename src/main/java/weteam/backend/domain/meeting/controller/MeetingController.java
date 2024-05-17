@@ -12,6 +12,7 @@ import weteam.backend.domain.common.pagination.param.MeetingPaginationParam;
 import weteam.backend.domain.common.swagger.SwaggerNoContent;
 import weteam.backend.domain.common.swagger.SwaggerOK;
 import weteam.backend.domain.meeting.dto.meeting.*;
+import weteam.backend.domain.meeting.param.MeetingDetailParam;
 import weteam.backend.domain.meeting.service.MeetingService;
 
 @RestController
@@ -50,10 +51,10 @@ public class MeetingController {
 //    return ResponseEntity.ok(meetingDtoList);
 //  }
 
-  @GetMapping("v2/{meetingId}")
+  @GetMapping("v2/detail")
   @SwaggerOK(summary = "약속 상세 조회 v2")
-  public ResponseEntity<MeetingDetailDtoV2> readMeetingV2(@PathVariable("meetingId") final Long meetingId) {
-    final MeetingDetailDtoV2 meetingDetailDtoV2 = meetingService.readMeetingDetailDtoV2(meetingId);
+  public ResponseEntity<MeetingDetailDtoV2> readMeetingV2(@ParameterObject @Valid final MeetingDetailParam param) {
+    final MeetingDetailDtoV2 meetingDetailDtoV2 = meetingService.readMeetingDetailDtoV2(param);
     return ResponseEntity.ok(meetingDetailDtoV2);
   }
 
