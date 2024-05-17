@@ -28,6 +28,7 @@ public interface MeetingRepository extends JpaRepository<Meeting, Long> {
       WHERE mu.user.id = :userId
          AND mu.isAccept = true
          AND mu.isDisplayed = true
+      ORDER BY m.isDone DESC, m.id ASC
       """)
   Page<Meeting> findAllByUserId(final Pageable pageable, final Long userId);
 
