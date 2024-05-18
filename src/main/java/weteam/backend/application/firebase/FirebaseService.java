@@ -10,7 +10,7 @@ import weteam.backend.application.auth.SecurityUtil;
 import weteam.backend.application.firebase.common.PushMessage;
 import weteam.backend.application.handler.exception.CustomErrorCode;
 import weteam.backend.application.handler.exception.CustomException;
-import weteam.backend.domain.alarm.Alarm;
+import weteam.backend.domain.alarm.entity.Alarm;
 import weteam.backend.domain.user.UserRepository;
 import weteam.backend.domain.user.entity.User;
 

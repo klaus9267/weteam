@@ -1,7 +1,7 @@
 package weteam.backend.domain.alarm.dto;
 
 import org.springframework.data.domain.Page;
-import weteam.backend.domain.alarm.Alarm;
+import weteam.backend.domain.alarm.entity.Alarm;
 
 import java.util.List;
 

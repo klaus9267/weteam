@@ -9,7 +9,7 @@ import weteam.backend.application.auth.SecurityUtil;
 import weteam.backend.application.handler.exception.CustomErrorCode;
 import weteam.backend.application.handler.exception.CustomException;
 import weteam.backend.domain.alarm.AlarmService;
-import weteam.backend.domain.alarm.AlarmStatus;
+import weteam.backend.domain.alarm.entity.AlarmStatus;
 import weteam.backend.domain.common.HashUtil;
 import weteam.backend.domain.common.pagination.param.ProjectPaginationParam;
 import weteam.backend.domain.project.dto.CreateProjectDto;

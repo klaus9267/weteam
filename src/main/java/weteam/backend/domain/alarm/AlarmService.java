@@ -9,8 +9,9 @@ import weteam.backend.application.firebase.FirebaseService;
 import weteam.backend.application.handler.exception.CustomErrorCode;
 import weteam.backend.application.handler.exception.CustomException;
 import weteam.backend.domain.alarm.dto.AlarmPaginationDto;
+import weteam.backend.domain.alarm.entity.Alarm;
+import weteam.backend.domain.alarm.entity.AlarmStatus;
 import weteam.backend.domain.common.pagination.param.AlarmPaginationParam;
-import weteam.backend.domain.meeting.entity.Meeting;
 import weteam.backend.domain.project.entity.Project;
 import weteam.backend.domain.user.entity.User;
 

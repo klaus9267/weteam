@@ -4,8 +4,8 @@ import com.google.firebase.messaging.Message;
 import com.google.firebase.messaging.Notification;
 import weteam.backend.application.handler.exception.CustomErrorCode;
 import weteam.backend.application.handler.exception.CustomException;
-import weteam.backend.domain.alarm.Alarm;
-import weteam.backend.domain.alarm.AlarmStatus;
+import weteam.backend.domain.alarm.entity.Alarm;
+import weteam.backend.domain.alarm.entity.AlarmStatus;
 import weteam.backend.domain.project.entity.Project;
 import weteam.backend.domain.user.entity.User;
 
