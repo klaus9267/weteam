@@ -22,9 +22,6 @@ public class MeetingUser {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Column(columnDefinition = "boolean default false")
-  private boolean isAccept;
-
   private boolean isDisplayed;
 
   @ManyToOne(fetch = FetchType.LAZY)
@@ -41,7 +38,6 @@ public class MeetingUser {
 
   private MeetingUser(final User user, final Meeting meeting) {
     this.meeting = meeting;
-    this.isAccept = true;
     this.isDisplayed = true;
     this.user = user;
   }

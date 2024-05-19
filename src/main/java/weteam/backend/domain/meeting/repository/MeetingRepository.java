@@ -17,7 +17,6 @@ public interface MeetingRepository extends JpaRepository<Meeting, Long> {
          LEFT JOIN FETCH meeting_users mu ON mu.meeting.id = m.id
       WHERE m.id = :meetingId
          AND mu.user.id = :userId
-         AND mu.isAccept = true
       """)
   Optional<Meeting> findByIdAndUserId(final Long meetingId, final Long userId);
 
@@ -26,7 +25,6 @@ public interface MeetingRepository extends JpaRepository<Meeting, Long> {
       FROM meetings m
            LEFT JOIN FETCH meeting_users mu ON mu.meeting.id = m.id
       WHERE mu.user.id = :userId
-         AND mu.isAccept = true
          AND mu.isDisplayed = true
       ORDER BY m.isDone DESC, m.id ASC
       """)
