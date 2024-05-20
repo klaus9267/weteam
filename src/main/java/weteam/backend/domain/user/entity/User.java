@@ -38,28 +38,28 @@ public class User extends BaseEntity {
   @Enumerated(EnumType.STRING)
   private UserRole role;
 
-  @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+  @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
   private ProfileImage profileImage;
 
-  @OneToMany(mappedBy = "host", cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "host", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Project> projectList = new ArrayList<>();
 
-  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<ProjectUser> projectUserList = new ArrayList<>();
 
-  @OneToMany(mappedBy = "host", cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "host", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Meeting> meetingList = new ArrayList<>();
 
-  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<MeetingUser> meetingUserList = new ArrayList<>();
 
-  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<BlackList> blackLists = new ArrayList<>();
 
-  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Alarm> alarms1 = new ArrayList<>();
 
-  @OneToMany(mappedBy = "targetUser", cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "targetUser", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Alarm> alarms2 = new ArrayList<>();
 
   public static User from(final UserDto userDto) {

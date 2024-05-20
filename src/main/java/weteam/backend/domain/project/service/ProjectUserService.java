@@ -45,7 +45,7 @@ public class ProjectUserService {
       throw new CustomException(CustomErrorCode.BAD_REQUEST, "해당 방에 입장할 수 없습니다.");
     }
     project.addProjectUser(securityUtil.getCurrentUser());
-    alarmService.addListWithTargetUser(project, AlarmStatus.JOIN, securityUtil.getCurrentUser());
+    alarmService.addAlarmListWithTargetUser(project, AlarmStatus.JOIN, securityUtil.getCurrentUser());
   }
 
   @Transactional
@@ -78,7 +78,7 @@ public class ProjectUserService {
     projectUserRepository.deleteAllById(projectUserIdList);
     blackListRepository.saveAll(blackLists);
 
-    alarmService.addListWithTargetUserList(project, AlarmStatus.KICK, userList);
+    alarmService.addAlarmListWithTargetUserList(project, AlarmStatus.KICK, userList);
   }
 
   @Transactional
@@ -88,6 +88,6 @@ public class ProjectUserService {
       throw new CustomException(CustomErrorCode.BAD_REQUEST, "호스트를 넘기기전에 탈퇴할 수 없습니다.");
     }
     projectUser.disable();
-    alarmService.addListWithTargetUser(projectUser.getProject(), AlarmStatus.EXIT, securityUtil.getCurrentUser());
+    alarmService.addAlarmListWithTargetUser(projectUser.getProject(), AlarmStatus.EXIT, securityUtil.getCurrentUser());
   }
 }

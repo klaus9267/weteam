@@ -50,22 +50,66 @@ public class Alarm {
     this.targetUser = targetUser;
   }
 
+  private Alarm(final Meeting meeting, final AlarmStatus status, final User user) {
+    this.status = status;
+    this.meeting = meeting;
+    this.user = user;
+    this.date = LocalDateTime.now();
+  }
+
+  private Alarm(final Meeting meeting, final AlarmStatus status, final User user, final User targetUser) {
+    this.status = status;
+    this.meeting = meeting;
+    this.user = user;
+    this.date = LocalDateTime.now();
+    this.targetUser = targetUser;
+  }
+
   public static List<Alarm> from(final Project project, final AlarmStatus status, final User targetUser) {
     return project.getProjectUserList()
         .stream()
         .filter(projectUser -> {
-          final User user = projectUser.getUser();
-          boolean isTargetUserConditionMet = targetUser == null || !user.getId().equals(targetUser.getId());
-          return user.isLogin() && user.isReceivePermission() && projectUser.isEnable() && isTargetUserConditionMet;
-        })
-        .map(projectUser -> targetUser == null
-            ? new Alarm(project, status, projectUser.getUser())
-            : new Alarm(project, status, projectUser.getUser(), targetUser))
+              final User user = projectUser.getUser();
+              return user.isLogin() && user.isReceivePermission() && projectUser.isEnable() && !user.getId().equals(targetUser.getId());
+            }
+        ).map(projectUser -> new Alarm(project, status, projectUser.getUser(), targetUser))
         .toList();
   }
 
+  public static List<Alarm> from(final Project project, final AlarmStatus status) {
+    return project.getProjectUserList()
+        .stream()
+        .filter(projectUser -> {
+              final User user = projectUser.getUser();
+              return user.isLogin() && user.isReceivePermission() && projectUser.isEnable();
+            }
+        ).map(projectUser -> new Alarm(project, status, projectUser.getUser()))
+        .toList();
+  }
 
-  public void changeIsRead() {
+  public static List<Alarm> from(final Meeting meeting, final AlarmStatus status) {
+    return meeting.getMeetingUserList()
+        .stream()
+        .filter(meetingUser -> {
+              final User user = meetingUser.getUser();
+              return user.isLogin() && user.isReceivePermission() && meetingUser.isDisplayed();
+            }
+        ).map(meetingUser -> new Alarm(meeting, status, meetingUser.getUser()))
+        .toList();
+  }
+
+  public static List<Alarm> from(final Meeting meeting, final AlarmStatus status, final User targetUser) {
+    return meeting.getMeetingUserList()
+        .stream()
+        .filter(meetingUser -> {
+              final User user = meetingUser.getUser();
+              return user.isLogin() && user.isReceivePermission() && meetingUser.isDisplayed() && !user.getId().equals(targetUser.getId());
+            }
+        ).map(meetingUser -> new Alarm(meeting, status, meetingUser.getUser()))
+        .toList();
+  }
+
+  public void markAsRead() {
     this.isRead = true;
   }
 }

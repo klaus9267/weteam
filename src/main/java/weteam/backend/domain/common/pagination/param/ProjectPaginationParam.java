@@ -21,7 +21,7 @@ public class ProjectPaginationParam extends AbstractPaginationParam {
     @Parameter(example = "false")
     private final boolean done;
 
-    @Parameter(example = "1")
+    @Parameter(example = "120")
     private final Long userId;
 
     @Parameter(name = "direction", description = "default desc")

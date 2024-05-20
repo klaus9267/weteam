@@ -54,7 +54,7 @@ public class ProjectController {
   @Operation(summary = "팀플 진행 상황 변경")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   public void updateDone(@PathVariable("projectId") final Long projectId) {
-    projectService.updateProject(projectId);
+    projectService.markAsDone(projectId);
   }
   
   @PatchMapping("{projectId}")

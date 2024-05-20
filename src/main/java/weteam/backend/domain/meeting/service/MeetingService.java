@@ -63,7 +63,7 @@ public class MeetingService {
         .orElseGet(() -> Meeting.from(meetingDto, securityUtil.getCurrentUser()));
     final Meeting addedMeeting = meetingRepository.save(meeting);
 
-    project.ifPresent(value -> alarmService.addList(value, AlarmStatus.NEW_MEETING));
+    project.ifPresent(value -> alarmService.addAlarmList(value, AlarmStatus.NEW_MEETING));
 
     final String hashedId = HashUtil.hashId(addedMeeting.getId());
     addedMeeting.addHashedId(hashedId);

@@ -59,17 +59,18 @@ public class ProjectService {
   }
 
   @Transactional
-  public void updateProject(final Long projectId) {
+  public void markAsDone(final Long projectId) {
     Project project = this.checkHost(projectId);
     project.updateDone();
-    alarmService.addList(project, AlarmStatus.DONE);
+//    alarmService.addList(project, AlarmStatus.DONE);
+    alarmService.addAlarmList(project, AlarmStatus.DONE);
   }
 
   @Transactional
   public void updateProject(final UpdateProjectDto projectDto, final Long projectId) {
     Project project = this.checkHost(projectId);
     project.updateProject(projectDto);
-    alarmService.addList(project, AlarmStatus.UPDATE_PROJECT);
+    alarmService.addAlarmList(project, AlarmStatus.UPDATE_PROJECT);
   }
 
   @Transactional
@@ -77,7 +78,7 @@ public class ProjectService {
     final User newHost = userRepository.findById(newHostId).orElseThrow(CustomException.notFound(CustomErrorCode.NOT_FOUND_USER));
     Project project = this.checkHost(projectId);
     project.updateHost(newHost);
-    alarmService.addListWithTargetUser(project, AlarmStatus.CHANGE_HOST, newHost);
+    alarmService.addAlarmListWithTargetUser(project, AlarmStatus.CHANGE_HOST, newHost);
   }
 
   @Transactional
