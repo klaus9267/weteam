@@ -22,7 +22,6 @@ public class ProjectUser {
 
   private String role;
 
-  @Column(columnDefinition = "boolean default true")
   private boolean isEnable;
 
   @ManyToOne(fetch = FetchType.LAZY)

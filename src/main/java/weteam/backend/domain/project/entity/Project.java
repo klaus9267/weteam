@@ -3,7 +3,7 @@ package weteam.backend.domain.project.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import weteam.backend.application.BaseEntity;
-import weteam.backend.domain.alarm.Alarm;
+import weteam.backend.domain.alarm.entity.Alarm;
 import weteam.backend.domain.meeting.entity.Meeting;
 import weteam.backend.domain.project.dto.CreateProjectDto;
 import weteam.backend.domain.project.dto.UpdateProjectDto;

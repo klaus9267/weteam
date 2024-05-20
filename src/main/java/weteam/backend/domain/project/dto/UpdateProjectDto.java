@@ -20,7 +20,7 @@ public record UpdateProjectDto(
     
     @NotNull(message = "endedAt is required")
     @FutureOrPresent
-    @Schema(example = "2023-12-24")
+    @Schema(example = "2024-12-24")
     LocalDate endedAt,
     
     @NotBlank(message = "explanation is required")

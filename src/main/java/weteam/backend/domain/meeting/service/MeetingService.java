@@ -8,7 +8,7 @@ import weteam.backend.application.auth.SecurityUtil;
 import weteam.backend.application.handler.exception.CustomErrorCode;
 import weteam.backend.application.handler.exception.CustomException;
 import weteam.backend.domain.alarm.AlarmService;
-import weteam.backend.domain.alarm.AlarmStatus;
+import weteam.backend.domain.alarm.entity.AlarmStatus;
 import weteam.backend.domain.common.HashUtil;
 import weteam.backend.domain.common.pagination.param.MeetingPaginationParam;
 import weteam.backend.domain.meeting.dto.meeting.*;
@@ -63,7 +63,7 @@ public class MeetingService {
         .orElseGet(() -> Meeting.from(meetingDto, securityUtil.getCurrentUser()));
     final Meeting addedMeeting = meetingRepository.save(meeting);
 
-    project.ifPresent(value -> alarmService.addList(value, AlarmStatus.NEW_MEETING));
+    project.ifPresent(value -> alarmService.addAlarmList(value, AlarmStatus.NEW_MEETING));
 
     final String hashedId = HashUtil.hashId(addedMeeting.getId());
     addedMeeting.addHashedId(hashedId);

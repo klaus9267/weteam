@@ -1,4 +1,4 @@
-package weteam.backend.domain.alarm;
+package weteam.backend.domain.alarm.entity;
 
 import lombok.Getter;
 

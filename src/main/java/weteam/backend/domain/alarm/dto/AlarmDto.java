@@ -1,8 +1,8 @@
 package weteam.backend.domain.alarm.dto;
 
 import lombok.Getter;
-import weteam.backend.domain.alarm.Alarm;
-import weteam.backend.domain.alarm.AlarmStatus;
+import weteam.backend.domain.alarm.entity.Alarm;
+import weteam.backend.domain.alarm.entity.AlarmStatus;
 import weteam.backend.domain.project.dto.ProjectDto;
 import weteam.backend.domain.user.dto.UserDto;
 

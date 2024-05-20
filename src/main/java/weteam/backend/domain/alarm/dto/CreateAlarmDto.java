@@ -1,6 +1,6 @@
 package weteam.backend.domain.alarm.dto;
 
-import weteam.backend.domain.alarm.AlarmStatus;
+import weteam.backend.domain.alarm.entity.AlarmStatus;
 
 import java.util.List;
 
