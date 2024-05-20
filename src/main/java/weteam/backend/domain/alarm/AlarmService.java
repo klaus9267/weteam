@@ -33,34 +33,24 @@ public class AlarmService {
 
   @Transactional
   public <T> void addAlarmList(final T entity, final AlarmStatus status) {
-    final List<Alarm> alarmList = new ArrayList<>();
-
     if (entity instanceof Project project) {
-      alarmList.addAll(Alarm.from(project, status));
+      this.sendAlarmList(Alarm.from(project, status));
     } else if (entity instanceof Meeting meeting) {
-      alarmList.addAll(Alarm.from(meeting, status));
+      this.sendAlarmList(Alarm.from(meeting, status));
     } else {
       throw new CustomException(CustomErrorCode.BAD_REQUEST, "잘못된 데이터입니다.");
     }
-
-    alarmRepository.saveAll(alarmList);
-    firebaseService.sendNotification(alarmList);
   }
 
   @Transactional
   public <T> void addAlarmListWithTargetUser(final T entity, final AlarmStatus status, final User targetUser) {
-    final List<Alarm> alarmList = new ArrayList<>();
-
     if (entity instanceof Project project) {
-      alarmList.addAll(Alarm.from(project, status, targetUser));
+      this.sendAlarmList(Alarm.from(project, status, targetUser));
     } else if (entity instanceof Meeting meeting) {
-      alarmList.addAll(Alarm.from(meeting, status, targetUser));
+      this.sendAlarmList(Alarm.from(meeting, status, targetUser));
     } else {
       throw new CustomException(CustomErrorCode.BAD_REQUEST, "잘못된 데이터입니다.");
     }
-
-    alarmRepository.saveAll(alarmList);
-    firebaseService.sendNotification(alarmList);
   }
 
   @Transactional
@@ -79,6 +69,11 @@ public class AlarmService {
       throw new CustomException(CustomErrorCode.BAD_REQUEST, "잘못된 데이터입니다.");
     }
 
+    this.sendAlarmList(alarmList);
+  }
+
+  @Transactional
+  private void sendAlarmList(List<Alarm> alarmList) {
     alarmRepository.saveAll(alarmList);
     firebaseService.sendNotification(alarmList);
   }
