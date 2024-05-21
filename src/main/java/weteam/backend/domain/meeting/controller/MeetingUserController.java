@@ -46,9 +46,16 @@ public class MeetingUserController {
     meetingUserService.updateTimeSlot(timeSlotDtoList, meetingId);
   }
 
+  @PatchMapping("{meetingId}/displayed")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  @SwaggerNoContent(summary = "약속 목록 조회 시 제외 처리")
+  public void updateMeetingDisplayed(@PathVariable("meetingId") final Long meetingId) {
+    meetingUserService.updateMeetingDisplayed(meetingId);
+  }
+
   @PatchMapping("{meetingId}/quit")
   @ResponseStatus(HttpStatus.NO_CONTENT)
-  @SwaggerNoContent(summary = "약속 나가기(목록 조회시 제외 기능)")
+  @SwaggerNoContent(summary = "약속 탈퇴")
   public void quitMeeting(@PathVariable("meetingId") final Long meetingId) {
     meetingUserService.quitMeeting(meetingId);
   }

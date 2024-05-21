@@ -32,7 +32,7 @@ public class ProjectController {
   @SwaggerCreated(summary = "팀플 생성")
   @ResponseStatus(HttpStatus.CREATED)
   public void addProject(@RequestBody @Valid final CreateProjectDto projectDto) {
-    projectService.addOne(projectDto);
+    projectService.addProject(projectDto);
   }
   
   @GetMapping

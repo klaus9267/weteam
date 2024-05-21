@@ -32,16 +32,16 @@ public class ProjectService {
   private final SecurityUtil securityUtil;
 
   @Transactional
-  public void addOne(final CreateProjectDto projectDto) {
+  public void addProject(final CreateProjectDto projectDto) {
     if (projectRepository.findByHostIdAndNameAndExplanation(securityUtil.getId(), projectDto.name(), projectDto.explanation()).isPresent()) {
       throw new CustomException(CustomErrorCode.DUPLICATE);
     }
 
     final Project project = Project.from(projectDto, securityUtil.getCurrentUser());
-    Project addedProject = projectRepository.save(project);
+    Project savedProject = projectRepository.save(project);
 
-    final String hashedId = HashUtil.hashId(addedProject.getId());
-    addedProject.addHashedId(hashedId);
+    final String hashedId = HashUtil.hashId(savedProject.getId());
+    savedProject.addHashedId(hashedId);
   }
 
   private Project findProjectByIdAndUserId(final Long projectId) {
