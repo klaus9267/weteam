@@ -6,6 +6,7 @@ import weteam.backend.application.handler.exception.CustomErrorCode;
 import weteam.backend.application.handler.exception.CustomException;
 import weteam.backend.domain.alarm.entity.Alarm;
 import weteam.backend.domain.alarm.entity.AlarmStatus;
+import weteam.backend.domain.meeting.entity.Meeting;
 import weteam.backend.domain.project.entity.Project;
 import weteam.backend.domain.user.entity.User;
 
@@ -17,9 +18,16 @@ public record PushMessage(
 ) {
   public static List<Message> makeMessageList(List<Alarm> alarmList) {
     final Alarm firstAlarm = alarmList.get(0);
-    final PushMessage pushMessage = firstAlarm.getTargetUser() == null
-        ? PushMessage.makeMessage(firstAlarm.getProject(), firstAlarm.getStatus())
-        : PushMessage.makeMessage(firstAlarm.getProject(), firstAlarm.getStatus(), firstAlarm.getTargetUser());
+    PushMessage pushMessage;
+    if (firstAlarm.getProject() != null) {
+      pushMessage = firstAlarm.getTargetUser() == null
+          ? PushMessage.makeMessage(firstAlarm.getProject(), firstAlarm.getStatus())
+          : PushMessage.makeMessage(firstAlarm.getProject(), firstAlarm.getStatus(), firstAlarm.getTargetUser());
+    } else if (firstAlarm.getMeeting() != null) {
+      pushMessage = PushMessage.makeMessage(firstAlarm.getMeeting(), firstAlarm.getStatus());
+    } else {
+      throw new CustomException(CustomErrorCode.BAD_REQUEST, "잘못된 요청입니다");
+    }
 
     final Notification notification = Notification.builder()
         .setTitle(pushMessage.title)
@@ -74,6 +82,22 @@ public record PushMessage(
       case NEW_MEETING -> {
         final String title = project.getName() + "에서 새로운 언제보까가 생성되었습니다! 확인해주세요!";
         final String content = "우리 언제 만날까...?";
+        yield new PushMessage(title, content);
+      }
+      default -> throw new CustomException(CustomErrorCode.BAD_REQUEST, "잘못된 요청입니다");
+    };
+  }
+
+  public static PushMessage makeMessage(final Meeting meeting, final AlarmStatus status) {
+    return switch (status) {
+      case ALL_CHECKED -> {
+        final String title = meeting.getTitle() + "에서 시간 선택이 완료되었습니다! 확인해주세요!";
+        final String content = "우리 언제 만날까...!";
+        yield new PushMessage(title, content);
+      }
+      case TIME_UPDATE -> {
+        final String title = meeting.getTitle() + "의 선택 시간이 수정되었습니다! 확인해주세요!";
+        final String content = "우리 언제 만날까...!!";
         yield new PushMessage(title, content);
       }
       default -> throw new CustomException(CustomErrorCode.BAD_REQUEST, "잘못된 요청입니다");

@@ -58,7 +58,7 @@ public class MeetingUser {
     this.timeSlotList2.addAll(timeSlot2List);
   }
 
-  public void quit() {
-    this.isDisplayed = false;
+  public void updateDisplayed() {
+    this.isDisplayed = !this.isDisplayed;
   }
 }

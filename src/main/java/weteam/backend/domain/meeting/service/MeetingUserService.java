@@ -7,14 +7,13 @@ import weteam.backend.application.auth.SecurityUtil;
 import weteam.backend.application.handler.exception.CustomErrorCode;
 import weteam.backend.application.handler.exception.CustomException;
 import weteam.backend.domain.alarm.AlarmService;
+import weteam.backend.domain.alarm.entity.AlarmStatus;
 import weteam.backend.domain.meeting.dto.time_slot.RequestTimeSlotDto;
 import weteam.backend.domain.meeting.dto.time_slot.RequestTimeSlotDtoV2;
 import weteam.backend.domain.meeting.entity.Meeting;
 import weteam.backend.domain.meeting.entity.MeetingUser;
 import weteam.backend.domain.meeting.repository.MeetingRepository;
 import weteam.backend.domain.meeting.repository.MeetingUserRepository;
-import weteam.backend.domain.meeting.repository.TimeSlot2Repository;
-import weteam.backend.domain.meeting.repository.TimeSlotRepository;
 
 import java.util.Comparator;
 import java.util.List;
@@ -55,9 +54,15 @@ public class MeetingUserService {
   }
 
   @Transactional
+  public void updateMeetingDisplayed(final Long meetingId) {
+    final MeetingUser meetingUser = meetingUserRepository.findByMeetingIdAndUserId(meetingId, securityUtil.getId()).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND));
+    meetingUser.updateDisplayed();
+  }
+
+  @Transactional
   public void quitMeeting(final Long meetingId) {
     final MeetingUser meetingUser = meetingUserRepository.findByMeetingIdAndUserId(meetingId, securityUtil.getId()).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND));
-    meetingUser.quit();
+    meetingUserRepository.delete(meetingUser);
   }
 
   private void validateTimeSlot(final List<RequestTimeSlotDto> timeSlotDtoList) {
@@ -74,8 +79,12 @@ public class MeetingUserService {
   private void verifyAllCheckedV2(final Meeting meeting) {
     final long count = meeting.getMeetingUserList().stream().filter(meetingUser -> meetingUser.getTimeSlotList2().isEmpty()).count();
     if (count == 0) {
-      meeting.done();
-//      alarmService.addList();
+      if (meeting.isDone()) {
+        alarmService.addAlarmList(meeting, AlarmStatus.ALL_CHECKED);
+        meeting.done();
+      } else {
+        alarmService.addAlarmList(meeting, AlarmStatus.TIME_UPDATE);
+      }
     }
   }
 
