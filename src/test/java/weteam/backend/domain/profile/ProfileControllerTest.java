@@ -22,8 +22,9 @@ class ProfileControllerTest extends BaseIntegrationTest {
   @Test
   @DisplayName("프로필 사진 생성")
   void addProfileImage() throws Exception {
-    mockMvc.perform(post(END_POINT + "/3"))
-        .andExpect(status().isCreated());
+    mockMvc.perform(post(END_POINT + "/3")
+        .header("Authorization", idToken)
+    ).andExpect(status().isCreated());
   }
 
   @Test
@@ -33,8 +34,9 @@ class ProfileControllerTest extends BaseIntegrationTest {
     ProfileImage profileImage = new ProfileImage(null, user, 1L);
     profileRepository.save(profileImage);
 
-    mockMvc.perform(patch(END_POINT + "/2"))
-        .andExpect(status().isNoContent())
+    mockMvc.perform(patch(END_POINT + "/2")
+            .header("Authorization", idToken)
+        ).andExpect(status().isNoContent())
         .andDo(print());
   }
 }

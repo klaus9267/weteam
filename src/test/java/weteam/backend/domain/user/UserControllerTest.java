@@ -2,6 +2,7 @@ package weteam.backend.domain.user;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import weteam.backend.common.BaseIntegrationTest;
 import weteam.backend.domain.user.dto.RequestUserDto;
@@ -17,6 +18,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 class UserControllerTest extends BaseIntegrationTest {
   private final String END_POINT = "/api/users";
+  @Autowired
+  UserRepository userRepository;
 
   @Test
   @DisplayName("내 정보 조회")
@@ -33,8 +36,8 @@ class UserControllerTest extends BaseIntegrationTest {
     Random random = new Random();
     int n = random.nextInt(0, 100);
     mockMvc.perform(get(END_POINT + "/" + n)
-            .header("Authorization", idToken))
-        .andExpect(status().isOk())
+            .header("Authorization", idToken)
+        ).andExpect(status().isOk())
         .andExpect(jsonPath("$.id").value(n))
         .andDo(print());
   }
