@@ -1,6 +1,7 @@
 package weteam.backend.common;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.UserRecord;
@@ -30,11 +31,16 @@ import java.util.Map;
 @Import(DataInitializer.class)
 @Transactional
 public class BaseIntegrationTest {
-  protected final ObjectMapper mapper = new ObjectMapper();
+  protected ObjectMapper mapper = new ObjectMapper();
 
   @Autowired
   protected MockMvc mockMvc;
   protected static String idToken;
+
+  public BaseIntegrationTest() {
+    this.mapper = new ObjectMapper();
+    this.mapper.registerModule(new JavaTimeModule());
+  }
 
   @BeforeAll
   public static void setup(@Autowired FirebaseAuth firebaseAuth) throws FirebaseAuthException, IOException, ParseException {

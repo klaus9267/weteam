@@ -4,7 +4,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import weteam.backend.common.BaseIntegrationTest;
-import weteam.backend.common.WithMockCustomUser;
 import weteam.backend.domain.user.UserRepository;
 import weteam.backend.domain.user.entity.User;
 
@@ -22,7 +21,6 @@ class ProfileControllerTest extends BaseIntegrationTest {
 
   @Test
   @DisplayName("프로필 사진 생성")
-  @WithMockCustomUser
   void addProfileImage() throws Exception {
     mockMvc.perform(post(END_POINT + "/3"))
         .andExpect(status().isCreated());
@@ -30,7 +28,6 @@ class ProfileControllerTest extends BaseIntegrationTest {
 
   @Test
   @DisplayName("프로필 사진 변경")
-  @WithMockCustomUser
   void readOtherInfo() throws Exception {
     User user = userRepository.findById(1L).orElseThrow(RuntimeException::new);
     ProfileImage profileImage = new ProfileImage(null, user, 1L);

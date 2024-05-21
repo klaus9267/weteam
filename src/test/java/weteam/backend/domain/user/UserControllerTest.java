@@ -4,7 +4,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import weteam.backend.common.BaseIntegrationTest;
-import weteam.backend.common.WithMockCustomUser;
 import weteam.backend.domain.user.dto.RequestUserDto;
 
 import java.util.Random;
@@ -21,7 +20,6 @@ class UserControllerTest extends BaseIntegrationTest {
 
   @Test
   @DisplayName("내 정보 조회")
-//  @WithMockCustomUser
   void readMyInfo() throws Exception {
     mockMvc.perform(get(END_POINT)
             .header("Authorization", idToken))
@@ -31,11 +29,11 @@ class UserControllerTest extends BaseIntegrationTest {
 
   @Test
   @DisplayName("다른 사용자 정보 조회")
-  @WithMockCustomUser
   void readOtherInfo() throws Exception {
     Random random = new Random();
     int n = random.nextInt(0, 100);
-    mockMvc.perform(get(END_POINT + "/" + n))
+    mockMvc.perform(get(END_POINT + "/" + n)
+            .header("Authorization", idToken))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.id").value(n))
         .andDo(print());
@@ -43,13 +41,13 @@ class UserControllerTest extends BaseIntegrationTest {
 
   @Test
   @DisplayName("사용자 정보 변경")
-  @WithMockCustomUser
   void updateUser() throws Exception {
-    RequestUserDto userDto = new RequestUserDto("test", "인덕대");
+    RequestUserDto userDto = new RequestUserDto("test", "인덕대", "소개");
     String body = mapper.writeValueAsString(userDto);
 
     mockMvc.perform(patch(END_POINT)
             .content(body)
+            .header("Authorization", idToken)
             .contentType(MediaType.APPLICATION_JSON)
         )
         .andExpect(status().isNoContent())
@@ -58,17 +56,19 @@ class UserControllerTest extends BaseIntegrationTest {
 
   @Test
   @DisplayName("푸시 알람 수신 변경")
-  @WithMockCustomUser
   void changeReceivePermission() throws Exception {
-    mockMvc.perform(get(END_POINT))
+    mockMvc.perform(get(END_POINT)
+            .header("Authorization", idToken))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.receivePermission").value(true))
         .andDo(print());
 
-    mockMvc.perform(patch(END_POINT + "/push"))
+    mockMvc.perform(patch(END_POINT + "/push")
+            .header("Authorization", idToken))
         .andExpect(status().isNoContent());
 
-    mockMvc.perform(get(END_POINT))
+    mockMvc.perform(get(END_POINT)
+            .header("Authorization", idToken))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.receivePermission").value(false))
         .andDo(print());
@@ -76,9 +76,9 @@ class UserControllerTest extends BaseIntegrationTest {
 
   @Test
   @DisplayName("로그아웃")
-  @WithMockCustomUser
   void logout() throws Exception {
-    mockMvc.perform(patch(END_POINT + "/logout"))
+    mockMvc.perform(patch(END_POINT + "/logout")
+            .header("Authorization", idToken))
         .andExpect(status().isNoContent())
         .andDo(print());
   }
