@@ -58,7 +58,7 @@ public class DataInitializer {
     for (long i = 0; i < 100; i++) {
       Random random = new Random();
       CreateProjectDto projectDto = new CreateProjectDto("name" + i, LocalDate.now(), i, LocalDate.now().plusMonths(1), "explanation" + 1);
-      Project project = new Project(projectDto, users.get(random.nextInt(0, 100)));
+      Project project = new Project(projectDto, users.get(random.nextInt(2, 100)));
 
       for (long j = 0; j < random.nextLong(0, 10); j++) {
         int r = random.nextInt(0, 100);

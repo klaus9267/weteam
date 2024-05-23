@@ -9,8 +9,7 @@ import weteam.backend.domain.user.dto.RequestUserDto;
 
 import java.util.Random;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -81,6 +80,15 @@ class UserControllerTest extends BaseIntegrationTest {
   @DisplayName("로그아웃")
   void logout() throws Exception {
     mockMvc.perform(patch(END_POINT + "/logout")
+            .header("Authorization", idToken))
+        .andExpect(status().isNoContent())
+        .andDo(print());
+  }
+
+  @Test
+  @DisplayName("사용자 탈퇴")
+  void quit() throws Exception {
+    mockMvc.perform(delete(END_POINT)
             .header("Authorization", idToken))
         .andExpect(status().isNoContent())
         .andDo(print());
