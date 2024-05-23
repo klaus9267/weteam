@@ -31,6 +31,7 @@ public class DataInitializer {
   List<Meeting> meetings = new ArrayList<>();
 
   @PostConstruct
+  @Transactional
   public void setContext() {
     this.saveUsers();
     this.saveProjects();
@@ -39,7 +40,7 @@ public class DataInitializer {
 
   private void saveUsers() {
     List<User> userList = new ArrayList<>();
-    userList.add(User.builder().role(UserRole.USER).receivePermission(true).username("kim").uid("hIGOWUmXSugwCftVJ2HsF9kiqfh1").build());
+    userList.add(User.builder().role(UserRole.USER).receivePermission(true).username("kim").organization("organization").introduction("introduction").uid("hIGOWUmXSugwCftVJ2HsF9kiqfh1").build());
     for (int i = 0; i < 100; i++) {
       User user = User.builder()
           .username("username" + i)
@@ -52,7 +53,6 @@ public class DataInitializer {
     users = userRepository.saveAll(userList);
   }
 
-  @Transactional
   private void saveProjects() {
     List<Project> projectList = new ArrayList<>();
     for (long i = 0; i < 100; i++) {
@@ -74,7 +74,6 @@ public class DataInitializer {
     projects = projectRepository.saveAll(projectList);
   }
 
-  @Transactional
   private void saveBlackLists() {
     List<BlackList> blackLists = new ArrayList<>();
 

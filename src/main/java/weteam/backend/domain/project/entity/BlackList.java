@@ -8,7 +8,6 @@ import weteam.backend.domain.user.entity.User;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
 @Builder
 public class BlackList {
   @Id

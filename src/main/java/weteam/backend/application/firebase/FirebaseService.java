@@ -42,7 +42,7 @@ public class FirebaseService {
       try {
         firebaseMessaging.sendAll(messageList);
       } catch (FirebaseMessagingException e) {
-        throw new RuntimeException(e);
+        throw new CustomException(CustomErrorCode.FIREBASE_MESSAGE_ERROR);
       }
     }
   }

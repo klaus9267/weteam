@@ -6,9 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import weteam.backend.common.BaseIntegrationTest;
 import weteam.backend.domain.user.dto.RequestUserDto;
+import weteam.backend.domain.user.entity.User;
 
+import java.util.List;
 import java.util.Random;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -39,6 +42,13 @@ class UserControllerTest extends BaseIntegrationTest {
         ).andExpect(status().isOk())
         .andExpect(jsonPath("$.id").value(n))
         .andDo(print());
+
+    User user1 = userRepository.findById(1L).orElseThrow(RuntimeException::new);
+    assertThat(user1).extracting(
+        User::getUsername,
+        User::getOrganization,
+        User::getIntroduction
+    ).doesNotContainNull();
   }
 
   @Test
@@ -54,43 +64,60 @@ class UserControllerTest extends BaseIntegrationTest {
         )
         .andExpect(status().isNoContent())
         .andDo(print());
+
+    User user1 = userRepository.findById(1L).orElseThrow(RuntimeException::new);
+    assertThat(user1).extracting(
+        User::getUsername,
+        User::getOrganization,
+        User::getIntroduction
+    ).containsExactly(
+        userDto.username(),
+        userDto.organization(),
+        userDto.introduction()
+    );
   }
 
   @Test
   @DisplayName("푸시 알람 수신 변경")
   void changeReceivePermission() throws Exception {
-    mockMvc.perform(get(END_POINT)
-            .header("Authorization", idToken))
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.receivePermission").value(true))
-        .andDo(print());
+    User user1 = userRepository.findById(1L).orElseThrow(RuntimeException::new);
+    assertThat(user1.isReceivePermission()).isTrue();
 
     mockMvc.perform(patch(END_POINT + "/push")
             .header("Authorization", idToken))
         .andExpect(status().isNoContent());
 
-    mockMvc.perform(get(END_POINT)
-            .header("Authorization", idToken))
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.receivePermission").value(false))
-        .andDo(print());
+    User user2 = userRepository.findById(1L).orElseThrow(RuntimeException::new);
+    assertThat(user1.isReceivePermission()).isFalse();
   }
 
   @Test
   @DisplayName("로그아웃")
   void logout() throws Exception {
+    User user1 = userRepository.findById(1L).orElseThrow(RuntimeException::new);
+    assertThat(user1.isLogin()).isFalse();
+
     mockMvc.perform(patch(END_POINT + "/logout")
             .header("Authorization", idToken))
         .andExpect(status().isNoContent())
         .andDo(print());
+
+    User user2 = userRepository.findById(1L).orElseThrow(RuntimeException::new);
+    assertThat(user2.isLogin()).isFalse();
   }
 
   @Test
   @DisplayName("사용자 탈퇴")
   void quit() throws Exception {
+    List<User> userList1 = userRepository.findAll();
+
     mockMvc.perform(delete(END_POINT)
             .header("Authorization", idToken))
         .andExpect(status().isNoContent())
         .andDo(print());
+
+    List<User> userList2 = userRepository.findAll();
+
+    assertThat(userList1.size()).isEqualTo(userList2.size() + 1);
   }
 }

@@ -12,7 +12,7 @@ import org.apache.hc.client5.http.impl.classic.HttpClients;
 import org.apache.hc.core5.http.ParseException;
 import org.apache.hc.core5.http.io.entity.EntityUtils;
 import org.apache.hc.core5.http.io.entity.StringEntity;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -38,18 +38,17 @@ public class BaseIntegrationTest {
   protected static String idToken;
 
   public BaseIntegrationTest() {
-    this.mapper = new ObjectMapper();
     this.mapper.registerModule(new JavaTimeModule());
   }
 
-  @BeforeAll
-  public static void setup(@Autowired FirebaseAuth firebaseAuth) throws FirebaseAuthException, IOException, ParseException {
+  @BeforeEach
+  public void setup(@Autowired FirebaseAuth firebaseAuth) throws FirebaseAuthException, IOException, ParseException {
     UserRecord userRecord = firebaseAuth.getUserByEmail("klaus9267@gmail.com");
     String customToken = firebaseAuth.createCustomToken(userRecord.getUid());
     idToken = "Bearer " + exchangeCustomTokenForIdToken(customToken);
   }
 
-  private static String exchangeCustomTokenForIdToken(String customToken) throws IOException, ParseException {
+  private String exchangeCustomTokenForIdToken(String customToken) throws IOException, ParseException {
     String apiKey = "AIzaSyBc4I9eLDbOYxWfTtjWD6JrMymeTy7UQm0";
     String requestUrl = "https://identitytoolkit.googleapis.com/v1/accounts:signInWithCustomToken?key=" + apiKey;
 
