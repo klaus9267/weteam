@@ -36,6 +36,7 @@ public class DataInitializer {
     this.saveUsers();
     this.saveProjects();
     this.saveBlackLists();
+    System.out.println("user size : " + this.users.size());
   }
 
   private void saveUsers() {

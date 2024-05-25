@@ -9,6 +9,7 @@ import weteam.backend.domain.user.dto.RequestUserDto;
 import weteam.backend.domain.user.entity.User;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Random;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -28,8 +29,8 @@ class UserControllerTest extends BaseIntegrationTest {
   void readMyInfo() throws Exception {
     mockMvc.perform(get(END_POINT)
             .header("Authorization", idToken))
-        .andExpect(status().isOk())
-        .andDo(print());
+        .andExpect(status().isOk());
+//        .andDo(print());
   }
 
   @Test
@@ -40,10 +41,9 @@ class UserControllerTest extends BaseIntegrationTest {
     mockMvc.perform(get(END_POINT + "/" + n)
             .header("Authorization", idToken)
         ).andExpect(status().isOk())
-        .andExpect(jsonPath("$.id").value(n))
-        .andDo(print());
+        .andExpect(jsonPath("$.id").value(n));
 
-    User user1 = userRepository.findById(1L).orElseThrow(RuntimeException::new);
+    User user1 = userRepository.findById(1L).orElseThrow(NoSuchElementException::new);
     assertThat(user1).extracting(
         User::getUsername,
         User::getOrganization,
@@ -62,10 +62,10 @@ class UserControllerTest extends BaseIntegrationTest {
             .header("Authorization", idToken)
             .contentType(MediaType.APPLICATION_JSON)
         )
-        .andExpect(status().isNoContent())
-        .andDo(print());
+        .andExpect(status().isNoContent());
+//        .andDo(print());
 
-    User user1 = userRepository.findById(1L).orElseThrow(RuntimeException::new);
+    User user1 = userRepository.findById(1L).orElseThrow(NoSuchElementException::new);
     assertThat(user1).extracting(
         User::getUsername,
         User::getOrganization,
@@ -80,29 +80,29 @@ class UserControllerTest extends BaseIntegrationTest {
   @Test
   @DisplayName("푸시 알람 수신 변경")
   void changeReceivePermission() throws Exception {
-    User user1 = userRepository.findById(1L).orElseThrow(RuntimeException::new);
+    User user1 = userRepository.findById(1L).orElseThrow(NoSuchElementException::new);
     assertThat(user1.isReceivePermission()).isTrue();
 
     mockMvc.perform(patch(END_POINT + "/push")
             .header("Authorization", idToken))
         .andExpect(status().isNoContent());
 
-    User user2 = userRepository.findById(1L).orElseThrow(RuntimeException::new);
+    User user2 = userRepository.findById(1L).orElseThrow(NoSuchElementException::new);
     assertThat(user1.isReceivePermission()).isFalse();
   }
 
   @Test
   @DisplayName("로그아웃")
   void logout() throws Exception {
-    User user1 = userRepository.findById(1L).orElseThrow(RuntimeException::new);
+    User user1 = userRepository.findById(1L).orElseThrow(NoSuchElementException::new);
     assertThat(user1.isLogin()).isFalse();
 
     mockMvc.perform(patch(END_POINT + "/logout")
             .header("Authorization", idToken))
-        .andExpect(status().isNoContent())
-        .andDo(print());
+        .andExpect(status().isNoContent());
+//        .andDo(print());
 
-    User user2 = userRepository.findById(1L).orElseThrow(RuntimeException::new);
+    User user2 = userRepository.findById(1L).orElseThrow(NoSuchElementException::new);
     assertThat(user2.isLogin()).isFalse();
   }
 
@@ -113,8 +113,8 @@ class UserControllerTest extends BaseIntegrationTest {
 
     mockMvc.perform(delete(END_POINT)
             .header("Authorization", idToken))
-        .andExpect(status().isNoContent())
-        .andDo(print());
+        .andExpect(status().isNoContent());
+//        .andDo(print());
 
     List<User> userList2 = userRepository.findAll();
 

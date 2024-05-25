@@ -19,6 +19,7 @@ public record PushMessage(
   public static List<Message> makeMessageList(List<Alarm> alarmList) {
     final Alarm firstAlarm = alarmList.get(0);
     PushMessage pushMessage;
+
     if (firstAlarm.getProject() != null) {
       pushMessage = firstAlarm.getTargetUser() == null
           ? PushMessage.makeMessage(firstAlarm.getProject(), firstAlarm.getStatus())
