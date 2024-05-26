@@ -11,7 +11,6 @@ import java.util.NoSuchElementException;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 class ProfileControllerTest extends BaseIntegrationTest {
@@ -32,7 +31,7 @@ class ProfileControllerTest extends BaseIntegrationTest {
   @Test
   @DisplayName("프로필 사진 변경")
   void readOtherInfo() throws Exception {
-    User user = userRepository.findById(1L).orElseThrow(NoSuchElementException::new);
+    User user = userRepository.findByUid(uid).orElseThrow(NoSuchElementException::new);
     ProfileImage profileImage = new ProfileImage(null, user, 1L);
     profileRepository.save(profileImage);
 

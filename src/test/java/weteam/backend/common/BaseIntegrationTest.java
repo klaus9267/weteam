@@ -17,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +25,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import static java.lang.System.getenv;
+
 @SpringBootTest
 @AutoConfigureMockMvc
 @Transactional
@@ -33,11 +34,13 @@ import java.util.Map;
 @Import(DataInitializer.class)
 //@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
 public class BaseIntegrationTest {
+  Map<String, String> env = getenv();
   protected ObjectMapper mapper = new ObjectMapper();
 
   @Autowired
   protected MockMvc mockMvc;
-  protected static String idToken;
+  protected String idToken;
+  protected String uid = env.get("uid");
 
   public BaseIntegrationTest() {
     this.mapper.registerModule(new JavaTimeModule());
@@ -51,8 +54,8 @@ public class BaseIntegrationTest {
   }
 
   private String exchangeCustomTokenForIdToken(String customToken) throws IOException, ParseException {
-    String apiKey = "AIzaSyBc4I9eLDbOYxWfTtjWD6JrMymeTy7UQm0";
-    String requestUrl = "https://identitytoolkit.googleapis.com/v1/accounts:signInWithCustomToken?key=" + apiKey;
+    String apiKey = env.get("apiKey");
+    String requestUrl = env.get("requestUrl") + apiKey;
 
     try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
       HttpPost httpPost = new HttpPost(requestUrl);

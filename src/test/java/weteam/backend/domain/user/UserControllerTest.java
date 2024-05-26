@@ -14,7 +14,6 @@ import java.util.Random;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -43,7 +42,7 @@ class UserControllerTest extends BaseIntegrationTest {
         ).andExpect(status().isOk())
         .andExpect(jsonPath("$.id").value(n));
 
-    User user1 = userRepository.findById(1L).orElseThrow(NoSuchElementException::new);
+    User user1 = userRepository.findByUid(uid).orElseThrow(NoSuchElementException::new);
     assertThat(user1).extracting(
         User::getUsername,
         User::getOrganization,
@@ -65,7 +64,7 @@ class UserControllerTest extends BaseIntegrationTest {
         .andExpect(status().isNoContent());
 //        .andDo(print());
 
-    User user1 = userRepository.findById(1L).orElseThrow(NoSuchElementException::new);
+    User user1 = userRepository.findByUid(uid).orElseThrow(NoSuchElementException::new);
     assertThat(user1).extracting(
         User::getUsername,
         User::getOrganization,
@@ -80,21 +79,21 @@ class UserControllerTest extends BaseIntegrationTest {
   @Test
   @DisplayName("푸시 알람 수신 변경")
   void changeReceivePermission() throws Exception {
-    User user1 = userRepository.findById(1L).orElseThrow(NoSuchElementException::new);
+    User user1 = userRepository.findByUid(uid).orElseThrow(NoSuchElementException::new);
     assertThat(user1.isReceivePermission()).isTrue();
 
     mockMvc.perform(patch(END_POINT + "/push")
             .header("Authorization", idToken))
         .andExpect(status().isNoContent());
 
-    User user2 = userRepository.findById(1L).orElseThrow(NoSuchElementException::new);
+    User user2 = userRepository.findByUid(uid).orElseThrow(NoSuchElementException::new);
     assertThat(user1.isReceivePermission()).isFalse();
   }
 
   @Test
   @DisplayName("로그아웃")
   void logout() throws Exception {
-    User user1 = userRepository.findById(1L).orElseThrow(NoSuchElementException::new);
+    User user1 = userRepository.findByUid(uid).orElseThrow(NoSuchElementException::new);
     assertThat(user1.isLogin()).isFalse();
 
     mockMvc.perform(patch(END_POINT + "/logout")
@@ -102,7 +101,7 @@ class UserControllerTest extends BaseIntegrationTest {
         .andExpect(status().isNoContent());
 //        .andDo(print());
 
-    User user2 = userRepository.findById(1L).orElseThrow(NoSuchElementException::new);
+    User user2 = userRepository.findByUid(uid).orElseThrow(NoSuchElementException::new);
     assertThat(user2.isLogin()).isFalse();
   }
 

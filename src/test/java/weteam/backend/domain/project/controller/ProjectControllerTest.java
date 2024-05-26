@@ -86,7 +86,7 @@ class ProjectControllerTest extends BaseIntegrationTest {
     @Test
     @DisplayName("팀플 진행 상황 변경")
     void updateDone() throws Exception {
-      User user = userRepository.findById(1L).orElseThrow(RuntimeException::new);
+      User user = userRepository.findByUid(uid).orElseThrow(RuntimeException::new);
       CreateProjectDto projectDto = new CreateProjectDto("test name", LocalDate.now(), 1L, LocalDate.now(), "test explanation");
       Project project = Project.from(projectDto, user);
 

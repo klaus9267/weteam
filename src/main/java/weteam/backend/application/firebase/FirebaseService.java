@@ -41,10 +41,12 @@ public class FirebaseService {
   public void sendNotification(final List<Alarm> alarmList) {
     if (alarmList != null && !alarmList.isEmpty()) {
       final List<Message> messageList = PushMessage.makeMessageList(alarmList);
-      try {
-        firebaseMessaging.sendAll(messageList);
-      } catch (FirebaseMessagingException e) {
-        throw new CustomException(CustomErrorCode.FIREBASE_MESSAGE_ERROR);
+      if (!messageList.isEmpty()) {
+        try {
+          firebaseMessaging.sendAll(messageList);
+        } catch (FirebaseMessagingException e) {
+          throw new CustomException(CustomErrorCode.FIREBASE_MESSAGE_ERROR);
+        }
       }
     }
   }

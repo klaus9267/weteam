@@ -60,14 +60,6 @@ public class GlobalExceptionHandler {
     return buildExceptionError(e, HttpStatus.BAD_REQUEST);
   }
 
-  @ExceptionHandler(FirebaseMessagingException.class)
-  @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-  protected ExceptionError handleFirebaseMessaging(final FirebaseMessagingException e, HttpServletRequest request) {
-    logRequestDetails(request, e, "FirebaseMessagingException");
-    sendSlackMessage(request, e, HttpStatus.INTERNAL_SERVER_ERROR);
-    return buildExceptionError(e, HttpStatus.INTERNAL_SERVER_ERROR);
-  }
-
   private ExceptionError buildExceptionError(Exception exception, HttpStatus status) {
     return ExceptionError.builder()
         .message(exception.getMessage())

@@ -11,6 +11,7 @@ import weteam.backend.domain.project.entity.Project;
 import weteam.backend.domain.user.entity.User;
 
 import java.util.List;
+import java.util.Objects;
 
 public record PushMessage(
     String title,
@@ -35,11 +36,18 @@ public record PushMessage(
         .setBody(pushMessage.content)
         .build();
 
-    return alarmList.stream().map(alarm -> Message.builder()
-        .setToken(alarm.getUser().getDeviceToken())
-        .setNotification(notification)
-        .build()
-    ).toList();
+    return alarmList.stream().map(alarm -> {
+          try {
+            return Message.builder()
+                .setToken(alarm.getUser().getDeviceToken())
+                .setNotification(notification)
+                .build();
+          } catch (Exception e) {
+            return null;
+          }
+        }
+    ).filter(Objects::nonNull)
+    .toList();
   }
 
   public static PushMessage makeMessage(final Project project, final AlarmStatus status, final User targetUser) {
