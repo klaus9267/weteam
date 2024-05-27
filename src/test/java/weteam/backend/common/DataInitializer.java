@@ -26,6 +26,7 @@ public class DataInitializer {
   private final UserRepository userRepository;
   private final ProjectRepository projectRepository;
   private final BlackListRepository blackListRepository;
+  public static User testUser;
   List<User> users = new ArrayList<>();
   List<Project> projects = new ArrayList<>();
   List<Meeting> meetings = new ArrayList<>();
@@ -33,13 +34,13 @@ public class DataInitializer {
   @PostConstruct
   @Transactional
   public void setContext() {
-    this.saveUsers();
-    this.saveProjects();
-    this.saveBlackLists();
-    System.out.println("user size : " + this.users.size());
+    this.initUsers();
+    this.initProjects();
+    this.initBlackLists();
+    testUser = users.get(0);
   }
 
-  private void saveUsers() {
+  private void initUsers() {
     List<User> userList = new ArrayList<>();
     userList.add(User.builder().role(UserRole.USER).receivePermission(true).username("kim").organization("organization").introduction("introduction").uid("hIGOWUmXSugwCftVJ2HsF9kiqfh1").build());
     for (int i = 0; i < 100; i++) {
@@ -54,7 +55,7 @@ public class DataInitializer {
     users = userRepository.saveAll(userList);
   }
 
-  private void saveProjects() {
+  private void initProjects() {
     List<Project> projectList = new ArrayList<>();
     for (long i = 0; i < 100; i++) {
       Random random = new Random();
@@ -75,7 +76,7 @@ public class DataInitializer {
     projects = projectRepository.saveAll(projectList);
   }
 
-  private void saveBlackLists() {
+  private void initBlackLists() {
     List<BlackList> blackLists = new ArrayList<>();
 
     A:

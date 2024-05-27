@@ -1,10 +1,12 @@
 package weteam.backend.domain.user;
 
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import weteam.backend.common.BaseIntegrationTest;
+import weteam.backend.common.DataInitializer;
 import weteam.backend.domain.user.dto.RequestUserDto;
 import weteam.backend.domain.user.entity.User;
 
@@ -23,100 +25,101 @@ class UserControllerTest extends BaseIntegrationTest {
   @Autowired
   UserRepository userRepository;
 
-  @Test
-  @DisplayName("내 정보 조회")
-  void readMyInfo() throws Exception {
-    mockMvc.perform(get(END_POINT)
-            .header("Authorization", idToken))
-        .andExpect(status().isOk());
-//        .andDo(print());
-  }
+  @Nested
+  class 성공 {
+    @Test
+    @DisplayName("내 정보 조회")
+    void readMyInfo() throws Exception {
+      User user = DataInitializer.testUser;
 
-  @Test
-  @DisplayName("다른 사용자 정보 조회")
-  void readOtherInfo() throws Exception {
-    Random random = new Random();
-    int n = random.nextInt(0, 100);
-    mockMvc.perform(get(END_POINT + "/" + n)
-            .header("Authorization", idToken)
-        ).andExpect(status().isOk())
-        .andExpect(jsonPath("$.id").value(n));
+      mockMvc.perform(get(END_POINT)
+              .header("Authorization", idToken)
+          ).andExpect(jsonPath("$.id").value(user.getId()))
+          .andExpect(jsonPath("$.username").value(user.getUsername()))
+          .andExpect(jsonPath("$.email").value(user.getEmail()))
+          .andExpect(jsonPath("$.organization").value(user.getOrganization()))
+          .andExpect(jsonPath("$.introduction").value(user.getIntroduction()))
+          .andExpect(status().isOk())
+      ;
+    }
 
-    User user1 = userRepository.findByUid(uid).orElseThrow(NoSuchElementException::new);
-    assertThat(user1).extracting(
-        User::getUsername,
-        User::getOrganization,
-        User::getIntroduction
-    ).doesNotContainNull();
-  }
+    @Test
+    @DisplayName("다른 사용자 정보 조회")
+    void readOtherInfo() throws Exception {
+      Random random = new Random();
+      int n = random.nextInt(0, 100);
+      mockMvc.perform(get(END_POINT + "/" + n)
+              .header("Authorization", idToken)
+          ).andExpect(status().isOk())
+          .andExpect(jsonPath("$.id").value(n));
 
-  @Test
-  @DisplayName("사용자 정보 변경")
-  void updateUser() throws Exception {
-    RequestUserDto userDto = new RequestUserDto("test", "인덕대", "소개");
-    String body = mapper.writeValueAsString(userDto);
+      User user = userRepository.findByUid(uid).orElseThrow(NoSuchElementException::new);
+      assertThat(user).extracting(
+          User::getUsername,
+          User::getOrganization,
+          User::getIntroduction
+      ).doesNotContainNull();
+    }
 
-    mockMvc.perform(patch(END_POINT)
-            .content(body)
-            .header("Authorization", idToken)
-            .contentType(MediaType.APPLICATION_JSON)
-        )
-        .andExpect(status().isNoContent());
-//        .andDo(print());
+    @Nested
+    class 사용자_정보_변경 {
+      @Test
+      void updateUser() throws Exception {
+        RequestUserDto userDto = new RequestUserDto("test", "인덕대", "소개");
+        String body = mapper.writeValueAsString(userDto);
 
-    User user1 = userRepository.findByUid(uid).orElseThrow(NoSuchElementException::new);
-    assertThat(user1).extracting(
-        User::getUsername,
-        User::getOrganization,
-        User::getIntroduction
-    ).containsExactly(
-        userDto.username(),
-        userDto.organization(),
-        userDto.introduction()
-    );
-  }
+        mockMvc.perform(patch(END_POINT)
+                .content(body)
+                .header("Authorization", idToken)
+                .contentType(MediaType.APPLICATION_JSON)
+            )
+            .andExpect(status().isNoContent());
 
-  @Test
-  @DisplayName("푸시 알람 수신 변경")
-  void changeReceivePermission() throws Exception {
-    User user1 = userRepository.findByUid(uid).orElseThrow(NoSuchElementException::new);
-    assertThat(user1.isReceivePermission()).isTrue();
+        User user = userRepository.findByUid(uid).orElseThrow(NoSuchElementException::new);
+        assertThat(user).extracting(
+            User::getUsername,
+            User::getOrganization,
+            User::getIntroduction
+        ).containsExactly(
+            userDto.username(),
+            userDto.organization(),
+            userDto.introduction()
+        );
+      }
+    }
 
-    mockMvc.perform(patch(END_POINT + "/push")
-            .header("Authorization", idToken))
-        .andExpect(status().isNoContent());
+    @Test
+    @DisplayName("푸시 알람 수신 변경")
+    void changeReceivePermission() throws Exception {
+      mockMvc.perform(patch(END_POINT + "/push")
+              .header("Authorization", idToken))
+          .andExpect(status().isNoContent());
 
-    User user2 = userRepository.findByUid(uid).orElseThrow(NoSuchElementException::new);
-    assertThat(user1.isReceivePermission()).isFalse();
-  }
+      User user = userRepository.findByUid(uid).orElseThrow(NoSuchElementException::new);
+      assertThat(user.isReceivePermission()).isFalse();
+    }
 
-  @Test
-  @DisplayName("로그아웃")
-  void logout() throws Exception {
-    User user1 = userRepository.findByUid(uid).orElseThrow(NoSuchElementException::new);
-    assertThat(user1.isLogin()).isFalse();
+    @Test
+    @DisplayName("로그아웃")
+    void logout() throws Exception {
+      mockMvc.perform(patch(END_POINT + "/logout")
+              .header("Authorization", idToken))
+          .andExpect(status().isNoContent());
 
-    mockMvc.perform(patch(END_POINT + "/logout")
-            .header("Authorization", idToken))
-        .andExpect(status().isNoContent());
-//        .andDo(print());
+      User user2 = userRepository.findByUid(uid).orElseThrow(NoSuchElementException::new);
+      assertThat(user2.isLogin()).isFalse();
+    }
 
-    User user2 = userRepository.findByUid(uid).orElseThrow(NoSuchElementException::new);
-    assertThat(user2.isLogin()).isFalse();
-  }
+    @Test
+    @DisplayName("사용자 탈퇴")
+    void quit() throws Exception {
+      mockMvc.perform(delete(END_POINT)
+              .header("Authorization", idToken))
+          .andExpect(status().isNoContent());
 
-  @Test
-  @DisplayName("사용자 탈퇴")
-  void quit() throws Exception {
-    List<User> userList1 = userRepository.findAll();
+      List<User> userList = userRepository.findAll();
 
-    mockMvc.perform(delete(END_POINT)
-            .header("Authorization", idToken))
-        .andExpect(status().isNoContent());
-//        .andDo(print());
-
-    List<User> userList2 = userRepository.findAll();
-
-    assertThat(userList1.size()).isEqualTo(userList2.size() + 1);
+      assertThat(userList.contains(DataInitializer.testUser)).isFalse();
+    }
   }
 }

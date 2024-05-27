@@ -6,13 +6,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import weteam.backend.common.BaseIntegrationTest;
+import weteam.backend.common.DataInitializer;
 import weteam.backend.domain.common.pagination.param.ProjectPaginationParam;
 import weteam.backend.domain.project.dto.CreateProjectDto;
 import weteam.backend.domain.project.entity.Project;
 import weteam.backend.domain.project.entity.ProjectUser;
 import weteam.backend.domain.project.repository.ProjectRepository;
 import weteam.backend.domain.user.UserRepository;
-import weteam.backend.domain.user.entity.User;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -86,13 +86,12 @@ class ProjectControllerTest extends BaseIntegrationTest {
     @Test
     @DisplayName("팀플 진행 상황 변경")
     void updateDone() throws Exception {
-      User user = userRepository.findByUid(uid).orElseThrow(RuntimeException::new);
       CreateProjectDto projectDto = new CreateProjectDto("test name", LocalDate.now(), 1L, LocalDate.now(), "test explanation");
-      Project project = Project.from(projectDto, user);
+      Project project = Project.from(projectDto, DataInitializer.testUser);
 
       Project savedProject = projectRepository.save(project);
 
-      mockMvc.perform(patch(END_POINT + "/" + savedProject.getId()+"/done")
+      mockMvc.perform(patch(END_POINT + "/" + savedProject.getId() + "/done")
           .header("Authorization", idToken)
       ).andExpect(status().isNoContent());
 

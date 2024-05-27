@@ -49,6 +49,7 @@ public class UserController {
   @PatchMapping
   @Operation(summary = "사용자 정보 변경", description = "응답 없음")
   @ResponseStatus(HttpStatus.NO_CONTENT)
+  //TODO: dto에서 하나만 보내도 되도록 수정
   public void updateUser(@RequestBody @Valid final RequestUserDto requestUserDto) {
     userService.updateUser(requestUserDto);
   }
