@@ -1,7 +1,10 @@
 package weteam.backend.domain.user.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import weteam.backend.application.BaseEntity;
 import weteam.backend.domain.alarm.entity.Alarm;
 import weteam.backend.domain.meeting.entity.Meeting;
@@ -69,9 +72,9 @@ public class User extends BaseEntity {
   }
 
   public void updateUser(final RequestUserDto userDto) {
-    this.organization = userDto.organization();
-    this.username = userDto.username();
-    this.introduction = userDto.introduction();
+    this.organization = userDto.organization() != null ? userDto.organization() : this.organization;
+    this.username = userDto.username() != null ? userDto.username() : this.username;
+    this.introduction = userDto.introduction() != null ? userDto.introduction() : this.introduction;
   }
 
   public void updateDevice(final String deviceToken) {

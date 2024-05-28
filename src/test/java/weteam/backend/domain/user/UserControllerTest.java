@@ -64,8 +64,24 @@ class UserControllerTest extends BaseIntegrationTest {
     @Nested
     class 사용자_정보_변경 {
       @Test
-      void updateUser() throws Exception {
-        RequestUserDto userDto = new RequestUserDto("test", "인덕대", "소개");
+      void ony_username() throws Exception {
+        RequestUserDto userDto = new RequestUserDto("test", null, null);
+        this.performRequest(userDto);
+      }
+
+      @Test
+      void organization_username() throws Exception {
+        RequestUserDto userDto = new RequestUserDto(null, "organization", null);
+        this.performRequest(userDto);
+      }
+
+      @Test
+      void introduction_username() throws Exception {
+        RequestUserDto userDto = new RequestUserDto(null, null, "introduction");
+        this.performRequest(userDto);
+      }
+
+      private void performRequest(RequestUserDto userDto) throws Exception {
         String body = mapper.writeValueAsString(userDto);
 
         mockMvc.perform(patch(END_POINT)
@@ -81,9 +97,9 @@ class UserControllerTest extends BaseIntegrationTest {
             User::getOrganization,
             User::getIntroduction
         ).containsExactly(
-            userDto.username(),
-            userDto.organization(),
-            userDto.introduction()
+            userDto.username() == null ? DataInitializer.testUser.getUsername() : userDto.username(),
+            userDto.organization() == null ? DataInitializer.testUser.getOrganization() : userDto.organization(),
+            userDto.introduction() == null ? DataInitializer.testUser.getIntroduction() : userDto.introduction()
         );
       }
     }
