@@ -138,4 +138,20 @@ class UserControllerTest extends BaseIntegrationTest {
       assertThat(userList.contains(DataInitializer.testUser)).isFalse();
     }
   }
+
+  @Nested
+  class 실패 {
+    @Test
+    public void 사용자_정보_변경_NULL() throws Exception {
+      RequestUserDto userDto = new RequestUserDto(null, null, null);
+      String body = mapper.writeValueAsString(userDto);
+
+      mockMvc.perform(patch(END_POINT)
+              .content(body)
+              .header("Authorization", idToken)
+              .contentType(MediaType.APPLICATION_JSON)
+          )
+          .andExpect(status().isBadRequest());
+    }
+  }
 }
