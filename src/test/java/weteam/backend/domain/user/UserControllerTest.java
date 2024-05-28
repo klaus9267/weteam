@@ -134,7 +134,6 @@ class UserControllerTest extends BaseIntegrationTest {
           .andExpect(status().isNoContent());
 
       List<User> userList = userRepository.findAll();
-
       assertThat(userList.contains(DataInitializer.testUser)).isFalse();
     }
   }

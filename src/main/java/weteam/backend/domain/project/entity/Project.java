@@ -77,11 +77,10 @@ public class Project extends BaseEntity {
   }
 
   public void updateProject(final UpdateProjectDto projectDto) {
-    this.name = projectDto.name() == null ? name : projectDto.name();
-    this.startedAt = projectDto.startedAt();
-    this.explanation = projectDto.explanation() == null ? explanation : projectDto.explanation();
-    this.endedAt = projectDto.endedAt();
-    if (this.isDone) this.isDone = false;
+    this.name = projectDto.name() == null ? this.name : projectDto.name();
+    this.startedAt = projectDto.startedAt() == null ? this.startedAt : projectDto.startedAt();
+    this.explanation = projectDto.explanation() == null ? this.explanation : projectDto.explanation();
+    this.endedAt = projectDto.endedAt() == null ? this.endedAt : projectDto.endedAt();
   }
 
   public void addProjectUser(final User user) {
