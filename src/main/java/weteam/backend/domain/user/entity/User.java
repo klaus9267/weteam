@@ -72,9 +72,9 @@ public class User extends BaseEntity {
   }
 
   public void updateUser(final RequestUserDto userDto) {
-    this.organization = userDto.organization();
-    this.username = userDto.username();
-    this.introduction = userDto.introduction();
+    this.organization = userDto.organization() != null ? userDto.organization() : this.organization;
+    this.username = userDto.username() != null ? userDto.username() : this.username;
+    this.introduction = userDto.introduction() != null ? userDto.introduction() : this.introduction;
   }
 
   public void updateDevice(final String deviceToken) {

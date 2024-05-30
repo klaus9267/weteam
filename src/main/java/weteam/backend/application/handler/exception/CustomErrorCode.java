@@ -21,11 +21,13 @@ public enum CustomErrorCode {
   INVALID_USER(HttpStatus.BAD_REQUEST, "잘못된 사용자의 접근입니다."),
   INVALID_HOST(HttpStatus.BAD_REQUEST, "호스트가 아닙니다."),
   IO_EXCEPTION(HttpStatus.BAD_REQUEST, "IOException!!"),
+  NULL(HttpStatus.BAD_REQUEST, "Required value is null"),
+  ILLEGAL_ACCESS(HttpStatus.BAD_REQUEST, "잘못된 필드의 접근"),
   FIREBASE_MESSAGE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to send notification");
-  
+
   private final HttpStatus httpStatus;
   private final String message;
-  
+
   CustomErrorCode(HttpStatus httpStatus, String message) {
     this.httpStatus = httpStatus;
     this.message = message;

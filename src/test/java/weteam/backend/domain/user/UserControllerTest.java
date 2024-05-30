@@ -1,85 +1,156 @@
 package weteam.backend.domain.user;
 
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import weteam.backend.common.BaseIntegrationTest;
-import weteam.backend.common.WithMockCustomUser;
+import weteam.backend.common.DataInitializer;
 import weteam.backend.domain.user.dto.RequestUserDto;
+import weteam.backend.domain.user.entity.User;
 
+import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Random;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
 class UserControllerTest extends BaseIntegrationTest {
   private final String END_POINT = "/api/users";
+  @Autowired
+  UserRepository userRepository;
 
-  @Test
-  @DisplayName("내 정보 조회")
-//  @WithMockCustomUser
-  void readMyInfo() throws Exception {
-    mockMvc.perform(get(END_POINT)
-            .header("Authorization", idToken))
-        .andExpect(status().isOk())
-        .andDo(print());
+  @Nested
+  class 성공 {
+    @Test
+    @DisplayName("내 정보 조회")
+    void readMyInfo() throws Exception {
+      User user = DataInitializer.testUser;
+
+      mockMvc.perform(get(END_POINT)
+              .header("Authorization", idToken)
+          ).andExpect(jsonPath("$.id").value(user.getId()))
+          .andExpect(jsonPath("$.username").value(user.getUsername()))
+          .andExpect(jsonPath("$.email").value(user.getEmail()))
+          .andExpect(jsonPath("$.organization").value(user.getOrganization()))
+          .andExpect(jsonPath("$.introduction").value(user.getIntroduction()))
+          .andExpect(status().isOk())
+      ;
+    }
+
+    @Test
+    @DisplayName("다른 사용자 정보 조회")
+    void readOtherInfo() throws Exception {
+      Random random = new Random();
+      int n = random.nextInt(0, 100);
+      mockMvc.perform(get(END_POINT + "/" + n)
+              .header("Authorization", idToken)
+          ).andExpect(status().isOk())
+          .andExpect(jsonPath("$.id").value(n));
+
+      User user = userRepository.findByUid(uid).orElseThrow(NoSuchElementException::new);
+      assertThat(user).extracting(
+          User::getUsername,
+          User::getOrganization,
+          User::getIntroduction
+      ).doesNotContainNull();
+    }
+
+    @Nested
+    class 사용자_정보_변경 {
+      @Test
+      void ony_username() throws Exception {
+        RequestUserDto userDto = new RequestUserDto("test", null, null);
+        this.performRequest(userDto);
+      }
+
+      @Test
+      void organization_username() throws Exception {
+        RequestUserDto userDto = new RequestUserDto(null, "organization", null);
+        this.performRequest(userDto);
+      }
+
+      @Test
+      void introduction_username() throws Exception {
+        RequestUserDto userDto = new RequestUserDto(null, null, "introduction");
+        this.performRequest(userDto);
+      }
+
+      private void performRequest(RequestUserDto userDto) throws Exception {
+        String body = mapper.writeValueAsString(userDto);
+
+        mockMvc.perform(patch(END_POINT)
+                .content(body)
+                .header("Authorization", idToken)
+                .contentType(MediaType.APPLICATION_JSON)
+            )
+            .andExpect(status().isNoContent());
+
+        User user = userRepository.findByUid(uid).orElseThrow(NoSuchElementException::new);
+        assertThat(user).extracting(
+            User::getUsername,
+            User::getOrganization,
+            User::getIntroduction
+        ).containsExactly(
+            userDto.username() == null ? DataInitializer.testUser.getUsername() : userDto.username(),
+            userDto.organization() == null ? DataInitializer.testUser.getOrganization() : userDto.organization(),
+            userDto.introduction() == null ? DataInitializer.testUser.getIntroduction() : userDto.introduction()
+        );
+      }
+    }
+
+    @Test
+    @DisplayName("푸시 알람 수신 변경")
+    void changeReceivePermission() throws Exception {
+      mockMvc.perform(patch(END_POINT + "/push")
+              .header("Authorization", idToken))
+          .andExpect(status().isNoContent());
+
+      User user = userRepository.findByUid(uid).orElseThrow(NoSuchElementException::new);
+      assertThat(user.isReceivePermission()).isFalse();
+    }
+
+    @Test
+    @DisplayName("로그아웃")
+    void logout() throws Exception {
+      mockMvc.perform(patch(END_POINT + "/logout")
+              .header("Authorization", idToken))
+          .andExpect(status().isNoContent());
+
+      User user2 = userRepository.findByUid(uid).orElseThrow(NoSuchElementException::new);
+      assertThat(user2.isLogin()).isFalse();
+    }
+
+    @Test
+    @DisplayName("사용자 탈퇴")
+    void quit() throws Exception {
+      mockMvc.perform(delete(END_POINT)
+              .header("Authorization", idToken))
+          .andExpect(status().isNoContent());
+
+      List<User> userList = userRepository.findAll();
+      assertThat(userList.contains(DataInitializer.testUser)).isFalse();
+    }
   }
 
-  @Test
-  @DisplayName("다른 사용자 정보 조회")
-  @WithMockCustomUser
-  void readOtherInfo() throws Exception {
-    Random random = new Random();
-    int n = random.nextInt(0, 100);
-    mockMvc.perform(get(END_POINT + "/" + n))
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.id").value(n))
-        .andDo(print());
-  }
+  @Nested
+  class 실패 {
+    @Test
+    public void 사용자_정보_변경_NULL() throws Exception {
+      RequestUserDto userDto = new RequestUserDto(null, null, null);
+      String body = mapper.writeValueAsString(userDto);
 
-  @Test
-  @DisplayName("사용자 정보 변경")
-  @WithMockCustomUser
-  void updateUser() throws Exception {
-    RequestUserDto userDto = new RequestUserDto("test", "인덕대");
-    String body = mapper.writeValueAsString(userDto);
-
-    mockMvc.perform(patch(END_POINT)
-            .content(body)
-            .contentType(MediaType.APPLICATION_JSON)
-        )
-        .andExpect(status().isNoContent())
-        .andDo(print());
-  }
-
-  @Test
-  @DisplayName("푸시 알람 수신 변경")
-  @WithMockCustomUser
-  void changeReceivePermission() throws Exception {
-    mockMvc.perform(get(END_POINT))
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.receivePermission").value(true))
-        .andDo(print());
-
-    mockMvc.perform(patch(END_POINT + "/push"))
-        .andExpect(status().isNoContent());
-
-    mockMvc.perform(get(END_POINT))
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.receivePermission").value(false))
-        .andDo(print());
-  }
-
-  @Test
-  @DisplayName("로그아웃")
-  @WithMockCustomUser
-  void logout() throws Exception {
-    mockMvc.perform(patch(END_POINT + "/logout"))
-        .andExpect(status().isNoContent())
-        .andDo(print());
+      mockMvc.perform(patch(END_POINT)
+              .content(body)
+              .header("Authorization", idToken)
+              .contentType(MediaType.APPLICATION_JSON)
+          )
+          .andExpect(status().isBadRequest());
+    }
   }
 }

@@ -1,6 +1,7 @@
 package weteam.backend.common;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.UserRecord;
@@ -11,7 +12,7 @@ import org.apache.hc.client5.http.impl.classic.HttpClients;
 import org.apache.hc.core5.http.ParseException;
 import org.apache.hc.core5.http.io.entity.EntityUtils;
 import org.apache.hc.core5.http.io.entity.StringEntity;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -24,28 +25,37 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import static java.lang.System.getenv;
+
 @SpringBootTest
 @AutoConfigureMockMvc
+@Transactional
 @ActiveProfiles("test")
 @Import(DataInitializer.class)
-@Transactional
+//@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
 public class BaseIntegrationTest {
-  protected final ObjectMapper mapper = new ObjectMapper();
+  Map<String, String> env = getenv();
+  protected ObjectMapper mapper = new ObjectMapper();
 
   @Autowired
   protected MockMvc mockMvc;
-  protected static String idToken;
+  protected String idToken;
+  protected String uid = env.get("uid");
 
-  @BeforeAll
-  public static void setup(@Autowired FirebaseAuth firebaseAuth) throws FirebaseAuthException, IOException, ParseException {
+  public BaseIntegrationTest() {
+    this.mapper.registerModule(new JavaTimeModule());
+  }
+
+  @BeforeEach
+  public void setup(@Autowired FirebaseAuth firebaseAuth) throws FirebaseAuthException, IOException, ParseException {
     UserRecord userRecord = firebaseAuth.getUserByEmail("klaus9267@gmail.com");
     String customToken = firebaseAuth.createCustomToken(userRecord.getUid());
     idToken = "Bearer " + exchangeCustomTokenForIdToken(customToken);
   }
 
-  private static String exchangeCustomTokenForIdToken(String customToken) throws IOException, ParseException {
-    String apiKey = "AIzaSyBc4I9eLDbOYxWfTtjWD6JrMymeTy7UQm0";
-    String requestUrl = "https://identitytoolkit.googleapis.com/v1/accounts:signInWithCustomToken?key=" + apiKey;
+  private String exchangeCustomTokenForIdToken(String customToken) throws IOException, ParseException {
+    String apiKey = env.get("apiKey");
+    String requestUrl = env.get("requestUrl") + apiKey;
 
     try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
       HttpPost httpPost = new HttpPost(requestUrl);

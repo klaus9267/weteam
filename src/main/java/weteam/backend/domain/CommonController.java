@@ -1,4 +1,4 @@
-package weteam.backend.domain.common;
+package weteam.backend.domain;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.firebase.auth.FirebaseAuth;

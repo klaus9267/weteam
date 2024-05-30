@@ -4,6 +4,7 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingException;
 import com.google.firebase.messaging.Message;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import weteam.backend.application.auth.SecurityUtil;
@@ -19,6 +20,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class FirebaseService {
   private final FirebaseMessaging firebaseMessaging;
   private final UserRepository userRepository;
@@ -39,10 +41,12 @@ public class FirebaseService {
   public void sendNotification(final List<Alarm> alarmList) {
     if (alarmList != null && !alarmList.isEmpty()) {
       final List<Message> messageList = PushMessage.makeMessageList(alarmList);
-      try {
-        firebaseMessaging.sendAll(messageList);
-      } catch (FirebaseMessagingException e) {
-        throw new RuntimeException(e);
+      if (!messageList.isEmpty()) {
+        try {
+          firebaseMessaging.sendAll(messageList);
+        } catch (FirebaseMessagingException e) {
+          throw new CustomException(CustomErrorCode.FIREBASE_MESSAGE_ERROR);
+        }
       }
     }
   }

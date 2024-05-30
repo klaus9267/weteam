@@ -25,7 +25,7 @@ public class GlobalExceptionHandler {
   @ExceptionHandler(Exception.class)
   @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
   protected ExceptionError handleException(final Exception e, HttpServletRequest request) {
-    logRequestDetails(request, e);
+    logRequestDetails(request, e, "Exception");
     sendSlackMessage(request, e, HttpStatus.INTERNAL_SERVER_ERROR);
     return buildExceptionError(e, HttpStatus.INTERNAL_SERVER_ERROR);
   }
@@ -33,7 +33,7 @@ public class GlobalExceptionHandler {
   @ExceptionHandler(RuntimeException.class)
   @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
   protected ExceptionError handleRuntime(final RuntimeException e, HttpServletRequest request) {
-    logRequestDetails(request, e);
+    logRequestDetails(request, e, "RuntimeException");
     sendSlackMessage(request, e, HttpStatus.INTERNAL_SERVER_ERROR);
     return buildExceptionError(e, HttpStatus.INTERNAL_SERVER_ERROR);
   }
@@ -41,7 +41,7 @@ public class GlobalExceptionHandler {
   @ExceptionHandler(IOException.class)
   @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
   protected ExceptionError handleIO(final IOException e, HttpServletRequest request) {
-    logRequestDetails(request, e);
+    logRequestDetails(request, e, "IOException");
     sendSlackMessage(request, e, HttpStatus.INTERNAL_SERVER_ERROR);
     return buildExceptionError(e, HttpStatus.INTERNAL_SERVER_ERROR);
   }
@@ -49,23 +49,15 @@ public class GlobalExceptionHandler {
   @ExceptionHandler(CustomException.class)
   @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
   protected ExceptionError handleCustom(final CustomException e, HttpServletRequest request) {
-    logRequestDetails(request, e);
+    logRequestDetails(request, e, "CustomException");
     return buildExceptionError(e, e.getCustomErrorCode().getHttpStatus());
   }
 
   @ExceptionHandler(MethodArgumentNotValidException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   protected ExceptionError handleMethodArgumentNotValid(final MethodArgumentNotValidException e, HttpServletRequest request) {
-    logRequestDetails(request, e);
+    logRequestDetails(request, e, "MethodArgumentNotValidException");
     return buildExceptionError(e, HttpStatus.BAD_REQUEST);
-  }
-
-  @ExceptionHandler(FirebaseMessagingException.class)
-  @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-  protected ExceptionError handleFirebaseMessaging(final FirebaseMessagingException e, HttpServletRequest request) {
-    logRequestDetails(request, e);
-    sendSlackMessage(request, e, HttpStatus.INTERNAL_SERVER_ERROR);
-    return buildExceptionError(e, HttpStatus.INTERNAL_SERVER_ERROR);
   }
 
   private ExceptionError buildExceptionError(Exception exception, HttpStatus status) {
@@ -76,7 +68,7 @@ public class GlobalExceptionHandler {
         .build();
   }
 
-  private void logRequestDetails(HttpServletRequest request, Exception e) {
+  private void logRequestDetails(HttpServletRequest request, Exception e, String exception) {
     String method = request.getMethod();
     String requestURI = request.getRequestURI();
     String queryString = request.getQueryString();
@@ -85,7 +77,7 @@ public class GlobalExceptionHandler {
 
     log.error("");
     log.error("Request {} '{}' who {}", method, fullRequestPath, sessionId);
-    log.error(e.toString());
+    log.error(exception, e);
     log.error("");
     log.error("-------------------------------------------------------------------------------------------------------------------");
   }
