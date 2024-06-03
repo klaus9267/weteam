@@ -7,9 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import weteam.backend.common.BaseIntegrationTest;
 import weteam.backend.common.DataInitializer;
+import weteam.backend.domain.project.dto.CreateProjectDto;
+import weteam.backend.domain.project.entity.Project;
+import weteam.backend.domain.project.repository.ProjectRepository;
 import weteam.backend.domain.user.dto.RequestUserDto;
 import weteam.backend.domain.user.entity.User;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Random;
@@ -24,6 +28,8 @@ class UserControllerTest extends BaseIntegrationTest {
   private final String END_POINT = "/api/users";
   @Autowired
   UserRepository userRepository;
+  @Autowired
+  ProjectRepository projectRepository;
 
   @Nested
   class 성공 {
@@ -141,6 +147,14 @@ class UserControllerTest extends BaseIntegrationTest {
   @Nested
   class 실패 {
     @Test
+    public void 다른_사용자_조회_없는_아이디() throws Exception {
+
+      mockMvc.perform(get(END_POINT + "/444")
+          .header("Authorization", idToken)
+      ).andExpect(status().isNotFound());
+    }
+
+    @Test
     public void 사용자_정보_변경_NULL() throws Exception {
       RequestUserDto userDto = new RequestUserDto(null, null, null);
       String body = mapper.writeValueAsString(userDto);
@@ -152,5 +166,21 @@ class UserControllerTest extends BaseIntegrationTest {
           )
           .andExpect(status().isBadRequest());
     }
+
+    @Test
+    public void 사용자_탈퇴_호스트인_팀플_존재() throws Exception {
+      saveProject();
+
+      mockMvc.perform(delete(END_POINT)
+          .header("Authorization", idToken)
+      ).andExpect(status().isBadRequest());
+    }
+  }
+
+  private Project saveProject() {
+    CreateProjectDto projectDto = new CreateProjectDto("test name", LocalDate.now(), 1L, LocalDate.now(), "test explanation");
+    Project project = Project.from(projectDto, DataInitializer.testUser);
+
+    return projectRepository.save(project);
   }
 }

@@ -1,7 +1,6 @@
 package weteam.backend.domain.project.controller;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,8 +32,7 @@ class ProjectControllerTest extends BaseIntegrationTest {
   @Nested
   class 성공 {
     @Test
-    @DisplayName("팀플 생성")
-    void addProject() throws Exception {
+    void 팀플_생성() throws Exception {
       CreateProjectDto projectDto = new CreateProjectDto("test name", LocalDate.now(), 1L, LocalDate.now(), "test explanation");
       String body = mapper.writeValueAsString(projectDto);
 
@@ -46,8 +44,7 @@ class ProjectControllerTest extends BaseIntegrationTest {
     }
 
     @Test
-    @DisplayName("팀플 목록 조회")
-    void readProjectList() throws Exception {
+    void 팀플_목록_조회() throws Exception {
       ProjectPaginationParam paginationParam = new ProjectPaginationParam(0, 10, false, 1L, null, null);
 
       mockMvc.perform(get(END_POINT)
@@ -62,8 +59,7 @@ class ProjectControllerTest extends BaseIntegrationTest {
     }
 
     @Test
-    @DisplayName("팀플 단건 조회")
-    void readProject() throws Exception {
+    void 팀플_단건_조회() throws Exception {
       List<Project> projectList = projectRepository.findAll();
       List<Long> list = new ArrayList<>();
       A:
@@ -84,8 +80,7 @@ class ProjectControllerTest extends BaseIntegrationTest {
     }
 
     @Test
-    @DisplayName("팀플 진행 상황 변경")
-    void updateDone() throws Exception {
+    void 팀플_진행_상황_변경() throws Exception {
       Project savedProject = saveProject();
 
       mockMvc.perform(patch(END_POINT + "/" + savedProject.getId() + "/done")
@@ -153,6 +148,39 @@ class ProjectControllerTest extends BaseIntegrationTest {
         callApiRequestForUpdate(projectDto, savedProject);
       }
     }
+
+    @Test
+    void 팀플_호스트_넘기기() throws Exception {
+      Project project = saveProject();
+      long userId = 32L;
+      mockMvc.perform(patch(END_POINT + "/" + project.getId() + "/" + userId)
+          .header("Authorization", idToken)
+      ).andExpect(status().isNoContent());
+
+      Project foundProject = projectRepository.findById(project.getId()).orElseThrow(RuntimeException::new);
+      assertThat(project).extracting(
+          Project::getId,
+          Project::getName,
+          Project::getExplanation,
+          Project::getHashedId,
+          project1 -> project1.getHost().getId()
+      ).containsExactly(
+          foundProject.getId(),
+          foundProject.getName(),
+          foundProject.getExplanation(),
+          foundProject.getHashedId(),
+          userId
+      );
+    }
+
+    @Test
+    void 팀플_삭제() throws Exception {
+      Project project = saveProject();
+
+      mockMvc.perform(delete(END_POINT + "/" + project.getId())
+          .header("Authorization", idToken)
+      ).andExpect(status().isNoContent());
+    }
   }
 
   @Nested
@@ -218,6 +246,49 @@ class ProjectControllerTest extends BaseIntegrationTest {
     }
 
     @Nested
+    class 목록_조회 {
+      private void callApiForBadRequestWhenRead(final Integer page, final Integer size, final Boolean isDone, Long userId) throws Exception {
+        mockMvc.perform(get(END_POINT)
+            .param("page", page != null ? String.valueOf(page) : null)
+            .param("size", size != null ? String.valueOf(size) : null)
+            .param("done", isDone != null ? String.valueOf(isDone) : null)
+            .param("userId", userId != null ? String.valueOf(userId) : null)
+            .header("Authorization", idToken)
+        ).andExpect(status().isInternalServerError());
+      }
+
+      @Test
+      public void page_null() throws Exception {
+        this.callApiForBadRequestWhenRead(null, 10, false, 1L);
+      }
+
+      @Test
+      public void size_null() throws Exception {
+        this.callApiForBadRequestWhenRead(0, null, false, 1L);
+      }
+    }
+
+    @Nested
+    class 팀플_단건_조회 {
+      @Test
+      public void 없는_아이디() throws Exception {
+        mockMvc.perform(get(END_POINT + "/11111")
+                .header("Authorization", idToken))
+            .andExpect(status().isNotFound());
+      }
+    }
+
+    @Nested
+    class 팀플_진행_상황_변경 {
+      @Test
+      public void 없는_아이디() throws Exception {
+        mockMvc.perform(patch(END_POINT + "/11111/done")
+                .header("Authorization", idToken))
+            .andExpect(status().isNotFound());
+      }
+    }
+
+    @Nested
     class 팀플_수정 {
       private void callApiForBadRequestWhenUpdate(final FailProjectDtoForUpdate failProjectDtoForUpdate, final Long projectId) throws Exception {
         String body = mapper.writeValueAsString(failProjectDtoForUpdate);
@@ -236,6 +307,51 @@ class ProjectControllerTest extends BaseIntegrationTest {
         ReflectionTestUtils.setField(projectDto, "name", null);
 
         this.callApiForBadRequestWhenUpdate(projectDto, project.getId());
+      }
+    }
+
+    @Nested
+    class 호스트_넘기기 {
+      @Test
+      void projectId_NOT_FOUNT() throws Exception {
+        mockMvc.perform(patch(END_POINT + "/" + 1111111 + "/" + 32)
+                .header("Authorization", idToken))
+            .andExpect(status().isNotFound());
+      }
+
+      @Test
+      void userId_NOT_FOUNT() throws Exception {
+        Project project = saveProject();
+        mockMvc.perform(patch(END_POINT + "/" + project.getId() + "/" + 320)
+                .header("Authorization", idToken))
+            .andExpect(status().isNotFound());
+      }
+
+      @Test
+      void 호스트_아님() throws Exception {
+        List<Project> list = projectRepository.findAll();
+        System.out.println(list.size());
+        mockMvc.perform(patch(END_POINT + "/" + 1 + "/" + 32)
+                .header("Authorization", idToken))
+            .andExpect(status().isBadRequest());
+      }
+    }
+
+    @Nested
+    class 팀플_삭제 {
+      @Test
+      void 호스트_아님() throws Exception {
+        mockMvc.perform(delete(END_POINT + "/2")
+                .header("Authorization", idToken))
+            .andExpect(status().isBadRequest());
+      }
+
+      @Test
+      void not_found() throws Exception {
+        Project project = saveProject();
+        mockMvc.perform(delete(END_POINT + "/333")
+                .header("Authorization", idToken))
+            .andExpect(status().isNotFound());
       }
     }
   }

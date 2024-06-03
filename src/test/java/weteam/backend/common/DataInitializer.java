@@ -67,12 +67,13 @@ public class DataInitializer {
         List<Long> ids = new ArrayList<>();
         for (ProjectUser projectUser : project.getProjectUserList()) ids.add(projectUser.getUser().getId());
         if (ids.contains(users.get(r).getId())) continue;
-
+        if (j == 0 && !ids.contains(1L)) project.addProjectUser(users.get(0));
         project.addProjectUser(users.get(r));
       }
 
       projectList.add(project);
     }
+
     projects = projectRepository.saveAll(projectList);
   }
 

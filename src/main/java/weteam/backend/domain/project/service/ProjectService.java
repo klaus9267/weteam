@@ -62,7 +62,6 @@ public class ProjectService {
   public void markAsDone(final Long projectId) {
     Project project = this.checkHost(projectId);
     project.updateDone();
-//    alarmService.addList(project, AlarmStatus.DONE);
     alarmService.addAlarmList(project, AlarmStatus.DONE);
   }
 
