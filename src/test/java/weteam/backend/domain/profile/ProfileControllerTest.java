@@ -4,11 +4,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import weteam.backend.common.BaseIntegrationTest;
-import weteam.backend.domain.user.UserRepository;
+import weteam.backend.common.DataInitializer;
 import weteam.backend.domain.user.entity.User;
 
-import java.util.NoSuchElementException;
-
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -17,8 +16,6 @@ class ProfileControllerTest extends BaseIntegrationTest {
   private final String END_POINT = "/api/profiles";
   @Autowired
   ProfileRepository profileRepository;
-  @Autowired
-  UserRepository userRepository;
 
   @Test
   @DisplayName("프로필 사진 생성")
@@ -31,13 +28,21 @@ class ProfileControllerTest extends BaseIntegrationTest {
   @Test
   @DisplayName("프로필 사진 변경")
   void readOtherInfo() throws Exception {
-    User user = userRepository.findByUid(uid).orElseThrow(NoSuchElementException::new);
-    ProfileImage profileImage = new ProfileImage(null, user, 1L);
+    User user = DataInitializer.testUser;
+    ProfileImage profileImage = ProfileImage.from(1L, user);
     profileRepository.save(profileImage);
 
-    mockMvc.perform(patch(END_POINT + "/1")
+    mockMvc.perform(patch(END_POINT + "/10")
         .header("Authorization", idToken)
     ).andExpect(status().isNoContent());
-//        .andDo(print());
+
+    ProfileImage image = profileRepository.findByUserId(user.getId()).orElseThrow(RuntimeException::new);
+    assertThat(image).extracting(
+        ProfileImage::getUser,
+        ProfileImage::getImageIdx
+    ).containsExactly(
+        user,
+        10L
+    );
   }
 }
