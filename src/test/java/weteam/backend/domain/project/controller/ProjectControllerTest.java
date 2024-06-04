@@ -37,10 +37,10 @@ class ProjectControllerTest extends BaseIntegrationTest {
       String body = mapper.writeValueAsString(projectDto);
 
       mockMvc.perform(post(END_POINT)
-              .header("Authorization", idToken)
-              .contentType(MediaType.APPLICATION_JSON)
-              .content(body))
-          .andExpect(status().isCreated());
+          .header("Authorization", idToken)
+          .contentType(MediaType.APPLICATION_JSON)
+          .content(body)
+      ).andExpect(status().isCreated());
     }
 
     @Test
