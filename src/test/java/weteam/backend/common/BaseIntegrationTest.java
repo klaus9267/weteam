@@ -55,7 +55,7 @@ public class BaseIntegrationTest {
 
   private String exchangeCustomTokenForIdToken(String customToken) throws IOException, ParseException {
     String apiKey = env.get("apiKey");
-    String requestUrl = env.get("requestUrl") + apiKey;
+    String requestUrl = "https://identitytoolkit.googleapis.com/v1/accounts:signInWithCustomToken?key=" + apiKey;
 
     try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
       HttpPost httpPost = new HttpPost(requestUrl);
