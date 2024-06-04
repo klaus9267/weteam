@@ -13,23 +13,24 @@ import weteam.backend.domain.user.entity.User;
 @AllArgsConstructor
 @Builder
 public class ProfileImage {
-    @Id
-    private Long id;
+  @Id
+  private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @MapsId
-    private User user;
+  @OneToOne(fetch = FetchType.LAZY)
+  @MapsId
+  private User user;
 
-    @Column(nullable = false)
-    private Long imageIdx;
+  @Column(nullable = false)
+  private Long imageIdx;
 
-    public static ProfileImage from(final Long imageIdx, final User user) {
-        return ProfileImage.builder().user(user)
-                           .imageIdx(imageIdx)
-                           .build();
-    }
+  public static ProfileImage from(final Long imageIdx, final User user) {
+    return ProfileImage.builder()
+        .user(user)
+        .imageIdx(imageIdx)
+        .build();
+  }
 
-    public void updateImage(final Long imageIdx) {
-        this.imageIdx = imageIdx;
-    }
+  public void updateImage(final Long imageIdx) {
+    this.imageIdx = imageIdx;
+  }
 }

@@ -57,14 +57,6 @@ public class Alarm {
     this.date = LocalDateTime.now();
   }
 
-  private Alarm(final Meeting meeting, final AlarmStatus status, final User user, final User targetUser) {
-    this.status = status;
-    this.meeting = meeting;
-    this.user = user;
-    this.date = LocalDateTime.now();
-    this.targetUser = targetUser;
-  }
-
   public static List<Alarm> from(final Project project, final AlarmStatus status, final User targetUser) {
     return project.getProjectUserList()
         .stream()

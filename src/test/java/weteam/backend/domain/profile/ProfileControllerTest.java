@@ -1,10 +1,11 @@
 package weteam.backend.domain.profile;
 
-import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import weteam.backend.common.BaseIntegrationTest;
 import weteam.backend.common.DataInitializer;
+import weteam.backend.domain.user.UserRepository;
 import weteam.backend.domain.user.entity.User;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -16,33 +17,37 @@ class ProfileControllerTest extends BaseIntegrationTest {
   private final String END_POINT = "/api/profiles";
   @Autowired
   ProfileRepository profileRepository;
+  @Autowired
+  UserRepository userRepository;
 
-  @Test
-  @DisplayName("프로필 사진 생성")
-  void addProfileImage() throws Exception {
-    mockMvc.perform(post(END_POINT + "/1")
-        .header("Authorization", idToken)
-    ).andExpect(status().isCreated());
-  }
+  @Nested
+  class 성공 {
+    @Test
+    void 프로필_사진_생성() throws Exception {
+      User user = DataInitializer.testUser;
+      long imageIdx = 12L;
 
-  @Test
-  @DisplayName("프로필 사진 변경")
-  void readOtherInfo() throws Exception {
-    User user = DataInitializer.testUser;
-    ProfileImage profileImage = ProfileImage.from(1L, user);
-    profileRepository.save(profileImage);
+      mockMvc.perform(post(END_POINT + "/" + imageIdx)
+          .header("Authorization", idToken)
+      ).andExpect(status().isCreated());
 
-    mockMvc.perform(patch(END_POINT + "/10")
-        .header("Authorization", idToken)
-    ).andExpect(status().isNoContent());
+      ProfileImage image = profileRepository.findByUserId(user.getId()).orElseThrow(RuntimeException::new);
+      assertThat(image.getImageIdx()).isEqualTo(imageIdx);
+    }
 
-    ProfileImage image = profileRepository.findByUserId(user.getId()).orElseThrow(RuntimeException::new);
-    assertThat(image).extracting(
-        ProfileImage::getUser,
-        ProfileImage::getImageIdx
-    ).containsExactly(
-        user,
-        10L
-    );
+    @Test
+    void 프로필_사진_변경() throws Exception {
+      long imageIdx = 12L;
+      User user = userRepository.findById(1L).orElseThrow(RuntimeException::new);
+      final ProfileImage profileImage = ProfileImage.from(2L, user);
+      profileRepository.save(profileImage);
+
+      mockMvc.perform(patch(END_POINT + "/" + imageIdx)
+          .header("Authorization", idToken)
+      ).andExpect(status().isNoContent());
+
+      ProfileImage image = profileRepository.findByUserId(user.getId()).orElseThrow(RuntimeException::new);
+      assertThat(image.getImageIdx()).isEqualTo(imageIdx);
+    }
   }
 }

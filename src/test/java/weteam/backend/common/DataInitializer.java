@@ -18,11 +18,16 @@ import weteam.backend.domain.user.entity.UserRole;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
+
+import static java.lang.System.getenv;
 
 @TestConfiguration
 @RequiredArgsConstructor
 public class DataInitializer {
+  Map<String, String> env = getenv();
+
   private final UserRepository userRepository;
   private final ProjectRepository projectRepository;
   private final BlackListRepository blackListRepository;
@@ -42,7 +47,7 @@ public class DataInitializer {
 
   private void initUsers() {
     List<User> userList = new ArrayList<>();
-    userList.add(User.builder().role(UserRole.USER).receivePermission(true).username("kim").organization("organization").introduction("introduction").uid("hIGOWUmXSugwCftVJ2HsF9kiqfh1").build());
+    userList.add(User.builder().role(UserRole.USER).receivePermission(true).username("kim").organization("organization").introduction("introduction").uid(env.get("uid")).build());
     for (int i = 0; i < 100; i++) {
       User user = User.builder()
           .username("username" + i)
