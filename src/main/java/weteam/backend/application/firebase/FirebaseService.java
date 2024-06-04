@@ -9,8 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import weteam.backend.application.auth.SecurityUtil;
 import weteam.backend.application.firebase.common.PushMessage;
-import weteam.backend.application.handler.exception.CustomErrorCode;
 import weteam.backend.application.handler.exception.CustomException;
+import weteam.backend.application.handler.exception.ErrorCode;
 import weteam.backend.domain.alarm.entity.Alarm;
 import weteam.backend.domain.user.UserRepository;
 import weteam.backend.domain.user.entity.User;
@@ -28,12 +28,12 @@ public class FirebaseService {
 
   public String readDeviceToken() {
     Optional<User> user = userRepository.findById(securityUtil.getId());
-    return user.map(User::getDeviceToken).orElseThrow(() -> new CustomException(CustomErrorCode.BAD_REQUEST, "디바이스 토큰을 조회할 수 없습니다."));
+    return user.map(User::getDeviceToken).orElseThrow(CustomException.raise(ErrorCode.DEVICE_TOKEN_NOT_FOUND));
   }
 
   @Transactional
   public void updateDevice(final String token) {
-    User user = userRepository.findById(securityUtil.getId()).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND, "사용자를 조회할 수 없습니다."));
+    User user = userRepository.findById(securityUtil.getId()).orElseThrow(CustomException.raise(ErrorCode.USER_NOT_FOUND));
     user.updateDevice(token);
   }
 
@@ -45,7 +45,7 @@ public class FirebaseService {
         try {
           firebaseMessaging.sendAll(messageList);
         } catch (FirebaseMessagingException e) {
-          throw new CustomException(CustomErrorCode.FIREBASE_MESSAGE_ERROR);
+          throw new CustomException(ErrorCode.FIREBASE_MESSAGE_ERROR);
         }
       }
     }

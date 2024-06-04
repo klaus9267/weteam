@@ -5,8 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import weteam.backend.application.handler.exception.CustomErrorCode;
 import weteam.backend.application.handler.exception.CustomException;
+import weteam.backend.application.handler.exception.ErrorCode;
 import weteam.backend.domain.user.entity.User;
 
 @Entity(name = "project_users")
@@ -43,7 +43,7 @@ public class ProjectUser {
   }
 
   public void disable() {
-    if (!this.isEnable) throw new CustomException(CustomErrorCode.BAD_REQUEST, "이미 탈퇴한 프로젝트입니다.");
+    if (!this.isEnable) throw new CustomException(ErrorCode.BAD_REQUEST);
     this.isEnable = false;
   }
 

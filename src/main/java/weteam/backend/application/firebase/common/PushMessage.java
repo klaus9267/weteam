@@ -2,8 +2,8 @@ package weteam.backend.application.firebase.common;
 
 import com.google.firebase.messaging.Message;
 import com.google.firebase.messaging.Notification;
-import weteam.backend.application.handler.exception.CustomErrorCode;
 import weteam.backend.application.handler.exception.CustomException;
+import weteam.backend.application.handler.exception.ErrorCode;
 import weteam.backend.domain.alarm.entity.Alarm;
 import weteam.backend.domain.alarm.entity.AlarmStatus;
 import weteam.backend.domain.meeting.entity.Meeting;
@@ -28,7 +28,7 @@ public record PushMessage(
     } else if (firstAlarm.getMeeting() != null) {
       pushMessage = PushMessage.makeMessage(firstAlarm.getMeeting(), firstAlarm.getStatus());
     } else {
-      throw new CustomException(CustomErrorCode.BAD_REQUEST, "잘못된 요청입니다");
+      throw new CustomException(ErrorCode.BAD_REQUEST);
     }
 
     final Notification notification = Notification.builder()
@@ -37,17 +37,17 @@ public record PushMessage(
         .build();
 
     return alarmList.stream().map(alarm -> {
-          try {
-            return Message.builder()
-                .setToken(alarm.getUser().getDeviceToken())
-                .setNotification(notification)
-                .build();
-          } catch (Exception e) {
-            return null;
-          }
-        }
-    ).filter(Objects::nonNull)
-    .toList();
+              try {
+                return Message.builder()
+                    .setToken(alarm.getUser().getDeviceToken())
+                    .setNotification(notification)
+                    .build();
+              } catch (Exception e) {
+                return null;
+              }
+            }
+        ).filter(Objects::nonNull)
+        .toList();
   }
 
   public static PushMessage makeMessage(final Project project, final AlarmStatus status, final User targetUser) {
@@ -72,7 +72,7 @@ public record PushMessage(
         final String content = "안녕히가세요\uD83D\uDE22";
         yield new PushMessage(title, content);
       }
-      default -> throw new CustomException(CustomErrorCode.BAD_REQUEST, "잘못된 요청입니다");
+      default -> throw new CustomException(ErrorCode.BAD_REQUEST);
     };
   }
 
@@ -93,7 +93,7 @@ public record PushMessage(
         final String content = "우리 언제 만날까...?";
         yield new PushMessage(title, content);
       }
-      default -> throw new CustomException(CustomErrorCode.BAD_REQUEST, "잘못된 요청입니다");
+      default -> throw new CustomException(ErrorCode.BAD_REQUEST);
     };
   }
 
@@ -109,7 +109,7 @@ public record PushMessage(
         final String content = "우리 언제 만날까...!!";
         yield new PushMessage(title, content);
       }
-      default -> throw new CustomException(CustomErrorCode.BAD_REQUEST, "잘못된 요청입니다");
+      default -> throw new CustomException(ErrorCode.BAD_REQUEST);
     };
   }
 }

@@ -48,10 +48,10 @@ public class GlobalExceptionHandler {
 
   @ExceptionHandler(CustomException.class)
   protected ResponseEntity<ExceptionError> handleCustom(final CustomException e, HttpServletRequest request) {
-    log.error("status code : " + e.getCustomErrorCode().getHttpStatus());
+    log.error("status code : " + e.getErrorCode().getHttpStatus());
     logRequestDetails(request, e, "CustomException");
-    ExceptionError error = buildExceptionError(e, e.getCustomErrorCode().getHttpStatus());
-    return ResponseEntity.status(e.getCustomErrorCode().getHttpStatus()).body(error);
+    ExceptionError error = buildExceptionError(e, e.getErrorCode().getHttpStatus());
+    return ResponseEntity.status(e.getErrorCode().getHttpStatus()).body(error);
   }
 
   @ExceptionHandler(MethodArgumentNotValidException.class)

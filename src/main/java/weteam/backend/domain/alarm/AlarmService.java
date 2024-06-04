@@ -6,8 +6,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import weteam.backend.application.auth.SecurityUtil;
 import weteam.backend.application.firebase.FirebaseService;
-import weteam.backend.application.handler.exception.CustomErrorCode;
 import weteam.backend.application.handler.exception.CustomException;
+import weteam.backend.application.handler.exception.ErrorCode;
 import weteam.backend.domain.alarm.dto.AlarmPaginationDto;
 import weteam.backend.domain.alarm.entity.Alarm;
 import weteam.backend.domain.alarm.entity.AlarmStatus;
@@ -38,7 +38,7 @@ public class AlarmService {
     } else if (entity instanceof Meeting meeting) {
       this.sendAlarmList(Alarm.from(meeting, status));
     } else {
-      throw new CustomException(CustomErrorCode.BAD_REQUEST, "잘못된 데이터입니다.");
+      throw new CustomException(ErrorCode.INVALID_DATA);
     }
   }
 
@@ -49,7 +49,7 @@ public class AlarmService {
     } else if (entity instanceof Meeting meeting) {
       this.sendAlarmList(Alarm.from(meeting, status, targetUser));
     } else {
-      throw new CustomException(CustomErrorCode.BAD_REQUEST, "잘못된 데이터입니다.");
+      throw new CustomException(ErrorCode.INVALID_DATA);
     }
   }
 
@@ -66,7 +66,7 @@ public class AlarmService {
         alarmList.addAll(Alarm.from(meeting, status, targetUser));
       }
     } else {
-      throw new CustomException(CustomErrorCode.BAD_REQUEST, "잘못된 데이터입니다.");
+      throw new CustomException(ErrorCode.INVALID_DATA);
     }
 
     this.sendAlarmList(alarmList);
@@ -80,18 +80,17 @@ public class AlarmService {
 
   @Transactional
   public void updateIsRead(final Long alarmId, final Long userId) {
-    Alarm alarm = alarmRepository.findByIdAndUserId(alarmId, userId).orElseThrow(CustomException.notFound(CustomErrorCode.NOT_FOUND));
+    Alarm alarm = alarmRepository.findByIdAndUserId(alarmId, userId).orElseThrow(CustomException.raise(ErrorCode.NOT_FOUND));
     if (alarm.isRead()) {
-      throw new CustomException(CustomErrorCode.DUPLICATE, "읽은 알람입니다.");
+      alarm.markAsRead();
     }
-    alarm.markAsRead();
   }
 
   @Transactional
   public void updateAllIsRead() {
     List<Alarm> alarmList = alarmRepository.findAllByUserId(securityUtil.getId()).stream().filter(alarm -> !alarm.isRead()).toList();
     if (alarmList.isEmpty()) {
-      throw new CustomException(CustomErrorCode.BAD_REQUEST, "미확인 알람이 없습니다.");
+      throw new CustomException(ErrorCode.NOT_EXIST_UNREAD_ALARM);
     } else {
       alarmList.forEach(Alarm::markAsRead);
     }

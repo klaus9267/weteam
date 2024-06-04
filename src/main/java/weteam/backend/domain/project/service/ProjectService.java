@@ -6,8 +6,8 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import weteam.backend.application.auth.SecurityUtil;
-import weteam.backend.application.handler.exception.CustomErrorCode;
 import weteam.backend.application.handler.exception.CustomException;
+import weteam.backend.application.handler.exception.ErrorCode;
 import weteam.backend.domain.alarm.AlarmService;
 import weteam.backend.domain.alarm.entity.AlarmStatus;
 import weteam.backend.domain.common.HashUtil;
@@ -34,7 +34,7 @@ public class ProjectService {
   @Transactional
   public void addProject(final CreateProjectDto projectDto) {
     if (projectRepository.findByHostIdAndNameAndExplanation(securityUtil.getId(), projectDto.name(), projectDto.explanation()).isPresent()) {
-      throw new CustomException(CustomErrorCode.DUPLICATE);
+      throw new CustomException(ErrorCode.DUPLICATE);
     }
 
     final Project project = Project.from(projectDto, securityUtil.getCurrentUser());
@@ -45,7 +45,7 @@ public class ProjectService {
   }
 
   private Project findProjectByIdAndUserId(final Long projectId) {
-    return projectRepository.findByIdAndUserId(projectId, securityUtil.getId()).orElseThrow(CustomException.notFound(CustomErrorCode.NOT_FOUND_PROJECT));
+    return projectRepository.findByIdAndUserId(projectId, securityUtil.getId()).orElseThrow(CustomException.raise(ErrorCode.PROJECT_NOT_FOUND));
   }
 
   public ProjectPaginationDto findListWithPagination(final ProjectPaginationParam paginationParam) {
@@ -74,7 +74,7 @@ public class ProjectService {
 
   @Transactional
   public void updateHost(final Long projectId, final Long newHostId) {
-    final User newHost = userRepository.findById(newHostId).orElseThrow(CustomException.notFound(CustomErrorCode.NOT_FOUND_USER));
+    final User newHost = userRepository.findById(newHostId).orElseThrow(CustomException.raise(ErrorCode.USER_NOT_FOUND));
     Project project = this.checkHost(projectId);
     project.updateHost(newHost);
     alarmService.addAlarmListWithTargetUser(project, AlarmStatus.CHANGE_HOST, newHost);
@@ -89,7 +89,7 @@ public class ProjectService {
   private Project checkHost(final Long projectId) {
     Project project = this.findProjectByIdAndUserId(projectId);
     if (!project.getHost().getId().equals(securityUtil.getId())) {
-      throw new CustomException(CustomErrorCode.INVALID_HOST);
+      throw new CustomException(ErrorCode.INVALID_HOST);
     }
     return project;
   }

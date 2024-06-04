@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import weteam.backend.application.auth.SecurityUtil;
-import weteam.backend.application.handler.exception.CustomErrorCode;
 import weteam.backend.application.handler.exception.CustomException;
+import weteam.backend.application.handler.exception.ErrorCode;
 import weteam.backend.domain.alarm.AlarmService;
 import weteam.backend.domain.alarm.entity.AlarmStatus;
 import weteam.backend.domain.meeting.dto.time_slot.RequestTimeSlotDto;
@@ -28,40 +28,40 @@ public class MeetingUserService {
 
   @Transactional
   public String inviteUser(final Long meetingId) {
-    final Meeting meeting = meetingRepository.findById(meetingId).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND_MEETING));
+    final Meeting meeting = meetingRepository.findById(meetingId).orElseThrow(() -> new CustomException(ErrorCode.MEETING_NOT_FOUND));
     return meeting.getHashedId();
   }
 
   @Transactional
   public void acceptInvite(final String hashedId) {
-    final Meeting meeting = meetingRepository.findByHashedId(hashedId).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND_MEETING));
+    final Meeting meeting = meetingRepository.findByHashedId(hashedId).orElseThrow(() -> new CustomException(ErrorCode.MEETING_NOT_FOUND));
     meeting.addMeetingUser(securityUtil.getCurrentUser());
   }
 
   @Transactional
   public void updateTimeSlot(final List<RequestTimeSlotDto> timeSlotDtoList, final Long meetingId) {
     this.validateTimeSlot(timeSlotDtoList);
-    final MeetingUser meetingUser = meetingUserRepository.findByMeetingIdAndUserId(meetingId, securityUtil.getId()).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND));
+    final MeetingUser meetingUser = meetingUserRepository.findByMeetingIdAndUserId(meetingId, securityUtil.getId()).orElseThrow(CustomException.raise(ErrorCode.MEETING_NOT_FOUND));
     meetingUser.updateTimeSlots(timeSlotDtoList);
     this.verifyAllChecked(meetingUser.getMeeting());
   }
 
   @Transactional
   public void updateTimeSlotV2(final RequestTimeSlotDtoV2 timeSlotDtoV2, final Long meetingId) {
-    final MeetingUser meetingUser = meetingUserRepository.findByMeetingIdAndUserId(meetingId, securityUtil.getId()).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND));
+    final MeetingUser meetingUser = meetingUserRepository.findByMeetingIdAndUserId(meetingId, securityUtil.getId()).orElseThrow(CustomException.raise(ErrorCode.MEETING_NOT_FOUND));
     meetingUser.updateTimeSlotsV2(timeSlotDtoV2);
     this.verifyAllCheckedV2(meetingUser.getMeeting());
   }
 
   @Transactional
   public void updateMeetingDisplayed(final Long meetingId) {
-    final MeetingUser meetingUser = meetingUserRepository.findByMeetingIdAndUserId(meetingId, securityUtil.getId()).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND));
+    final MeetingUser meetingUser = meetingUserRepository.findByMeetingIdAndUserId(meetingId, securityUtil.getId()).orElseThrow(CustomException.raise(ErrorCode.MEETING_NOT_FOUND));
     meetingUser.updateDisplayed();
   }
 
   @Transactional
   public void quitMeeting(final Long meetingId) {
-    final MeetingUser meetingUser = meetingUserRepository.findByMeetingIdAndUserId(meetingId, securityUtil.getId()).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND));
+    final MeetingUser meetingUser = meetingUserRepository.findByMeetingIdAndUserId(meetingId, securityUtil.getId()).orElseThrow(CustomException.raise(ErrorCode.MEETING_NOT_FOUND));
     meetingUserRepository.delete(meetingUser);
   }
 
@@ -70,7 +70,7 @@ public class MeetingUserService {
 
     for (int i = 0; i < timeSlotDtoList.size() - 1; i++) {
       if (timeSlotDtoList.get(i).endedAt().isAfter(timeSlotDtoList.get(i + 1).startedAt())) {
-        throw new CustomException(CustomErrorCode.BAD_REQUEST, "겹치는 시간대가 있습니다");
+        throw new CustomException(ErrorCode.MEETING_TIME_DUPLICATE);
       }
     }
   }
