@@ -8,6 +8,8 @@ import weteam.backend.common.DataInitializer;
 import weteam.backend.domain.user.UserRepository;
 import weteam.backend.domain.user.entity.User;
 
+import java.util.NoSuchElementException;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -31,14 +33,14 @@ class ProfileControllerTest extends BaseIntegrationTest {
           .header("Authorization", idToken)
       ).andExpect(status().isCreated());
 
-      ProfileImage image = profileRepository.findByUserId(user.getId()).orElseThrow(RuntimeException::new);
+      ProfileImage image = profileRepository.findByUserId(user.getId()).orElseThrow(NoSuchElementException::new);
       assertThat(image.getImageIdx()).isEqualTo(imageIdx);
     }
 
     @Test
     void 프로필_사진_변경() throws Exception {
       long imageIdx = 12L;
-      User user = userRepository.findById(1L).orElseThrow(RuntimeException::new);
+      User user = userRepository.findById(1L).orElseThrow(NoSuchElementException::new);
       final ProfileImage profileImage = ProfileImage.from(2L, user);
       profileRepository.save(profileImage);
 
@@ -46,7 +48,7 @@ class ProfileControllerTest extends BaseIntegrationTest {
           .header("Authorization", idToken)
       ).andExpect(status().isNoContent());
 
-      ProfileImage image = profileRepository.findByUserId(user.getId()).orElseThrow(RuntimeException::new);
+      ProfileImage image = profileRepository.findByUserId(user.getId()).orElseThrow(NoSuchElementException::new);
       assertThat(image.getImageIdx()).isEqualTo(imageIdx);
     }
   }
