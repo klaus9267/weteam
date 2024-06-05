@@ -31,7 +31,7 @@ import static java.lang.System.getenv;
 @AutoConfigureMockMvc
 @Transactional
 @ActiveProfiles("test")
-@Import(DataInitializer.class)
+@Import({DataInitializer.class,TestRepository.class})
 //@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
 public class BaseIntegrationTest {
   Map<String, String> env = getenv();
@@ -39,6 +39,8 @@ public class BaseIntegrationTest {
 
   @Autowired
   protected MockMvc mockMvc;
+  @Autowired
+  protected TestRepository testRepository;
   protected String idToken;
   protected String uid = env.get("uid");
 

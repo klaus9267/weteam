@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.util.ReflectionTestUtils;
 import weteam.backend.common.BaseIntegrationTest;
-import weteam.backend.common.DataInitializer;
 import weteam.backend.domain.common.pagination.param.ProjectPaginationParam;
 import weteam.backend.domain.project.dto.CreateProjectDto;
 import weteam.backend.domain.project.dto.UpdateProjectDto;
@@ -81,7 +80,7 @@ class ProjectControllerTest extends BaseIntegrationTest {
 
     @Test
     void 팀플_진행_상황_변경() throws Exception {
-      Project savedProject = saveProject();
+      Project savedProject = testRepository.saveProject();
 
       mockMvc.perform(patch(END_POINT + "/" + savedProject.getId() + "/done")
           .header("Authorization", idToken)
@@ -118,7 +117,7 @@ class ProjectControllerTest extends BaseIntegrationTest {
 
       @Test
       void name_only() throws Exception {
-        Project savedProject = saveProject();
+        Project savedProject = testRepository.saveProject();
         UpdateProjectDto projectDto = new UpdateProjectDto("test name1", null, null, null);
 
         callApiRequestForUpdate(projectDto, savedProject);
@@ -126,7 +125,7 @@ class ProjectControllerTest extends BaseIntegrationTest {
 
       @Test
       void startedAt_only() throws Exception {
-        Project savedProject = saveProject();
+        Project savedProject = testRepository.saveProject();
         UpdateProjectDto projectDto = new UpdateProjectDto(null, LocalDate.now(), null, null);
 
         callApiRequestForUpdate(projectDto, savedProject);
@@ -134,7 +133,7 @@ class ProjectControllerTest extends BaseIntegrationTest {
 
       @Test
       void endedAt_only() throws Exception {
-        Project savedProject = saveProject();
+        Project savedProject = testRepository.saveProject();
         UpdateProjectDto projectDto = new UpdateProjectDto(null, null, LocalDate.now(), null);
 
         callApiRequestForUpdate(projectDto, savedProject);
@@ -142,7 +141,7 @@ class ProjectControllerTest extends BaseIntegrationTest {
 
       @Test
       void explanation_only() throws Exception {
-        Project savedProject = saveProject();
+        Project savedProject = testRepository.saveProject();
         UpdateProjectDto projectDto = new UpdateProjectDto(null, null, null, "test explanation1");
 
         callApiRequestForUpdate(projectDto, savedProject);
@@ -151,7 +150,7 @@ class ProjectControllerTest extends BaseIntegrationTest {
 
     @Test
     void 팀플_호스트_넘기기() throws Exception {
-      Project project = saveProject();
+      Project project = testRepository.saveProject();
       long userId = 32L;
       mockMvc.perform(patch(END_POINT + "/" + project.getId() + "/" + userId)
           .header("Authorization", idToken)
@@ -175,7 +174,7 @@ class ProjectControllerTest extends BaseIntegrationTest {
 
     @Test
     void 팀플_삭제() throws Exception {
-      Project project = saveProject();
+      Project project = testRepository.saveProject();
 
       mockMvc.perform(delete(END_POINT + "/" + project.getId())
           .header("Authorization", idToken)
@@ -296,13 +295,13 @@ class ProjectControllerTest extends BaseIntegrationTest {
         mockMvc.perform(patch(END_POINT + "/" + projectId)
                 .header("Authorization", idToken)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(body))
-            .andExpect(status().isBadRequest());
+                .content(body)
+            )            .andExpect(status().isBadRequest());
       }
 
       @Test
       void all_NULL() throws Exception {
-        Project project = saveProject();
+        Project project = testRepository.saveProject();
         final FailProjectDtoForUpdate projectDto = new FailProjectDtoForUpdate(null, null, null, null);
         ReflectionTestUtils.setField(projectDto, "name", null);
 
@@ -321,7 +320,7 @@ class ProjectControllerTest extends BaseIntegrationTest {
 
       @Test
       void userId_NOT_FOUNT() throws Exception {
-        Project project = saveProject();
+        Project project = testRepository.saveProject();
         mockMvc.perform(patch(END_POINT + "/" + project.getId() + "/" + 320)
                 .header("Authorization", idToken))
             .andExpect(status().isNotFound());
@@ -348,19 +347,12 @@ class ProjectControllerTest extends BaseIntegrationTest {
 
       @Test
       void not_found() throws Exception {
-        Project project = saveProject();
+        Project project = testRepository.saveProject();
         mockMvc.perform(delete(END_POINT + "/333")
                 .header("Authorization", idToken))
             .andExpect(status().isNotFound());
       }
     }
-  }
-
-  private Project saveProject() {
-    CreateProjectDto projectDto = new CreateProjectDto("test name", LocalDate.now(), 1L, LocalDate.now(), "test explanation");
-    Project project = Project.from(projectDto, DataInitializer.testUser);
-
-    return projectRepository.save(project);
   }
 
   @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
