@@ -9,6 +9,7 @@ import weteam.backend.common.DataInitializer;
 import weteam.backend.domain.common.pagination.param.ProjectPaginationParam;
 import weteam.backend.domain.project.entity.Project;
 import weteam.backend.domain.project.entity.ProjectUser;
+import weteam.backend.domain.project.repository.BlackListRepository;
 import weteam.backend.domain.project.repository.ProjectRepository;
 import weteam.backend.domain.project.repository.ProjectUserRepository;
 import weteam.backend.domain.user.entity.User;
@@ -17,8 +18,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 class ProjectUserControllerTest extends BaseIntegrationTest {
@@ -28,6 +28,8 @@ class ProjectUserControllerTest extends BaseIntegrationTest {
   ProjectRepository projectRepository;
   @Autowired
   ProjectUserRepository projectUserRepository;
+  @Autowired
+  BlackListRepository blackListRepository;
 
   @Nested
   class 성공 {
@@ -94,12 +96,30 @@ class ProjectUserControllerTest extends BaseIntegrationTest {
 
     @Test
     void 팀원_강퇴() throws Exception {
+      User user = testRepository.findMe();
       Project project = findJoinedProject();
-      project.
+      project.updateHost(user);
+      projectRepository.save(project);
 
-      mockMvc.perform(patch(END_POINT)
+      mockMvc.perform(delete(END_POINT)
+          .header("Authorization", idToken)
+          .param("projectUserIdList", String.valueOf(project.getProjectUserList().get(1).getId()))
+      ).andExpect(status().isNoContent());
+
+      List<ProjectUser> projectUserList = projectUserRepository.findAllByProjectIdWhereNotBlackList(project.getId());
+      assertThat(projectUserList.size()).isEqualTo(project.getProjectUserList().size() - 1);
+    }
+
+    @Test
+    void 팀플_탈퇴() throws Exception {
+      Project project = findJoinedProject();
+
+      mockMvc.perform(delete(END_POINT + "/" + project.getId())
           .header("Authorization", idToken)
       ).andExpect(status().isNoContent());
+
+      List<ProjectUser> projectUserList = projectUserRepository.findAllByProjectIdWhereNotBlackList(project.getId());
+      assertThat(projectUserList.size()).isEqualTo(project.getProjectUserList().size() - 1);
     }
   }
 

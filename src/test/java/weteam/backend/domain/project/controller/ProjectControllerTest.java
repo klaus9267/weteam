@@ -329,7 +329,6 @@ class ProjectControllerTest extends BaseIntegrationTest {
       @Test
       void 호스트_아님() throws Exception {
         List<Project> list = projectRepository.findAll();
-        System.out.println(list.size());
         mockMvc.perform(patch(END_POINT + "/" + 1 + "/" + 32)
                 .header("Authorization", idToken))
             .andExpect(status().isBadRequest());

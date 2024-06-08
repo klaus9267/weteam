@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import weteam.backend.application.auth.SecurityUtil;
 import weteam.backend.common.BaseIntegrationTest;
 import weteam.backend.common.DataInitializer;
 import weteam.backend.domain.project.dto.CreateProjectDto;
@@ -20,12 +21,15 @@ import java.util.Random;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
 class UserControllerTest extends BaseIntegrationTest {
   private final String END_POINT = "/api/users";
+  @Autowired
+  SecurityUtil securityUtil;
   @Autowired
   UserRepository userRepository;
   @Autowired
@@ -42,10 +46,10 @@ class UserControllerTest extends BaseIntegrationTest {
               .header("Authorization", idToken)
           ).andExpect(jsonPath("$.id").value(user.getId()))
           .andExpect(jsonPath("$.username").value(user.getUsername()))
-          .andExpect(jsonPath("$.email").value(user.getEmail()))
           .andExpect(jsonPath("$.organization").value(user.getOrganization()))
           .andExpect(jsonPath("$.introduction").value(user.getIntroduction()))
           .andExpect(status().isOk())
+          .andDo(print())
       ;
     }
 

@@ -46,4 +46,5 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
 
   List<Project> findAllByIsDoneAndEndedAtBefore(final boolean isDone, final LocalDate endedAt);
 
+  List<Project> findAllByHostId(final Long hostId);
 }

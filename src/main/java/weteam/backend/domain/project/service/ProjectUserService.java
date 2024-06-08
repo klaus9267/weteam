@@ -31,7 +31,7 @@ public class ProjectUserService {
   private final SecurityUtil securityUtil;
 
   public List<ProjectUserDto> findProjectUserListByProjectId(final Long projectId) {
-    final List<ProjectUser> projectUserList = projectUserRepository.findByProjectIdWhereNotBlackList(projectId);
+    final List<ProjectUser> projectUserList = projectUserRepository.findAllByProjectIdWhereNotBlackList(projectId);
     if (projectUserList.isEmpty()) {
       throw new CustomException(ErrorCode.PROJECT_USER_NOT_FOUND);
     }
@@ -72,6 +72,7 @@ public class ProjectUserService {
       if (projectUserIdList.contains(projectUser.getId())) {
         blackLists.add(BlackList.from(projectUser));
         userList.add(projectUser.getUser());
+        projectUser.disable();
       }
     }
 

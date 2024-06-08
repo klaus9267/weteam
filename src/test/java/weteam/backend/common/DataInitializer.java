@@ -47,7 +47,16 @@ public class DataInitializer {
 
   private void initUsers() {
     List<User> userList = new ArrayList<>();
-    userList.add(User.builder().role(UserRole.USER).receivePermission(true).username("kim").organization("organization").introduction("introduction").uid(env.get("uid")).build());
+    userList.add(User.builder()
+        .role(UserRole.USER)
+        .receivePermission(true)
+        .email("klaus9267@gmail.com")
+        .username("kim1")
+        .organization("organization")
+        .introduction("introduction")
+        .uid(env.get("uid"))
+        .build()
+    );
     for (int i = 0; i < 100; i++) {
       User user = User.builder()
           .username("username" + i)
