@@ -44,13 +44,6 @@ public class MeetingController {
     return ResponseEntity.ok(meetingDetailDto);
   }
 
-//  @GetMapping("from-project/{projectId}")
-//  @SwaggerOK(summary = "프로젝트에서 약속 목록 조회")
-//  public ResponseEntity<MeetingPaginationDto> readMeetingListFromProject(@PathVariable("projectId") final Long projectId) {
-//    final MeetingPaginationDto meetingDtoList = meetingService.readListWithPagination(paginationParam);
-//    return ResponseEntity.ok(meetingDtoList);
-//  }
-
   @GetMapping("v2/detail")
   @SwaggerOK(summary = "약속 상세 조회 v2")
   public ResponseEntity<MeetingDetailDtoV2> readMeetingV2(@ParameterObject @Valid final MeetingDetailParam param) {

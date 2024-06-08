@@ -4,7 +4,9 @@ import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.transaction.annotation.Transactional;
+import weteam.backend.domain.meeting.dto.meeting.CreateMeetingDto;
 import weteam.backend.domain.meeting.entity.Meeting;
+import weteam.backend.domain.meeting.repository.MeetingRepository;
 import weteam.backend.domain.project.dto.CreateProjectDto;
 import weteam.backend.domain.project.entity.BlackList;
 import weteam.backend.domain.project.entity.Project;
@@ -16,6 +18,7 @@ import weteam.backend.domain.user.entity.User;
 import weteam.backend.domain.user.entity.UserRole;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +34,7 @@ public class DataInitializer {
   private final UserRepository userRepository;
   private final ProjectRepository projectRepository;
   private final BlackListRepository blackListRepository;
+  private final MeetingRepository meetingRepository;
   public static User testUser;
   List<User> users = new ArrayList<>();
   List<Project> projects = new ArrayList<>();
@@ -42,6 +46,7 @@ public class DataInitializer {
     this.initUsers();
     this.initProjects();
     this.initBlackLists();
+    this.initMeetings();
     testUser = users.get(0);
   }
 
@@ -107,5 +112,16 @@ public class DataInitializer {
     }
 
     blackListRepository.saveAll(blackLists);
+  }
+
+  @Transactional
+  private void initMeetings() {
+    List<Meeting> list = new ArrayList<>();
+    for (int i = 0; i < 100; i++) {
+      CreateMeetingDto createMeetingDto = new CreateMeetingDto("title" + i, LocalDateTime.now(), 2L, LocalDateTime.now(), null);
+      Meeting meeting = Meeting.from(createMeetingDto, users.get(0));
+      list.add(meeting);
+    }
+    meetings = meetingRepository.saveAll(list);
   }
 }
