@@ -31,7 +31,7 @@ public class ProjectUserService {
   private final SecurityUtil securityUtil;
 
   public List<ProjectUserDto> findProjectUserListByProjectId(final Long projectId) {
-    final List<ProjectUser> projectUserList = projectUserRepository.findByProjectId(projectId);
+    final List<ProjectUser> projectUserList = projectUserRepository.findByProjectIdWhereNotBlackList(projectId);
     if (projectUserList.isEmpty()) {
       throw new CustomException(ErrorCode.PROJECT_USER_NOT_FOUND);
     }
