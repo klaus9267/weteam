@@ -28,13 +28,13 @@ public class MeetingUserService {
 
   @Transactional
   public String inviteUser(final Long meetingId) {
-    final Meeting meeting = meetingRepository.findById(meetingId).orElseThrow(() -> new CustomException(ErrorCode.MEETING_NOT_FOUND));
+    final Meeting meeting = meetingRepository.findById(meetingId).orElseThrow(CustomException.raise(ErrorCode.MEETING_NOT_FOUND));
     return meeting.getHashedId();
   }
 
   @Transactional
   public void acceptInvite(final String hashedId) {
-    final Meeting meeting = meetingRepository.findByHashedId(hashedId).orElseThrow(() -> new CustomException(ErrorCode.MEETING_NOT_FOUND));
+    final Meeting meeting = meetingRepository.findByHashedId(hashedId).orElseThrow(CustomException.raise(ErrorCode.MEETING_NOT_FOUND));
     meeting.addMeetingUser(securityUtil.getCurrentUser());
   }
 

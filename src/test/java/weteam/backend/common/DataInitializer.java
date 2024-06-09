@@ -116,11 +116,18 @@ public class DataInitializer {
 
   @Transactional
   private void initMeetings() {
+    Random random = new Random();
     List<Meeting> list = new ArrayList<>();
+    CreateMeetingDto createMeetingDto = new CreateMeetingDto("title", LocalDateTime.now(), 2L, LocalDateTime.now(), null);
+    Meeting meeting = Meeting.from(createMeetingDto, users.get(0));
+    meeting.addHashedId("test");
+    list.add(meeting);
+
     for (int i = 0; i < 100; i++) {
-      CreateMeetingDto createMeetingDto = new CreateMeetingDto("title" + i, LocalDateTime.now(), 2L, LocalDateTime.now(), null);
-      Meeting meeting = Meeting.from(createMeetingDto, users.get(0));
-      list.add(meeting);
+      CreateMeetingDto meetingDto = new CreateMeetingDto("title" + i, LocalDateTime.now(), 2L, LocalDateTime.now(), null);
+      Meeting meeting2 = Meeting.from(meetingDto, users.get(random.nextInt(2, 100)));
+      meeting2.addHashedId("test" + i);
+      list.add(meeting2);
     }
     meetings = meetingRepository.saveAll(list);
   }

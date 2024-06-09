@@ -48,7 +48,6 @@ public class GlobalExceptionHandler {
 
   @ExceptionHandler(CustomException.class)
   protected ResponseEntity<ExceptionError> handleCustom(final CustomException e, HttpServletRequest request) {
-    log.error("status code : " + e.getErrorCode().getHttpStatus());
     logRequestDetails(request, e, "CustomException");
     ExceptionError error = buildExceptionError(e, e.getErrorCode().getHttpStatus());
     return ResponseEntity.status(e.getErrorCode().getHttpStatus()).body(error);
