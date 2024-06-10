@@ -70,7 +70,9 @@ public class CommonController {
       try (CloseableHttpResponse response = httpClient.execute(httpPost)) {
         String responseBody = EntityUtils.toString(response.getEntity());
         Map<String, Object> responseMap = new ObjectMapper().readValue(responseBody, HashMap.class);
-        return ResponseEntity.ok((String) responseMap.get("idToken"));
+        String idToken = (String) responseMap.get("idToken");
+
+        return ResponseEntity.ok(idToken);
       } catch (ParseException e) {
         throw new RuntimeException(e);
       }

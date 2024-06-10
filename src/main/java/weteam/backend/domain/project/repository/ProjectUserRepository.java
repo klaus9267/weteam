@@ -17,14 +17,9 @@ public interface ProjectUserRepository extends JpaRepository<ProjectUser, Long> 
       SELECT pu
       FROM project_users pu
           LEFT JOIN FETCH pu.project p
-          LEFT JOIN FETCH p.blackLists b
       WHERE p.id = :projectId
         AND pu.isEnable = true
-        AND pu.user.id NOT IN (
-            SELECT bl.user.id
-            FROM black_list bl
-            WHERE bl.project.id = :projectId
-        )
+        AND pu.isBlack = false
       """)
-  List<ProjectUser> findAllByProjectIdWhereNotBlackList(final Long projectId);
+  List<ProjectUser> findAllByProjectId(final Long projectId);
 }
