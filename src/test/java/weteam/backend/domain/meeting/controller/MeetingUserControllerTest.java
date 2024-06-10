@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import static org.assertj.core.api.Assertions.as;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
@@ -107,8 +106,6 @@ class MeetingUserControllerTest extends BaseIntegrationTest {
 
   private Meeting findJoinedMeeting() {
     MeetingPaginationParam param = new MeetingPaginationParam(0, 10, null, null);
-    List<Meeting> meetingList = meetingRepository.findAllByUserId(param.toPageable(), DataInitializer.testUser.getId()).getContent();
-    Meeting meeting = meetingList.get(0);
-    return meeting;
+    return meetingRepository.findAllByUserId(param.toPageable(), DataInitializer.testUser.getId()).getContent().get(0);
   }
 }
