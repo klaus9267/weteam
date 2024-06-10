@@ -3,8 +3,8 @@ package weteam.backend.domain.meeting.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import weteam.backend.application.BaseEntity;
-import weteam.backend.application.handler.exception.CustomErrorCode;
 import weteam.backend.application.handler.exception.CustomException;
+import weteam.backend.application.handler.exception.ErrorCode;
 import weteam.backend.domain.meeting.dto.meeting.CreateMeetingDto;
 import weteam.backend.domain.meeting.dto.meeting.UpdateMeetingDto;
 import weteam.backend.domain.project.entity.Project;
@@ -96,7 +96,7 @@ public class Meeting extends BaseEntity {
   public void addMeetingUser(final User user) {
     for (final MeetingUser meetingUser : this.meetingUserList) {
       if (meetingUser.getUser().getId().equals(user.getId())) {
-        throw new CustomException(CustomErrorCode.BAD_REQUEST, "이미 수락한 약속입니다.");
+        throw new CustomException(ErrorCode.ALREADY_ACCESS_MEETING);
       }
     }
     final MeetingUser meetingUser = MeetingUser.from(user, this);

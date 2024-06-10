@@ -4,7 +4,9 @@ import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.transaction.annotation.Transactional;
+import weteam.backend.domain.meeting.dto.meeting.CreateMeetingDto;
 import weteam.backend.domain.meeting.entity.Meeting;
+import weteam.backend.domain.meeting.repository.MeetingRepository;
 import weteam.backend.domain.project.dto.CreateProjectDto;
 import weteam.backend.domain.project.entity.BlackList;
 import weteam.backend.domain.project.entity.Project;
@@ -16,16 +18,23 @@ import weteam.backend.domain.user.entity.User;
 import weteam.backend.domain.user.entity.UserRole;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
+
+import static java.lang.System.getenv;
 
 @TestConfiguration
 @RequiredArgsConstructor
 public class DataInitializer {
+  Map<String, String> env = getenv();
+
   private final UserRepository userRepository;
   private final ProjectRepository projectRepository;
   private final BlackListRepository blackListRepository;
+  private final MeetingRepository meetingRepository;
   public static User testUser;
   List<User> users = new ArrayList<>();
   List<Project> projects = new ArrayList<>();
@@ -37,12 +46,22 @@ public class DataInitializer {
     this.initUsers();
     this.initProjects();
     this.initBlackLists();
+    this.initMeetings();
     testUser = users.get(0);
   }
 
   private void initUsers() {
     List<User> userList = new ArrayList<>();
-    userList.add(User.builder().role(UserRole.USER).receivePermission(true).username("kim").organization("organization").introduction("introduction").uid("hIGOWUmXSugwCftVJ2HsF9kiqfh1").build());
+    userList.add(User.builder()
+        .role(UserRole.USER)
+        .receivePermission(true)
+        .email("klaus9267@gmail.com")
+        .username("kim1")
+        .organization("organization")
+        .introduction("introduction")
+        .uid(env.get("uid"))
+        .build()
+    );
     for (int i = 0; i < 100; i++) {
       User user = User.builder()
           .username("username" + i)
@@ -67,12 +86,13 @@ public class DataInitializer {
         List<Long> ids = new ArrayList<>();
         for (ProjectUser projectUser : project.getProjectUserList()) ids.add(projectUser.getUser().getId());
         if (ids.contains(users.get(r).getId())) continue;
-
+        if (j == 0 && !ids.contains(1L)) project.addProjectUser(users.get(0));
         project.addProjectUser(users.get(r));
       }
 
       projectList.add(project);
     }
+
     projects = projectRepository.saveAll(projectList);
   }
 
@@ -92,5 +112,23 @@ public class DataInitializer {
     }
 
     blackListRepository.saveAll(blackLists);
+  }
+
+  @Transactional
+  private void initMeetings() {
+    Random random = new Random();
+    List<Meeting> list = new ArrayList<>();
+    CreateMeetingDto createMeetingDto = new CreateMeetingDto("title", LocalDateTime.now(), 2L, LocalDateTime.now(), null);
+    Meeting meeting = Meeting.from(createMeetingDto, users.get(0));
+    meeting.addHashedId("test");
+    list.add(meeting);
+
+    for (int i = 0; i < 100; i++) {
+      CreateMeetingDto meetingDto = new CreateMeetingDto("title" + i, LocalDateTime.now(), 2L, LocalDateTime.now(), null);
+      Meeting meeting2 = Meeting.from(meetingDto, users.get(random.nextInt(2, 100)));
+      meeting2.addHashedId("test" + i);
+      list.add(meeting2);
+    }
+    meetings = meetingRepository.saveAll(list);
   }
 }

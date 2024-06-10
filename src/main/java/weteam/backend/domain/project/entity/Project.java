@@ -12,6 +12,7 @@ import weteam.backend.domain.user.entity.User;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Entity(name = "projects")
 @NoArgsConstructor
@@ -27,13 +28,13 @@ public class Project extends BaseEntity {
   private String name, explanation, hashedId;
   private LocalDate startedAt, endedAt;
 
-  @Column(columnDefinition = "boolean default false")
-  private boolean isDone;
+  @Builder.Default
+  private boolean isDone = false;
 
   @ManyToOne(fetch = FetchType.LAZY)
   private User host;
 
-  @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<ProjectUser> projectUserList = new ArrayList<>();
 
   @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
@@ -41,9 +42,6 @@ public class Project extends BaseEntity {
 
   @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
   private List<Meeting> meetingList = new ArrayList<>();
-
-  @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
-  private List<BlackList> blackLists = new ArrayList<>();
 
   public Project(CreateProjectDto projectDto, User user) {
     ProjectUser projectUser = ProjectUser.from(user, this);
@@ -98,8 +96,9 @@ public class Project extends BaseEntity {
     this.hashedId = hashedId;
   }
 
-  public void addBlackList(final User user) {
-    final BlackList blackList = BlackList.from(this, user);
-    this.blackLists.add(blackList);
+  public Optional<ProjectUser> findProjectUserByUser(final User user) {
+    return this.projectUserList.stream()
+        .filter(projectUser -> projectUser.getUser().getId().equals(user.getId()))
+        .findFirst();
   }
 }

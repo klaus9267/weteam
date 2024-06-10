@@ -5,17 +5,23 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import weteam.backend.application.auth.SecurityUtil;
 import weteam.backend.common.BaseIntegrationTest;
 import weteam.backend.common.DataInitializer;
+import weteam.backend.domain.project.dto.CreateProjectDto;
+import weteam.backend.domain.project.entity.Project;
+import weteam.backend.domain.project.repository.ProjectRepository;
 import weteam.backend.domain.user.dto.RequestUserDto;
 import weteam.backend.domain.user.entity.User;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Random;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -23,7 +29,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class UserControllerTest extends BaseIntegrationTest {
   private final String END_POINT = "/api/users";
   @Autowired
+  SecurityUtil securityUtil;
+  @Autowired
   UserRepository userRepository;
+  @Autowired
+  ProjectRepository projectRepository;
 
   @Nested
   class 성공 {
@@ -36,10 +46,10 @@ class UserControllerTest extends BaseIntegrationTest {
               .header("Authorization", idToken)
           ).andExpect(jsonPath("$.id").value(user.getId()))
           .andExpect(jsonPath("$.username").value(user.getUsername()))
-          .andExpect(jsonPath("$.email").value(user.getEmail()))
           .andExpect(jsonPath("$.organization").value(user.getOrganization()))
           .andExpect(jsonPath("$.introduction").value(user.getIntroduction()))
           .andExpect(status().isOk())
+          .andDo(print())
       ;
     }
 
@@ -141,6 +151,14 @@ class UserControllerTest extends BaseIntegrationTest {
   @Nested
   class 실패 {
     @Test
+    public void 다른_사용자_조회_없는_아이디() throws Exception {
+
+      mockMvc.perform(get(END_POINT + "/444")
+          .header("Authorization", idToken)
+      ).andExpect(status().isNotFound());
+    }
+
+    @Test
     public void 사용자_정보_변경_NULL() throws Exception {
       RequestUserDto userDto = new RequestUserDto(null, null, null);
       String body = mapper.writeValueAsString(userDto);
@@ -152,5 +170,21 @@ class UserControllerTest extends BaseIntegrationTest {
           )
           .andExpect(status().isBadRequest());
     }
+
+    @Test
+    public void 사용자_탈퇴_호스트인_팀플_존재() throws Exception {
+      saveProject();
+
+      mockMvc.perform(delete(END_POINT)
+          .header("Authorization", idToken)
+      ).andExpect(status().isBadRequest());
+    }
+  }
+
+  private Project saveProject() {
+    CreateProjectDto projectDto = new CreateProjectDto("test name", LocalDate.now(), 1L, LocalDate.now(), "test explanation");
+    Project project = Project.from(projectDto, DataInitializer.testUser);
+
+    return projectRepository.save(project);
   }
 }

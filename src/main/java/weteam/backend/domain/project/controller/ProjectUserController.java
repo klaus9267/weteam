@@ -10,7 +10,6 @@ import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import weteam.backend.domain.common.swagger.SwaggerCreated;
 import weteam.backend.domain.common.swagger.SwaggerNoContent;
 import weteam.backend.domain.common.swagger.SwaggerOK;
 import weteam.backend.domain.project.dto.ProjectUserDto;
@@ -27,7 +26,7 @@ public class ProjectUserController {
   private final ProjectUserService projectUserService;
 
   @GetMapping("{projectId}/invite")
-  @SwaggerCreated(summary = "팀원 초대용 hashedId 조회")
+  @SwaggerOK(summary = "팀원 초대용 hashedId 조회")
   public ResponseEntity<String> readHashedId(@PathVariable("projectId") final Long projectId) {
     final String hashedId = projectUserService.readHashedId(projectId);
     return ResponseEntity.ok(hashedId);

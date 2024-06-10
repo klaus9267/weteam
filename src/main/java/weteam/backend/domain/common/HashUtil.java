@@ -1,6 +1,6 @@
 package weteam.backend.domain.common;
 
-import weteam.backend.application.handler.exception.CustomErrorCode;
+import weteam.backend.application.handler.exception.ErrorCode;
 import weteam.backend.application.handler.exception.CustomException;
 
 import java.nio.charset.StandardCharsets;
@@ -24,7 +24,7 @@ public class HashUtil {
 
       return hexString.toString();
     } catch (NoSuchAlgorithmException e) {
-      throw new CustomException(CustomErrorCode.BAD_REQUEST, e.getMessage());
+      throw new CustomException(ErrorCode.BAD_REQUEST, e.getMessage());
     }
   }
 }

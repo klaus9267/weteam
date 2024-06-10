@@ -5,8 +5,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import weteam.backend.application.auth.SecurityUtil;
-import weteam.backend.application.handler.exception.CustomErrorCode;
 import weteam.backend.application.handler.exception.CustomException;
+import weteam.backend.application.handler.exception.ErrorCode;
 import weteam.backend.domain.alarm.AlarmService;
 import weteam.backend.domain.alarm.entity.AlarmStatus;
 import weteam.backend.domain.common.HashUtil;
@@ -32,12 +32,12 @@ public class MeetingService {
   private final SecurityUtil securityUtil;
 
   public MeetingDetailDto readMeetingDetailDto(final Long meetingId) {
-    final Meeting meeting = meetingRepository.findByIdAndUserId(meetingId, securityUtil.getId()).orElseThrow(CustomException.notFound(CustomErrorCode.NOT_FOUND_MEETING));
+    final Meeting meeting = meetingRepository.findByIdAndUserId(meetingId, securityUtil.getId()).orElseThrow(CustomException.raise(ErrorCode.MEETING_NOT_FOUND));
     return MeetingDetailDto.from(meeting);
   }
 
   public MeetingDetailDtoV2 readMeetingDetailDtoV2(final MeetingDetailParam param) {
-    final Meeting meeting = meetingRepository.findByIdAndUserId(param.getMeetingId(), securityUtil.getId()).orElseThrow(CustomException.notFound(CustomErrorCode.NOT_FOUND_MEETING));
+    final Meeting meeting = meetingRepository.findByIdAndUserId(param.getMeetingId(), securityUtil.getId()).orElseThrow(CustomException.raise(ErrorCode.MEETING_NOT_FOUND));
     Map<LocalDateTime, List<String>> timeMap = new HashMap<>();
 
     for (final MeetingUser meetingUser : meeting.getMeetingUserList()) {
@@ -73,24 +73,24 @@ public class MeetingService {
 
   @Transactional
   public void updateMeeting(final UpdateMeetingDto meetingDto, final Long meetingId) {
-    Meeting meeting = meetingRepository.findById(meetingId).orElseThrow(CustomException.notFound(CustomErrorCode.NOT_FOUND_MEETING));
+    Meeting meeting = meetingRepository.findById(meetingId).orElseThrow(CustomException.raise(ErrorCode.MEETING_NOT_FOUND));
     if (!meeting.getHost().getId().equals(securityUtil.getId())) {
-      throw new CustomException(CustomErrorCode.INVALID_HOST);
+      throw new CustomException(ErrorCode.INVALID_HOST);
     }
     meeting.updateMeeting(meetingDto);
   }
 
   @Transactional
   public void acceptInvite(final String hashedProjectId) {
-    final Meeting meeting = meetingRepository.findByHashedId(hashedProjectId).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND_MEETING));
+    final Meeting meeting = meetingRepository.findByHashedId(hashedProjectId).orElseThrow(CustomException.raise(ErrorCode.MEETING_NOT_FOUND));
     meeting.addMeetingUser(securityUtil.getCurrentUser());
   }
 
   @Transactional
   public void deleteMeeting(final Long meetingId) {
-    final Meeting meeting = meetingRepository.findById(meetingId).orElseThrow(CustomException.notFound(CustomErrorCode.NOT_FOUND_MEETING));
+    final Meeting meeting = meetingRepository.findById(meetingId).orElseThrow(CustomException.raise(ErrorCode.MEETING_NOT_FOUND));
     if (!meeting.getHost().getId().equals(securityUtil.getId())) {
-      throw new CustomException(CustomErrorCode.INVALID_HOST);
+      throw new CustomException(ErrorCode.INVALID_HOST);
     }
     meetingRepository.delete(meeting);
   }

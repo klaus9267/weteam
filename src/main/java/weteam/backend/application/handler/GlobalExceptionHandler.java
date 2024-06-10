@@ -1,10 +1,10 @@
 package weteam.backend.application.handler;
 
-import com.google.firebase.messaging.FirebaseMessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -47,10 +47,10 @@ public class GlobalExceptionHandler {
   }
 
   @ExceptionHandler(CustomException.class)
-  @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-  protected ExceptionError handleCustom(final CustomException e, HttpServletRequest request) {
+  protected ResponseEntity<ExceptionError> handleCustom(final CustomException e, HttpServletRequest request) {
     logRequestDetails(request, e, "CustomException");
-    return buildExceptionError(e, e.getCustomErrorCode().getHttpStatus());
+    ExceptionError error = buildExceptionError(e, e.getErrorCode().getHttpStatus());
+    return ResponseEntity.status(e.getErrorCode().getHttpStatus()).body(error);
   }
 
   @ExceptionHandler(MethodArgumentNotValidException.class)

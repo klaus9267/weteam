@@ -3,6 +3,7 @@ package weteam.backend.domain.meeting.controller;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springdoc.core.converters.models.PageableAsQueryParam;
 import org.springframework.http.HttpStatus;
@@ -19,6 +20,7 @@ import weteam.backend.domain.meeting.service.MeetingService;
 @RequestMapping("/api/meetings")
 @RequiredArgsConstructor
 @Tag(name = "MEETING")
+@Slf4j
 public class MeetingController {
   private final MeetingService meetingService;
 
@@ -43,13 +45,6 @@ public class MeetingController {
     final MeetingDetailDto meetingDetailDto = meetingService.readMeetingDetailDto(meetingId);
     return ResponseEntity.ok(meetingDetailDto);
   }
-
-//  @GetMapping("from-project/{projectId}")
-//  @SwaggerOK(summary = "프로젝트에서 약속 목록 조회")
-//  public ResponseEntity<MeetingPaginationDto> readMeetingListFromProject(@PathVariable("projectId") final Long projectId) {
-//    final MeetingPaginationDto meetingDtoList = meetingService.readListWithPagination(paginationParam);
-//    return ResponseEntity.ok(meetingDtoList);
-//  }
 
   @GetMapping("v2/detail")
   @SwaggerOK(summary = "약속 상세 조회 v2")

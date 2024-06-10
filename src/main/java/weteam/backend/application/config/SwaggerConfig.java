@@ -8,14 +8,13 @@ import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 
 import java.util.Collections;
 
 @OpenAPIDefinition(
     info = @Info(
         title = "Weteam Swagger",
-        version = "0.1.0")
+        version = "1.0.0")
 )
 @Configuration
 public class SwaggerConfig {

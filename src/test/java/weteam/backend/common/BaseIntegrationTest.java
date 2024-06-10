@@ -31,7 +31,7 @@ import static java.lang.System.getenv;
 @AutoConfigureMockMvc
 @Transactional
 @ActiveProfiles("test")
-@Import(DataInitializer.class)
+@Import({DataInitializer.class,TestRepository.class})
 //@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
 public class BaseIntegrationTest {
   Map<String, String> env = getenv();
@@ -39,6 +39,8 @@ public class BaseIntegrationTest {
 
   @Autowired
   protected MockMvc mockMvc;
+  @Autowired
+  protected TestRepository testRepository;
   protected String idToken;
   protected String uid = env.get("uid");
 
@@ -55,7 +57,7 @@ public class BaseIntegrationTest {
 
   private String exchangeCustomTokenForIdToken(String customToken) throws IOException, ParseException {
     String apiKey = env.get("apiKey");
-    String requestUrl = env.get("requestUrl") + apiKey;
+    String requestUrl = "https://identitytoolkit.googleapis.com/v1/accounts:signInWithCustomToken?key=" + apiKey;
 
     try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
       HttpPost httpPost = new HttpPost(requestUrl);

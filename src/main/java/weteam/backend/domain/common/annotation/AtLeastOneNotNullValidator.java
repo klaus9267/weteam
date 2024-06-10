@@ -2,7 +2,7 @@ package weteam.backend.domain.common.annotation;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
-import weteam.backend.application.handler.exception.CustomErrorCode;
+import weteam.backend.application.handler.exception.ErrorCode;
 import weteam.backend.application.handler.exception.CustomException;
 
 import java.lang.reflect.Field;
@@ -22,7 +22,7 @@ public class AtLeastOneNotNullValidator implements ConstraintValidator<AtLeastOn
         }
       }
     } catch (IllegalAccessException e) {
-      throw new CustomException(CustomErrorCode.ILLEGAL_ACCESS);
+      throw new CustomException(ErrorCode.ILLEGAL_ACCESS);
     }
 
     return false;
