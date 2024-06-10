@@ -24,7 +24,8 @@ public interface MeetingRepository extends JpaRepository<Meeting, Long> {
       SELECT m
       FROM meetings m
            LEFT JOIN FETCH meeting_users mu ON mu.meeting.id = m.id
-      WHERE mu.user.id = :userId
+           LEFT JOIN FETCH users u ON mu.user.id = u.id
+      WHERE u.id = :userId
          AND mu.isDisplayed = true
       ORDER BY m.isDone DESC, m.id ASC
       """)

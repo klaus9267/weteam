@@ -14,6 +14,7 @@ import weteam.backend.domain.user.entity.User;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Entity(name = "meetings")
 @NoArgsConstructor
@@ -105,5 +106,12 @@ public class Meeting extends BaseEntity {
 
   public void done() {
     this.isDone = true;
+  }
+
+  public void quit(final Long userId) {
+    final Optional<MeetingUser> optionalMeetingUser = this.meetingUserList.stream()
+        .filter(meetingUser -> meetingUser.getUser().getId().equals(userId))
+        .findFirst();
+    optionalMeetingUser.ifPresent(meetingUser -> this.meetingUserList.remove(meetingUser));
   }
 }

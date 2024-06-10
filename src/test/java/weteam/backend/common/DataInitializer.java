@@ -8,10 +8,8 @@ import weteam.backend.domain.meeting.dto.meeting.CreateMeetingDto;
 import weteam.backend.domain.meeting.entity.Meeting;
 import weteam.backend.domain.meeting.repository.MeetingRepository;
 import weteam.backend.domain.project.dto.CreateProjectDto;
-import weteam.backend.domain.project.entity.BlackList;
 import weteam.backend.domain.project.entity.Project;
 import weteam.backend.domain.project.entity.ProjectUser;
-import weteam.backend.domain.project.repository.BlackListRepository;
 import weteam.backend.domain.project.repository.ProjectRepository;
 import weteam.backend.domain.user.UserRepository;
 import weteam.backend.domain.user.entity.User;
@@ -33,7 +31,6 @@ public class DataInitializer {
 
   private final UserRepository userRepository;
   private final ProjectRepository projectRepository;
-  private final BlackListRepository blackListRepository;
   private final MeetingRepository meetingRepository;
   public static User testUser;
   List<User> users = new ArrayList<>();
@@ -45,7 +42,6 @@ public class DataInitializer {
   public void setContext() {
     this.initUsers();
     this.initProjects();
-    this.initBlackLists();
     this.initMeetings();
     testUser = users.get(0);
   }
@@ -74,44 +70,30 @@ public class DataInitializer {
     users = userRepository.saveAll(userList);
   }
 
+  @Transactional
   private void initProjects() {
     List<Project> projectList = new ArrayList<>();
     for (long i = 0; i < 100; i++) {
       Random random = new Random();
-      CreateProjectDto projectDto = new CreateProjectDto("name" + i, LocalDate.now(), i, LocalDate.now().plusMonths(1), "explanation" + 1);
+      CreateProjectDto projectDto = new CreateProjectDto("name" + i, LocalDate.now(), i, LocalDate.now().plusMonths(1), "explanation" + i);
       Project project = new Project(projectDto, users.get(random.nextInt(2, 100)));
-
+      project.addHashedId("hashedId" + i);
+      A:
       for (long j = 0; j < random.nextLong(0, 10); j++) {
         int r = random.nextInt(0, 100);
         List<Long> ids = new ArrayList<>();
-        for (ProjectUser projectUser : project.getProjectUserList()) ids.add(projectUser.getUser().getId());
-        if (ids.contains(users.get(r).getId())) continue;
+        for (ProjectUser projectUser : project.getProjectUserList()) {
+          if (projectUser.getUser().getId().equals(users.get(r).getId())) continue A;
+          ids.add(projectUser.getUser().getId());
+        }
+
         if (j == 0 && !ids.contains(1L)) project.addProjectUser(users.get(0));
         project.addProjectUser(users.get(r));
       }
-
       projectList.add(project);
     }
 
     projects = projectRepository.saveAll(projectList);
-  }
-
-  private void initBlackLists() {
-    List<BlackList> blackLists = new ArrayList<>();
-
-    A:
-    for (Project project : projects) {
-      Random random = new Random();
-      long n = random.nextLong(0, users.size());
-
-      for (BlackList blackList : project.getBlackLists()) {
-        if (blackList.getUser().getId().equals(n)) continue A;
-      }
-      BlackList blackList = BlackList.from(project, users.get((int) n));
-      blackLists.add(blackList);
-    }
-
-    blackListRepository.saveAll(blackLists);
   }
 
   @Transactional

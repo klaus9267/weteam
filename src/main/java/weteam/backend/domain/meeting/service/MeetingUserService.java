@@ -61,8 +61,8 @@ public class MeetingUserService {
 
   @Transactional
   public void quitMeeting(final Long meetingId) {
-    final MeetingUser meetingUser = meetingUserRepository.findByMeetingIdAndUserId(meetingId, securityUtil.getId()).orElseThrow(CustomException.raise(ErrorCode.MEETING_NOT_FOUND));
-    meetingUserRepository.delete(meetingUser);
+    final Meeting meeting = meetingRepository.findByIdAndUserId(meetingId, securityUtil.getId()).orElseThrow(CustomException.raise(ErrorCode.MEETING_NOT_FOUND));
+    meeting.quit(securityUtil.getId());
   }
 
   private void validateTimeSlot(final List<RequestTimeSlotDto> timeSlotDtoList) {

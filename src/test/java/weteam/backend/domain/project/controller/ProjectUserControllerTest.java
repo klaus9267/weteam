@@ -9,7 +9,6 @@ import weteam.backend.common.DataInitializer;
 import weteam.backend.domain.common.pagination.param.ProjectPaginationParam;
 import weteam.backend.domain.project.entity.Project;
 import weteam.backend.domain.project.entity.ProjectUser;
-import weteam.backend.domain.project.repository.BlackListRepository;
 import weteam.backend.domain.project.repository.ProjectRepository;
 import weteam.backend.domain.project.repository.ProjectUserRepository;
 import weteam.backend.domain.user.entity.User;
@@ -28,8 +27,6 @@ class ProjectUserControllerTest extends BaseIntegrationTest {
   ProjectRepository projectRepository;
   @Autowired
   ProjectUserRepository projectUserRepository;
-  @Autowired
-  BlackListRepository blackListRepository;
 
   @Nested
   class 성공 {
@@ -84,7 +81,12 @@ class ProjectUserControllerTest extends BaseIntegrationTest {
 
     @Test
     void 초대_수락() throws Exception {
-      Project project = testRepository.saveProject();
+      User user = DataInitializer.testUser;
+      Project project = projectRepository.findAll().stream()
+          .filter(projectEl -> projectEl.getProjectUserList().stream()
+              .noneMatch(projectUser -> projectUser.getUser().getId().equals(user.getId()))
+          ).findFirst().orElseThrow(NoSuchElementException::new);
+
 
       mockMvc.perform(patch(END_POINT + "/" + project.getHashedId())
           .header("Authorization", idToken)
@@ -106,7 +108,7 @@ class ProjectUserControllerTest extends BaseIntegrationTest {
           .param("projectUserIdList", String.valueOf(project.getProjectUserList().get(1).getId()))
       ).andExpect(status().isNoContent());
 
-      List<ProjectUser> projectUserList = projectUserRepository.findAllByProjectIdWhereNotBlackList(project.getId());
+      List<ProjectUser> projectUserList = projectUserRepository.findAllByProjectId(project.getId());
       assertThat(projectUserList.size()).isEqualTo(project.getProjectUserList().size() - 1);
     }
 
@@ -118,7 +120,7 @@ class ProjectUserControllerTest extends BaseIntegrationTest {
           .header("Authorization", idToken)
       ).andExpect(status().isNoContent());
 
-      List<ProjectUser> projectUserList = projectUserRepository.findAllByProjectIdWhereNotBlackList(project.getId());
+      List<ProjectUser> projectUserList = projectUserRepository.findAllByProjectId(project.getId());
       assertThat(projectUserList.size()).isEqualTo(project.getProjectUserList().size() - 1);
     }
   }

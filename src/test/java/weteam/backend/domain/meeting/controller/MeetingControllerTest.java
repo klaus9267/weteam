@@ -6,7 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.util.MultiValueMap;
 import weteam.backend.common.BaseIntegrationTest;
+import weteam.backend.common.DataInitializer;
 import weteam.backend.common.TestParam;
+import weteam.backend.domain.common.pagination.param.MeetingPaginationParam;
 import weteam.backend.domain.meeting.dto.meeting.CreateMeetingDto;
 import weteam.backend.domain.meeting.dto.meeting.UpdateMeetingDto;
 import weteam.backend.domain.meeting.entity.Meeting;
@@ -56,10 +58,11 @@ class MeetingControllerTest extends BaseIntegrationTest {
 
     @Test
     void 약속_상세_조회_v2() throws Exception {
-      Meeting meeting = testRepository.findMeetingById(2L);
+      Meeting meeting = findJoinedMeeting();
+
       mockMvc.perform(get(END_POINT + "/v2/detail")
               .header("Authorization", idToken)
-              .param("meetingId", String.valueOf(2))
+              .param("meetingId", String.valueOf(meeting.getId()))
               .param("minimum", String.valueOf(0))
           ).andExpect(status().isOk())
           .andExpect(jsonPath("$.id").value(meeting.getId()))
@@ -69,27 +72,35 @@ class MeetingControllerTest extends BaseIntegrationTest {
 
     @Test
     void 약속_수정() throws Exception {
+      Meeting meeting = testRepository.saveMeeting();
       UpdateMeetingDto meetingDto = new UpdateMeetingDto("test title2", null, null);
       String body = mapper.writeValueAsString(meetingDto);
 
-      mockMvc.perform(patch(END_POINT + "/2")
+      mockMvc.perform(patch(END_POINT + "/" + meeting.getId())
           .header("Authorization", idToken)
           .content(body)
           .contentType(MediaType.APPLICATION_JSON)
       ).andExpect(status().isNoContent());
 
-      Meeting meeting = testRepository.findMeetingById(2L);
-      assertThat(meeting.getTitle()).isEqualTo(meetingDto.title());
+      Meeting foundMeeting = testRepository.findMeetingById(meeting.getId());
+      assertThat(foundMeeting.getTitle()).isEqualTo(meetingDto.title());
     }
 
     @Test
     void 약속_삭제() throws Exception {
-      mockMvc.perform(delete(END_POINT + "/2")
+      Meeting meeting = testRepository.saveMeeting();
+
+      mockMvc.perform(delete(END_POINT + "/" + meeting.getId())
           .header("Authorization", idToken)
       ).andExpect(status().isNoContent());
 
-      Optional<Meeting> meeting = meetingRepository.findById(2L);
-      assertThat(meeting).isEmpty();
+      Optional<Meeting> foundMeeting = meetingRepository.findById(meeting.getId());
+      assertThat(foundMeeting).isEmpty();
     }
+  }
+
+  private Meeting findJoinedMeeting() {
+    MeetingPaginationParam param = new MeetingPaginationParam(0, 10, null, null);
+    return meetingRepository.findAllByUserId(param.toPageable(), DataInitializer.testUser.getId()).getContent().get(0);
   }
 }
