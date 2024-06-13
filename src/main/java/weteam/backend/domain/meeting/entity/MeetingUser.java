@@ -31,10 +31,10 @@ public class MeetingUser {
   private User user;
 
   @OneToMany(mappedBy = "meetingUser", cascade = CascadeType.ALL, orphanRemoval = true)
-  private List<TimeSlot> timeSlotList = new ArrayList<>();
+  private final List<TimeSlot> timeSlotList = new ArrayList<>();
 
   @OneToMany(mappedBy = "meetingUser", cascade = CascadeType.ALL, orphanRemoval = true)
-  private List<TimeSlot2> timeSlotList2 = new ArrayList<>();
+  private final List<TimeSlot2> timeSlotList2 = new ArrayList<>();
 
   private MeetingUser(final User user, final Meeting meeting) {
     this.meeting = meeting;

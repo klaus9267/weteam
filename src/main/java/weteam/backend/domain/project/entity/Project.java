@@ -35,13 +35,13 @@ public class Project extends BaseEntity {
   private User host;
 
   @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
-  private List<ProjectUser> projectUserList = new ArrayList<>();
+  private final List<ProjectUser> projectUserList = new ArrayList<>();
 
   @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
-  private List<Alarm> alarmList = new ArrayList<>();
+  private final List<Alarm> alarmList = new ArrayList<>();
 
   @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
-  private List<Meeting> meetingList = new ArrayList<>();
+  private final List<Meeting> meetingList = new ArrayList<>();
 
   public Project(CreateProjectDto projectDto, User user) {
     ProjectUser projectUser = ProjectUser.from(user, this);

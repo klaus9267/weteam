@@ -41,7 +41,7 @@ public class Meeting extends BaseEntity {
   private Project project;
 
   @OneToMany(mappedBy = "meeting", cascade = CascadeType.ALL)
-  private List<MeetingUser> meetingUserList = new ArrayList<>();
+  private final List<MeetingUser> meetingUserList = new ArrayList<>();
 
   private Meeting(final Long meetingId) {
     this.id = meetingId;
