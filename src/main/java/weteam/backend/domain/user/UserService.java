@@ -26,7 +26,7 @@ public class UserService {
     return userList.stream().map(UserDto::from).toList();
   }
 
-  public UserWithProfileImageDto findOneById(final Long userId) {
+  public UserWithProfileImageDto findUserById(final Long userId) {
     final User user = this.findOne(userId);
     return UserWithProfileImageDto.from(user);
   }

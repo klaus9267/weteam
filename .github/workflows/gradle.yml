@@ -74,7 +74,5 @@ jobs:
           username: ubuntu
           key: ${{ secrets.KEY }}
           script: |
-            docker-compose down
             sudo docker pull ${{ secrets.DOCKER_ID }}/weteam
             docker-compose up -d
-            docker image prune -f

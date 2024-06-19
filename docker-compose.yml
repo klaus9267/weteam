@@ -1,14 +1,19 @@
 version: '3.8'
 services:
+  weteam:
+    image: klaus9267/weteam
+    ports:
+      - 9090:9090
+    environment:
+      TZ: "Asia/Seoul"
+
   prometheus:
     image: prom/prometheus:latest
     container_name: prometheus
     volumes:
-      - ./prometheus.yml:/src/main/resources/config/application-monitor.yml
-    command:
-      - '--config.file=/src/main/resources/config/application-monitor.yml'
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
     ports:
-      - "9090:9090"
+      - "9000:9000"
     networks:
       - monitoring-network
 

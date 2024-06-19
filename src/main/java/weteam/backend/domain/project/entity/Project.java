@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import weteam.backend.application.BaseEntity;
 import weteam.backend.domain.alarm.entity.Alarm;
+import weteam.backend.domain.common.HashUtil;
 import weteam.backend.domain.meeting.entity.Meeting;
 import weteam.backend.domain.project.dto.CreateProjectDto;
 import weteam.backend.domain.project.dto.UpdateProjectDto;
@@ -42,6 +43,13 @@ public class Project extends BaseEntity {
 
   @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
   private final List<Meeting> meetingList = new ArrayList<>();
+
+  @PostPersist
+  public void setHashedId() {
+    if (this.hashedId == null || this.hashedId.isBlank()) {
+      this.hashedId = HashUtil.hashId(this.id);
+    }
+  }
 
   public Project(CreateProjectDto projectDto, User user) {
     ProjectUser projectUser = ProjectUser.from(user, this);
