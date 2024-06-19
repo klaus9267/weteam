@@ -3,6 +3,7 @@ package weteam.backend.common;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
 import weteam.backend.domain.common.HashUtil;
+import weteam.backend.domain.meeting.dto.meeting.CreateMeetingDto;
 import weteam.backend.domain.meeting.entity.Meeting;
 import weteam.backend.domain.meeting.repository.MeetingRepository;
 import weteam.backend.domain.project.dto.CreateProjectDto;
@@ -12,6 +13,7 @@ import weteam.backend.domain.user.UserRepository;
 import weteam.backend.domain.user.entity.User;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.NoSuchElementException;
 import java.util.Random;
 
@@ -33,6 +35,15 @@ public class TestRepository {
     project.addHashedId(hashedId);
 
     return projectRepository.save(savedProject);
+  }
+
+  public Meeting saveMeeting() {
+    CreateMeetingDto meetingDto = new CreateMeetingDto("title", LocalDateTime.now(), 2L, LocalDateTime.now(), null);
+    Meeting meeting = Meeting.from(meetingDto, DataInitializer.testUser);
+    Meeting savedMeeting = meetingRepository.save(meeting);
+    String hashedId = HashUtil.hashId(savedMeeting.getId());
+    savedMeeting.addHashedId(hashedId);
+    return meetingRepository.save(savedMeeting);
   }
 
   public User findMe() {

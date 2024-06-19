@@ -48,6 +48,13 @@ jobs:
           echo "${{ secrets.FIREBASE }}" >> ./application-firebase.yml
         shell: bash
 
+      - name: make application-monitor.yml
+        run: |
+          cd ./src/main/resources
+          touch ./application-monitor.yml
+          echo "${{ secrets.MONITOR }}" >> ./application-monitor.yml
+        shell: bash
+
       - name: chmod
         run: sudo chmod +x ./gradlew
 
@@ -67,7 +74,5 @@ jobs:
           username: ubuntu
           key: ${{ secrets.KEY }}
           script: |
-            docker-compose down
             sudo docker pull ${{ secrets.DOCKER_ID }}/weteam
             docker-compose up -d
-            docker image prune -f

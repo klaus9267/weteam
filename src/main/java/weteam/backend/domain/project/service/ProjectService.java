@@ -10,7 +10,6 @@ import weteam.backend.application.handler.exception.CustomException;
 import weteam.backend.application.handler.exception.ErrorCode;
 import weteam.backend.domain.alarm.AlarmService;
 import weteam.backend.domain.alarm.entity.AlarmStatus;
-import weteam.backend.domain.common.HashUtil;
 import weteam.backend.domain.common.pagination.param.ProjectPaginationParam;
 import weteam.backend.domain.project.dto.CreateProjectDto;
 import weteam.backend.domain.project.dto.ProjectDto;
@@ -22,6 +21,7 @@ import weteam.backend.domain.user.UserRepository;
 import weteam.backend.domain.user.entity.User;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 @Service
 @RequiredArgsConstructor
@@ -38,10 +38,7 @@ public class ProjectService {
     }
 
     final Project project = Project.from(projectDto, securityUtil.getCurrentUser());
-    Project savedProject = projectRepository.save(project);
-
-    final String hashedId = HashUtil.hashId(savedProject.getId());
-    savedProject.addHashedId(hashedId);
+    projectRepository.save(project);
   }
 
   private Project findProjectByIdAndUserId(final Long projectId) {

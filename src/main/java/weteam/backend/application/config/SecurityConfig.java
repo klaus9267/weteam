@@ -31,9 +31,12 @@ public class SecurityConfig {
             .requestMatchers(
                 "/api/common/**",
                 "/api/users/all",
+                "/actuator/prometheus",
                 "/error.html",
                 "/error-weteam",
                 "/swagger-ui/**",
+                "/monitor",
+                "/actuator/**",
                 "/v3/**"
             ).permitAll()
             .anyRequest().authenticated()

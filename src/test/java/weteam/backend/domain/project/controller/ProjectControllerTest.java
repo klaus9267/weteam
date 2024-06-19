@@ -293,10 +293,10 @@ class ProjectControllerTest extends BaseIntegrationTest {
         String body = mapper.writeValueAsString(failProjectDtoForUpdate);
 
         mockMvc.perform(patch(END_POINT + "/" + projectId)
-                .header("Authorization", idToken)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(body)
-            )            .andExpect(status().isBadRequest());
+            .header("Authorization", idToken)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(body)
+        ).andExpect(status().isBadRequest());
       }
 
       @Test
@@ -328,7 +328,6 @@ class ProjectControllerTest extends BaseIntegrationTest {
 
       @Test
       void 호스트_아님() throws Exception {
-        List<Project> list = projectRepository.findAll();
         mockMvc.perform(patch(END_POINT + "/" + 1 + "/" + 32)
                 .header("Authorization", idToken))
             .andExpect(status().isBadRequest());
@@ -339,14 +338,13 @@ class ProjectControllerTest extends BaseIntegrationTest {
     class 팀플_삭제 {
       @Test
       void 호스트_아님() throws Exception {
-        mockMvc.perform(delete(END_POINT + "/2")
+        mockMvc.perform(delete(END_POINT + "/1")
                 .header("Authorization", idToken))
             .andExpect(status().isBadRequest());
       }
 
       @Test
       void not_found() throws Exception {
-        Project project = testRepository.saveProject();
         mockMvc.perform(delete(END_POINT + "/333")
                 .header("Authorization", idToken))
             .andExpect(status().isNotFound());

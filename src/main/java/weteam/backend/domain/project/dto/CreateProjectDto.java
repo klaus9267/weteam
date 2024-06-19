@@ -21,7 +21,7 @@ public record CreateProjectDto(
     Long imageId,
 
     @NotNull(message = "endedAt is required")
-    @Schema(example = "2023-12-24")
+    @Schema(example = "2025-12-24")
     @FutureOrPresent
     LocalDate endedAt,
 

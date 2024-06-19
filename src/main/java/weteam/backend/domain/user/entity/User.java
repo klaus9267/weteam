@@ -41,22 +41,22 @@ public class User extends BaseEntity {
   private ProfileImage profileImage;
 
   @OneToMany(mappedBy = "host", cascade = CascadeType.ALL, orphanRemoval = true)
-  private List<Project> projectList = new ArrayList<>();
+  private final List<Project> projectList = new ArrayList<>();
 
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-  private List<ProjectUser> projectUserList = new ArrayList<>();
+  private final List<ProjectUser> projectUserList = new ArrayList<>();
 
   @OneToMany(mappedBy = "host", cascade = CascadeType.ALL, orphanRemoval = true)
-  private List<Meeting> meetingList = new ArrayList<>();
+  private final List<Meeting> meetingList = new ArrayList<>();
 
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-  private List<MeetingUser> meetingUserList = new ArrayList<>();
+  private final List<MeetingUser> meetingUserList = new ArrayList<>();
 
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-  private List<Alarm> alarms1 = new ArrayList<>();
+  private final List<Alarm> alarms1 = new ArrayList<>();
 
   @OneToMany(mappedBy = "targetUser", cascade = CascadeType.ALL)
-  private List<Alarm> alarms2 = new ArrayList<>();
+  private final List<Alarm> alarms2 = new ArrayList<>();
 
   public static User from(final UserDto userDto) {
     return User.builder().id(userDto.id())
