@@ -14,17 +14,12 @@ services:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
     ports:
       - "9000:9000"
-    networks:
-      - monitoring-network
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--web.listen-address=:9000'
 
   grafana:
     image: grafana/grafana:latest
     container_name: grafana
     ports:
       - "3000:3000"
-    networks:
-      - monitoring-network
-
-networks:
-  monitoring-network:
-    driver: bridge
