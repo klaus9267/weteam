@@ -1,6 +1,7 @@
 package weteam.backend.domain.project.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -21,10 +22,11 @@ import weteam.backend.domain.user.UserRepository;
 import weteam.backend.domain.user.entity.User;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
+import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ProjectService {
   private final ProjectRepository projectRepository;
   private final UserRepository userRepository;
@@ -95,6 +97,7 @@ public class ProjectService {
   @Transactional
   public void checkProject() {
     final LocalDate now = LocalDate.now();
+    log.info("Project check time : " + LocalDateTime.now());
     projectRepository.findAllByIsDoneAndEndedAtBefore(false, now).forEach(Project::updateDone);
   }
 }
