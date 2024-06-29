@@ -84,3 +84,4 @@ jobs:
           script: |
             sudo docker pull ${{ secrets.DOCKER_ID }}/weteam
             docker-compose up -d
+            docker image prune -a

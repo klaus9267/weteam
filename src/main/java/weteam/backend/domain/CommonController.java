@@ -6,6 +6,7 @@ import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.UserRecord;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.hc.client5.http.classic.methods.HttpPost;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
@@ -33,8 +34,15 @@ import java.util.Map;
 @RequestMapping("/api/common")
 @RequiredArgsConstructor
 @Tag(name = "COMMON")
+@Slf4j
 public class CommonController {
   private final FirebaseAuth firebaseAuth;
+
+  @GetMapping("test")
+  public String test() {
+    log.info("test");
+    return "test";
+  }
 
   @GetMapping
   @SwaggerOK(summary = "딥링크용 url 반환 API")
