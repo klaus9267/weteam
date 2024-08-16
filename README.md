@@ -28,3 +28,8 @@
       <h3>ERD</h3>
       
   ![erd](https://github.com/klaus9267/weteam/assets/90795904/00b603d8-ed88-4951-bc5e-6a7fb73c7878)
+
+  <h3> Architecture</h3>
+  
+  ![weteam drawio](https://github.com/user-attachments/assets/8d60d79e-db32-4be7-b5c2-0b7104caa08d)
+
