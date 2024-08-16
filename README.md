@@ -28,7 +28,3 @@
       <h3>ERD</h3>
       
   ![erd](https://github.com/klaus9267/weteam/assets/90795904/00b603d8-ed88-4951-bc5e-6a7fb73c7878)
-
-  <h3>rchitecture</h3>
-
-![제목 없는 다이어그램 drawio](https://github.com/klaus9267/weteam/assets/90795904/72c03704-0805-474c-89ac-a45932d2ef95)
