@@ -13,7 +13,6 @@ public record CreateProjectDto(
 
     @NotNull(message = "startedAt is required")
     @Schema(example = "2023-12-24")
-    @PastOrPresent
     LocalDate startedAt,
 
     @NotNull
@@ -22,7 +21,6 @@ public record CreateProjectDto(
 
     @NotNull(message = "endedAt is required")
     @Schema(example = "2025-12-24")
-    @FutureOrPresent
     LocalDate endedAt,
 
     @NotBlank(message = "explanation is required")
