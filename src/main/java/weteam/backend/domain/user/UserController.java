@@ -13,6 +13,7 @@ import weteam.backend.domain.common.swagger.SwaggerNoContent;
 import weteam.backend.domain.common.swagger.SwaggerOK;
 import weteam.backend.domain.user.dto.RequestUserDto;
 import weteam.backend.domain.user.dto.UserWithProfileImageDto;
+import weteam.backend.domain.user.dto.UserWithProfileImageDtoV2;
 import weteam.backend.domain.user.entity.User;
 
 @RestController
@@ -36,6 +37,14 @@ public class UserController {
   public ResponseEntity<UserWithProfileImageDto> readMyInfo() {
     final User user = securityUtil.getCurrentUser();
     final UserWithProfileImageDto userWithProfileImageDto = UserWithProfileImageDto.from(user);
+    return ResponseEntity.ok(userWithProfileImageDto);
+  }
+
+  @GetMapping("v2")
+  @SwaggerOK(summary = "내 정보 조회 v2")
+  public ResponseEntity<UserWithProfileImageDtoV2> readMyInfoV2() {
+    final User user = securityUtil.getCurrentUser();
+    final UserWithProfileImageDtoV2 userWithProfileImageDto = UserWithProfileImageDtoV2.from(user, true);
     return ResponseEntity.ok(userWithProfileImageDto);
   }
 

@@ -35,9 +35,14 @@ public class ProjectService {
 
   @Transactional
   public void addProject(final CreateProjectDto projectDto) {
-    if (projectRepository.findByHostIdAndNameAndExplanation(securityUtil.getId(), projectDto.name(), projectDto.explanation()).isPresent()) {
-      throw new CustomException(ErrorCode.DUPLICATE);
+    if (projectDto.startedAt().isAfter(projectDto.endedAt()) || projectDto.endedAt().isBefore(projectDto.startedAt())) {
+      throw new CustomException(ErrorCode.INVALID_TIME);
     }
+
+    projectRepository.findByHostIdAndNameAndExplanation(securityUtil.getId(), projectDto.name(), projectDto.explanation())
+        .ifPresent(project -> {
+          throw new CustomException(ErrorCode.DUPLICATE);
+        });
 
     final Project project = Project.from(projectDto, securityUtil.getCurrentUser());
     projectRepository.save(project);

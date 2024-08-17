@@ -25,6 +25,7 @@ public enum ErrorCode {
   ACCESS_DENIED(HttpStatus.FORBIDDEN, "접근이 거부됬습니다."),
 
   BAD_REQUEST(HttpStatus.BAD_REQUEST, "잘못된 요청사항입니다."),
+  INVALID_TIME(HttpStatus.BAD_REQUEST, "시작, 종료일을 확인해주세요."),
   PROJECT_ACCESS_DENIED(HttpStatus.BAD_REQUEST, "해당 방에 입장할 수 없습니다."),
   ALREADY_ACCESS_MEETING(HttpStatus.BAD_REQUEST, "이미 수락한 약속입니다."),
   ALREADY_ACCESS_PROJECT(HttpStatus.BAD_REQUEST, "이미 수락한 프로젝트입니다."),
