@@ -98,11 +98,12 @@ public class ProjectService {
     return project;
   }
 
-  @Scheduled(fixedRate = 600000) // 60 * 60 * 1000 밀리초
+  @Scheduled(fixedRate = 1000 * 60 * 60) // 1시간
   @Transactional
   public void checkProject() {
     final LocalDate now = LocalDate.now();
     log.info("Project check time : " + LocalDateTime.now());
     projectRepository.findAllByIsDoneAndEndedAtBefore(false, now).forEach(Project::updateDone);
+    log.info("-------------------------------------------------------------------------------------------------------------------");
   }
 }
