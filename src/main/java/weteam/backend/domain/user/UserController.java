@@ -28,7 +28,7 @@ public class UserController {
   @GetMapping("{id}")
   @SwaggerOK(summary = "다른 사용자 조회")
   public ResponseEntity<UserWithProfileImageDto> readOtherInfo(@PathVariable("id") final Long id) {
-    final UserWithProfileImageDto user = userService.findUserById(id);
+    final UserWithProfileImageDto user = userService.findById(id);
     return ResponseEntity.ok(user);
   }
 
@@ -73,6 +73,6 @@ public class UserController {
   @SwaggerNoContent(summary = "사용자 탈퇴")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   public void deleteUser() {
-    userService.deleteOne();
+    userService.deleteUser();
   }
 }

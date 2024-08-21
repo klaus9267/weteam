@@ -8,11 +8,8 @@ import weteam.backend.application.handler.exception.CustomException;
 import weteam.backend.application.handler.exception.ErrorCode;
 import weteam.backend.domain.project.repository.ProjectRepository;
 import weteam.backend.domain.user.dto.RequestUserDto;
-import weteam.backend.domain.user.dto.UserDto;
 import weteam.backend.domain.user.dto.UserWithProfileImageDto;
 import weteam.backend.domain.user.entity.User;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -21,34 +18,29 @@ public class UserService {
   private final ProjectRepository projectRepository;
   private final SecurityUtil securityUtil;
 
-  public List<UserDto> findAll() {
-    final List<User> userList = userRepository.findAll();
-    return userList.stream().map(UserDto::from).toList();
-  }
-
-  public UserWithProfileImageDto findUserById(final Long userId) {
-    final User user = this.findOne(userId);
+  public UserWithProfileImageDto findById(final Long userId) {
+    final User user = this.findUser(userId);
     return UserWithProfileImageDto.from(user);
   }
 
-  private User findOne(final Long id) {
+  private User findUser(final Long id) {
     return userRepository.findById(id).orElseThrow(CustomException.raise(ErrorCode.NOT_FOUND));
   }
 
   @Transactional
   public void updateUser(final RequestUserDto userDto) {
-    final User user = this.findOne(securityUtil.getId());
+    final User user = this.findUser(securityUtil.getId());
     user.updateUser(userDto);
   }
 
   @Transactional
   public void updateReceivePermission() {
-    final User user = this.findOne(securityUtil.getId());
+    final User user = this.findUser(securityUtil.getId());
     user.updateReceivePermission();
   }
 
   @Transactional
-  public void deleteOne() {
+  public void deleteUser() {
     final Long userId = securityUtil.getId();
     if (projectRepository.existsByHostId(userId)) {
       throw new CustomException(ErrorCode.USER_IS_HOST);
