@@ -52,10 +52,10 @@ public class User extends BaseEntity {
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
   private final List<MeetingUser> meetingUserList = new ArrayList<>();
 
-  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
   private final List<Alarm> alarms1 = new ArrayList<>();
 
-  @OneToMany(mappedBy = "targetUser", cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "targetUser", cascade = CascadeType.ALL, orphanRemoval = true)
   private final List<Alarm> alarms2 = new ArrayList<>();
 
   public static User from(final UserDto userDto) {

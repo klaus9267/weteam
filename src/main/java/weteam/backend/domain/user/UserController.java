@@ -75,4 +75,11 @@ public class UserController {
   public void deleteUser() {
     userService.deleteUser();
   }
+
+  @DeleteMapping("{id}")
+  @SwaggerNoContent(summary = "사용자 강제 삭제(개발용)")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  public void withdrawUser(@PathVariable("id") final long id) {
+    userService.deleteUser(id);
+  }
 }

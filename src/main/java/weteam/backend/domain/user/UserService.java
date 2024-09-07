@@ -49,6 +49,11 @@ public class UserService {
   }
 
   @Transactional
+  public void deleteUser(final long id) {
+    userRepository.deleteById(id);
+  }
+
+  @Transactional
   public void logOut() {
     final User user = securityUtil.getCurrentUser();
     user.logout();
