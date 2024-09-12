@@ -9,7 +9,7 @@ import weteam.backend.domain.user.entity.User;
 
 @Component
 public class SecurityUtil {
-  public Long getId() {
+  public Long getCurrentUserId() {
     return getCustomUserDetails().getId();
   }
 

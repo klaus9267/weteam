@@ -38,12 +38,6 @@ import java.util.Map;
 public class CommonController {
   private final FirebaseAuth firebaseAuth;
 
-  @GetMapping("test")
-  public String test() {
-    log.info("test");
-    return "test";
-  }
-
   @GetMapping
   @SwaggerOK(summary = "딥링크용 url 반환 API")
   public ResponseEntity<String> returnURL(@RequestParam("url") final String url) {

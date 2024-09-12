@@ -77,7 +77,7 @@ public class User extends BaseEntity {
     this.deviceToken = deviceToken;
   }
 
-  public void updateReceivePermission() {
+  public void toggleReceivePermission() {
     this.receivePermission = !receivePermission;
   }
 

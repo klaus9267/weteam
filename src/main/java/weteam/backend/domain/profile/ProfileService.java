@@ -18,7 +18,7 @@ public class ProfileService {
 
   @Transactional
   public void addProfile(final Long imageIdx) {
-    final User user = userRepository.findById(securityUtil.getId()).orElseThrow(CustomException.raise(ErrorCode.NOT_FOUND));
+    final User user = userRepository.findById(securityUtil.getCurrentUserId()).orElseThrow(CustomException.raise(ErrorCode.NOT_FOUND));
     if (user.getProfileImage() != null) {
       throw new CustomException(ErrorCode.DUPLICATE);
     }
@@ -28,7 +28,7 @@ public class ProfileService {
 
   @Transactional
   public void updateProfile(final Long imageIdx) {
-    ProfileImage image = profileRepository.findByUserId(securityUtil.getId()).orElseThrow(CustomException.raise(ErrorCode.NOT_FOUND));
+    ProfileImage image = profileRepository.findByUserId(securityUtil.getCurrentUserId()).orElseThrow(CustomException.raise(ErrorCode.NOT_FOUND));
     image.updateImage(imageIdx);
   }
 }

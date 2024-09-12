@@ -39,7 +39,7 @@ public class ProjectService {
       throw new CustomException(ErrorCode.INVALID_TIME);
     }
 
-    projectRepository.findByHostIdAndNameAndExplanation(securityUtil.getId(), projectDto.name(), projectDto.explanation())
+    projectRepository.findByHostIdAndNameAndExplanation(securityUtil.getCurrentUserId(), projectDto.name(), projectDto.explanation())
         .ifPresent(project -> {
           throw new CustomException(ErrorCode.DUPLICATE);
         });
@@ -49,7 +49,7 @@ public class ProjectService {
   }
 
   private Project findProjectByIdAndUserId(final Long projectId) {
-    return projectRepository.findByIdAndUserId(projectId, securityUtil.getId()).orElseThrow(CustomException.raise(ErrorCode.PROJECT_NOT_FOUND));
+    return projectRepository.findByIdAndUserId(projectId, securityUtil.getCurrentUserId()).orElseThrow(CustomException.raise(ErrorCode.PROJECT_NOT_FOUND));
   }
 
   public ProjectPaginationDto findListWithPagination(final ProjectPaginationParam paginationParam) {
@@ -92,7 +92,7 @@ public class ProjectService {
 
   private Project checkHost(final Long projectId) {
     Project project = this.findProjectByIdAndUserId(projectId);
-    if (!project.getHost().getId().equals(securityUtil.getId())) {
+    if (!project.getHost().getId().equals(securityUtil.getCurrentUserId())) {
       throw new CustomException(ErrorCode.INVALID_HOST);
     }
     return project;

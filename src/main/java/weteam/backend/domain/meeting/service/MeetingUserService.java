@@ -41,28 +41,28 @@ public class MeetingUserService {
   @Transactional
   public void updateTimeSlot(final List<RequestTimeSlotDto> timeSlotDtoList, final Long meetingId) {
     this.validateTimeSlot(timeSlotDtoList);
-    final MeetingUser meetingUser = meetingUserRepository.findByMeetingIdAndUserId(meetingId, securityUtil.getId()).orElseThrow(CustomException.raise(ErrorCode.MEETING_NOT_FOUND));
+    final MeetingUser meetingUser = meetingUserRepository.findByMeetingIdAndUserId(meetingId, securityUtil.getCurrentUserId()).orElseThrow(CustomException.raise(ErrorCode.MEETING_NOT_FOUND));
     meetingUser.updateTimeSlots(timeSlotDtoList);
     this.verifyAllChecked(meetingUser.getMeeting());
   }
 
   @Transactional
   public void updateTimeSlotV2(final RequestTimeSlotDtoV2 timeSlotDtoV2, final Long meetingId) {
-    final MeetingUser meetingUser = meetingUserRepository.findByMeetingIdAndUserId(meetingId, securityUtil.getId()).orElseThrow(CustomException.raise(ErrorCode.MEETING_NOT_FOUND));
+    final MeetingUser meetingUser = meetingUserRepository.findByMeetingIdAndUserId(meetingId, securityUtil.getCurrentUserId()).orElseThrow(CustomException.raise(ErrorCode.MEETING_NOT_FOUND));
     meetingUser.updateTimeSlotsV2(timeSlotDtoV2);
     this.verifyAllCheckedV2(meetingUser.getMeeting());
   }
 
   @Transactional
   public void updateMeetingDisplayed(final Long meetingId) {
-    final MeetingUser meetingUser = meetingUserRepository.findByMeetingIdAndUserId(meetingId, securityUtil.getId()).orElseThrow(CustomException.raise(ErrorCode.MEETING_NOT_FOUND));
+    final MeetingUser meetingUser = meetingUserRepository.findByMeetingIdAndUserId(meetingId, securityUtil.getCurrentUserId()).orElseThrow(CustomException.raise(ErrorCode.MEETING_NOT_FOUND));
     meetingUser.updateDisplayed();
   }
 
   @Transactional
   public void quitMeeting(final Long meetingId) {
-    final Meeting meeting = meetingRepository.findByIdAndUserId(meetingId, securityUtil.getId()).orElseThrow(CustomException.raise(ErrorCode.MEETING_NOT_FOUND));
-    meeting.quit(securityUtil.getId());
+    final Meeting meeting = meetingRepository.findByIdAndUserId(meetingId, securityUtil.getCurrentUserId()).orElseThrow(CustomException.raise(ErrorCode.MEETING_NOT_FOUND));
+    meeting.quit(securityUtil.getCurrentUserId());
   }
 
   private void validateTimeSlot(final List<RequestTimeSlotDto> timeSlotDtoList) {

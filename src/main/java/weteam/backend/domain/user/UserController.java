@@ -22,13 +22,13 @@ import weteam.backend.domain.user.entity.User;
 @RequiredArgsConstructor
 @Tag(name = "USER")
 public class UserController {
-  private final UserService userService;
+  private final UserFacade userFacade;
   private final SecurityUtil securityUtil;
 
   @GetMapping("{id}")
   @SwaggerOK(summary = "다른 사용자 조회")
   public ResponseEntity<UserWithProfileImageDto> readOtherInfo(@PathVariable("id") final Long id) {
-    final UserWithProfileImageDto user = userService.findById(id);
+    final UserWithProfileImageDto user = userFacade.findUserInfo(id);
     return ResponseEntity.ok(user);
   }
 
@@ -52,34 +52,38 @@ public class UserController {
   @Operation(summary = "푸시 알람 수신 활성화/비활성화", description = "응답 없음")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   public void changeReceivePermission() {
-    userService.updateReceivePermission();
+    final long currentUserId = securityUtil.getCurrentUserId();
+    userFacade.toggleReceivePermission(currentUserId);
   }
 
   @PatchMapping
   @Operation(summary = "사용자 정보 변경", description = "응답 없음")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   public void updateUser(@RequestBody @Valid final RequestUserDto requestUserDto) {
-    userService.updateUser(requestUserDto);
+    final long currentUserId = securityUtil.getCurrentUserId();
+    userFacade.updateUser(requestUserDto, currentUserId);
   }
 
   @PatchMapping("logout")
   @Operation(summary = "로그아웃", description = "응답 없음")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   public void logout() {
-    userService.logOut();
+    final long currentUserId = securityUtil.getCurrentUserId();
+    userFacade.logOut(currentUserId);
   }
 
   @DeleteMapping
   @SwaggerNoContent(summary = "사용자 탈퇴")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   public void deleteUser() {
-    userService.deleteUser();
+    final long currentUserId = securityUtil.getCurrentUserId();
+    userFacade.deleteUser(currentUserId);
   }
 
   @DeleteMapping("{id}")
   @SwaggerNoContent(summary = "사용자 강제 삭제(개발용)")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   public void withdrawUser(@PathVariable("id") final long id) {
-    userService.deleteUser(id);
+    userFacade.deleteUser(id);
   }
 }

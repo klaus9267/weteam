@@ -62,14 +62,14 @@ public class ProjectUserService {
 
   @Transactional
   public void updateProjectRole(final UpdateProjectRoleParam param) {
-    ProjectUser projectUser = projectUserRepository.findByProjectIdAndUserId(param.getProjectId(), securityUtil.getId()).orElseThrow(CustomException.raise(ErrorCode.PROJECT_USER_NOT_FOUND));
+    ProjectUser projectUser = projectUserRepository.findByProjectIdAndUserId(param.getProjectId(), securityUtil.getCurrentUserId()).orElseThrow(CustomException.raise(ErrorCode.PROJECT_USER_NOT_FOUND));
     projectUser.updateRole(param.getRole());
   }
 
   @Transactional
   public void kickUsers(final List<Long> projectUserIdList) {
     final Project project = projectRepository.findByProjectUserListIdIn(projectUserIdList).orElseThrow(CustomException.raise(ErrorCode.PROJECT_NOT_FOUND));
-    if (!project.getHost().getId().equals(securityUtil.getId())) {
+    if (!project.getHost().getId().equals(securityUtil.getCurrentUserId())) {
       throw new CustomException(ErrorCode.INVALID_HOST);
     }
 
@@ -87,8 +87,8 @@ public class ProjectUserService {
 
   @Transactional
   public void exitProject(final Long projectId) {
-    final ProjectUser projectUser = projectUserRepository.findByProjectIdAndUserId(projectId, securityUtil.getId()).orElseThrow(CustomException.raise(ErrorCode.PROJECT_NOT_FOUND));
-    if (projectUser.getProject().getHost().getId().equals(securityUtil.getId())) {
+    final ProjectUser projectUser = projectUserRepository.findByProjectIdAndUserId(projectId, securityUtil.getCurrentUserId()).orElseThrow(CustomException.raise(ErrorCode.PROJECT_NOT_FOUND));
+    if (projectUser.getProject().getHost().getId().equals(securityUtil.getCurrentUserId())) {
       throw new CustomException(ErrorCode.USER_IS_HOST);
     }
     projectUser.disable();
