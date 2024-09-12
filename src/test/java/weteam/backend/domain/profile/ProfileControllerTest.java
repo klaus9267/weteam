@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import weteam.backend.common.BaseIntegrationTest;
 import weteam.backend.common.DataInitializer;
+import weteam.backend.domain.profile.entity.ProfileImage;
 import weteam.backend.domain.user.UserRepository;
 import weteam.backend.domain.user.entity.User;
 

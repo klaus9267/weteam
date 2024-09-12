@@ -1,6 +1,7 @@
 package weteam.backend.domain.profile;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import weteam.backend.domain.profile.entity.ProfileImage;
 
 import java.util.Optional;
 
