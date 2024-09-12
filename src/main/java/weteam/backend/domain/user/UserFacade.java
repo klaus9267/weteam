@@ -3,6 +3,7 @@ package weteam.backend.domain.user;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import weteam.backend.application.auth.SecurityUtil;
 import weteam.backend.application.handler.exception.CustomException;
 import weteam.backend.application.handler.exception.ErrorCode;
 import weteam.backend.domain.user.dto.RequestUserDto;
@@ -13,6 +14,7 @@ import weteam.backend.domain.user.entity.User;
 @RequiredArgsConstructor
 public class UserFacade {
   private final UserService userService;
+  private final SecurityUtil securityUtil;
 
   public UserWithProfileImageDto findUserInfo(final long userId) {
     final User user = userService.findUser(userId);
@@ -20,34 +22,44 @@ public class UserFacade {
   }
 
   @Transactional
-  public void toggleReceivePermission(final long userId) {
-    final User user = userService.findUser(userId);
-    user.toggleReceivePermission();
+  public void toggleReceivePermission() {
+    final User currentUser = this.findCurrentUser();
+    currentUser.toggleReceivePermission();
+  }
+
+  public UserWithProfileImageDto findMyInfo() {
+    final User user = securityUtil.getCurrentUser();
+    return UserWithProfileImageDto.from(user);
+  }
+
+  private User findCurrentUser() {
+    final long currentUserId = securityUtil.getCurrentUserId();
+    return userService.findUser(currentUserId);
   }
 
   @Transactional
-  public void updateUser(final RequestUserDto requestUserDto, final long userId) {
-    final User user = userService.findUser(userId);
-    user.updateUser(requestUserDto);
+  public void updateUser(final RequestUserDto requestUserDto) {
+    final User currentUser = this.findCurrentUser();
+    currentUser.updateUser(requestUserDto);
+  }
+
+  @Transactional
+  public void removeAccount() {
+    final User currentUser = this.findCurrentUser();
+    if (!currentUser.getProjectList().isEmpty()) {
+      throw new CustomException(ErrorCode.USER_IS_HOST);
+    }
+    userService.deleteUser(currentUser.getId());
   }
 
   @Transactional
   public void deleteUser(final long userId) {
-    final User user = userService.findUser(userId);
-    if (!user.getProjectList().isEmpty()) {
-      throw new CustomException(ErrorCode.USER_IS_HOST);
-    }
     userService.deleteUser(userId);
   }
 
   @Transactional
-  public void deleteUser4Develop(final long userId) {
-    userService.deleteUser(userId);
-  }
-
-  @Transactional
-  public void logOut(final long userId) {
-    final User user = userService.findUser(userId);
+  public void logOut() {
+    final User user = findCurrentUser();
     user.logout();
   }
 }
