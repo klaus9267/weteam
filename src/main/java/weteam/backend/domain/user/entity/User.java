@@ -11,7 +11,7 @@ import weteam.backend.domain.meeting.entity.Meeting;
 import weteam.backend.domain.meeting.entity.MeetingUser;
 import weteam.backend.domain.profile.entity.ProfileImage;
 import weteam.backend.domain.project.entity.Project;
-import weteam.backend.domain.project.entity.ProjectUser;
+import weteam.backend.domain.project_user.entity.ProjectUser;
 import weteam.backend.domain.user.dto.RequestUserDto;
 import weteam.backend.domain.user.dto.UserDto;
 

@@ -1,4 +1,4 @@
-package weteam.backend.domain.project.service;
+package weteam.backend.domain.project_user;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -8,12 +8,11 @@ import weteam.backend.application.handler.exception.CustomException;
 import weteam.backend.application.handler.exception.ErrorCode;
 import weteam.backend.domain.alarm.AlarmService;
 import weteam.backend.domain.alarm.entity.AlarmStatus;
-import weteam.backend.domain.project.dto.ProjectUserDto;
+import weteam.backend.domain.project_user.dto.ProjectUserDto;
 import weteam.backend.domain.project.entity.Project;
-import weteam.backend.domain.project.entity.ProjectUser;
-import weteam.backend.domain.project.param.UpdateProjectRoleParam;
-import weteam.backend.domain.project.repository.ProjectRepository;
-import weteam.backend.domain.project.repository.ProjectUserRepository;
+import weteam.backend.domain.project_user.param.UpdateProjectRoleParam;
+import weteam.backend.domain.project.ProjectRepository;
+import weteam.backend.domain.project_user.entity.ProjectUser;
 import weteam.backend.domain.user.entity.User;
 
 import java.util.ArrayList;

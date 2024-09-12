@@ -1,4 +1,4 @@
-package weteam.backend.domain.project.controller;
+package weteam.backend.domain.project_user;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -12,9 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import weteam.backend.domain.common.swagger.SwaggerNoContent;
 import weteam.backend.domain.common.swagger.SwaggerOK;
-import weteam.backend.domain.project.dto.ProjectUserDto;
-import weteam.backend.domain.project.param.UpdateProjectRoleParam;
-import weteam.backend.domain.project.service.ProjectUserService;
+import weteam.backend.domain.project_user.dto.ProjectUserDto;
+import weteam.backend.domain.project_user.param.UpdateProjectRoleParam;
 
 import java.util.List;
 

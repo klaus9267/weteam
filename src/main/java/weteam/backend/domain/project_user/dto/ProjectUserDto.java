@@ -1,9 +1,9 @@
-package weteam.backend.domain.project.dto;
+package weteam.backend.domain.project_user.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import weteam.backend.domain.project.entity.ProjectUser;
+import weteam.backend.domain.project_user.entity.ProjectUser;
 import weteam.backend.domain.user.dto.UserWithProfileImageDto;
 
 import java.util.List;

@@ -1,4 +1,4 @@
-package weteam.backend.domain.project.entity;
+package weteam.backend.domain.project_user.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import weteam.backend.application.handler.exception.CustomException;
 import weteam.backend.application.handler.exception.ErrorCode;
+import weteam.backend.domain.project.entity.Project;
 import weteam.backend.domain.user.entity.User;
 
 @Entity(name = "project_users")

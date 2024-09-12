@@ -18,7 +18,7 @@ import weteam.backend.domain.meeting.entity.TimeSlot2;
 import weteam.backend.domain.meeting.param.MeetingDetailParam;
 import weteam.backend.domain.meeting.repository.MeetingRepository;
 import weteam.backend.domain.project.entity.Project;
-import weteam.backend.domain.project.repository.ProjectRepository;
+import weteam.backend.domain.project.ProjectRepository;
 
 import java.time.LocalDateTime;
 import java.util.*;

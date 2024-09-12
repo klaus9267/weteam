@@ -8,6 +8,7 @@ import weteam.backend.domain.common.HashUtil;
 import weteam.backend.domain.meeting.entity.Meeting;
 import weteam.backend.domain.project.dto.CreateProjectDto;
 import weteam.backend.domain.project.dto.UpdateProjectDto;
+import weteam.backend.domain.project_user.entity.ProjectUser;
 import weteam.backend.domain.user.entity.User;
 
 import java.time.LocalDate;

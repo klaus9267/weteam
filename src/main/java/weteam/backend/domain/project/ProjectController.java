@@ -1,4 +1,4 @@
-package weteam.backend.domain.project.controller;
+package weteam.backend.domain.project;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -17,7 +17,7 @@ import weteam.backend.domain.project.dto.CreateProjectDto;
 import weteam.backend.domain.project.dto.ProjectDto;
 import weteam.backend.domain.project.dto.ProjectPaginationDto;
 import weteam.backend.domain.project.dto.UpdateProjectDto;
-import weteam.backend.domain.project.service.ProjectService;
+import weteam.backend.domain.project.ProjectService;
 
 @RestController
 @RequestMapping("/api/projects")

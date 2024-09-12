@@ -3,7 +3,7 @@ package weteam.backend.domain.project.dto;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import weteam.backend.domain.project.entity.Project;
-import weteam.backend.domain.project.entity.ProjectUser;
+import weteam.backend.domain.project_user.entity.ProjectUser;
 import weteam.backend.domain.user.dto.UserWithProfileImageDto;
 
 import java.time.LocalDate;

@@ -1,10 +1,10 @@
-package weteam.backend.domain.project.repository;
+package weteam.backend.domain.project_user;
 
 import jakarta.persistence.LockModeType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
-import weteam.backend.domain.project.entity.ProjectUser;
+import weteam.backend.domain.project_user.entity.ProjectUser;
 
 import java.util.List;
 import java.util.Optional;

@@ -8,9 +8,9 @@ import weteam.backend.common.BaseIntegrationTest;
 import weteam.backend.common.DataInitializer;
 import weteam.backend.domain.common.pagination.param.ProjectPaginationParam;
 import weteam.backend.domain.project.entity.Project;
-import weteam.backend.domain.project.entity.ProjectUser;
-import weteam.backend.domain.project.repository.ProjectRepository;
-import weteam.backend.domain.project.repository.ProjectUserRepository;
+import weteam.backend.domain.project_user.entity.ProjectUser;
+import weteam.backend.domain.project.ProjectRepository;
+import weteam.backend.domain.project_user.ProjectUserRepository;
 import weteam.backend.domain.user.entity.User;
 
 import java.util.List;

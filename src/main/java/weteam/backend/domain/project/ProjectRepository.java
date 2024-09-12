@@ -1,4 +1,4 @@
-package weteam.backend.domain.project.repository;
+package weteam.backend.domain.project;
 
 import jakarta.persistence.LockModeType;
 import org.springframework.data.domain.Page;

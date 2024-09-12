@@ -8,7 +8,7 @@ import weteam.backend.application.handler.exception.ErrorCode;
 import weteam.backend.domain.meeting.dto.meeting.CreateMeetingDto;
 import weteam.backend.domain.meeting.dto.meeting.UpdateMeetingDto;
 import weteam.backend.domain.project.entity.Project;
-import weteam.backend.domain.project.entity.ProjectUser;
+import weteam.backend.domain.project_user.entity.ProjectUser;
 import weteam.backend.domain.user.entity.User;
 
 import java.time.LocalDateTime;

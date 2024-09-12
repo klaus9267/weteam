@@ -8,7 +8,7 @@ import weteam.backend.domain.meeting.entity.Meeting;
 import weteam.backend.domain.meeting.repository.MeetingRepository;
 import weteam.backend.domain.project.dto.CreateProjectDto;
 import weteam.backend.domain.project.entity.Project;
-import weteam.backend.domain.project.repository.ProjectRepository;
+import weteam.backend.domain.project.ProjectRepository;
 import weteam.backend.domain.user.UserRepository;
 import weteam.backend.domain.user.entity.User;
 
