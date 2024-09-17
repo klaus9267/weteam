@@ -35,14 +35,14 @@ public class ProjectController {
   @GetMapping
   @SwaggerOK(summary = "팀플 목록 조회", description = "done으로 종료, 진행 분류해서 조회")
   @PageableAsQueryParam
-  public ResponseEntity<ProjectPaginationDto> readProjectList(@ParameterObject @Valid final ProjectPaginationParam paginationParam) {
+  public ResponseEntity<ProjectPaginationDto> pagingProjects(@ParameterObject @Valid final ProjectPaginationParam paginationParam) {
     final ProjectPaginationDto paginationDto = projectFacade.pagingProjects(paginationParam);
     return ResponseEntity.ok(paginationDto);
   }
 
   @GetMapping("{projectId}")
   @SwaggerOK(summary = "팀플 단건 조회")
-  public ResponseEntity<ProjectDto> readProject(@PathVariable("projectId") final Long projectId) {
+  public ResponseEntity<ProjectDto> findProject(@PathVariable("projectId") final Long projectId) {
     final ProjectDto projectDto = projectFacade.findProjectInfo(projectId);
     return ResponseEntity.ok(projectDto);
   }
@@ -50,7 +50,7 @@ public class ProjectController {
   @PatchMapping("{projectId}/done")
   @Operation(summary = "팀플 진행 상황 변경")
   @ResponseStatus(HttpStatus.NO_CONTENT)
-  public void updateDone(@PathVariable("projectId") final Long projectId) {
+  public void toggleIsDone(@PathVariable("projectId") final Long projectId) {
     projectFacade.toggleIsDone(projectId);
   }
 
@@ -77,7 +77,7 @@ public class ProjectController {
   @DeleteMapping("{projectId}")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   @SwaggerNoContent(summary = "팀플 삭제")
-  public void removeProject(@PathVariable("projectId") final Long projectId) {
+  public void deleteProject(@PathVariable("projectId") final Long projectId) {
     projectFacade.deleteProject(projectId);
   }
 }

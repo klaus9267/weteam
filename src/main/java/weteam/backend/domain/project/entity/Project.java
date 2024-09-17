@@ -53,7 +53,7 @@ public class Project extends BaseEntity {
   }
 
   public Project(CreateProjectDto projectDto, User user) {
-    ProjectUser projectUser = ProjectUser.from(user, this);
+    ProjectUser projectUser = ProjectUser.from(this, user);
     this.name = projectDto.name();
     this.imageId = projectDto.imageId();
     this.explanation = projectDto.explanation();
@@ -90,24 +90,11 @@ public class Project extends BaseEntity {
     this.endedAt = projectDto.endedAt() == null ? this.endedAt : projectDto.endedAt();
   }
 
-  public void addProjectUser(final User user) {
-    for (final ProjectUser projectUser : this.projectUserList) {
-      if (projectUser.getUser().equals(user)) {
-        projectUser.enable();
-        return;
-      }
-    }
-    final ProjectUser projectUser = ProjectUser.from(this, user);
-    this.getProjectUserList().add(projectUser);
-  }
-
   public void addHashedId(final String hashedId) {
     this.hashedId = hashedId;
   }
 
-  public Optional<ProjectUser> findProjectUserByUser(final User user) {
-    return this.projectUserList.stream()
-        .filter(projectUser -> projectUser.getUser().getId().equals(user.getId()))
-        .findFirst();
+  public void leaveProject(final ProjectUser projectUser) {
+    this.projectUserList.remove(projectUser);
   }
 }

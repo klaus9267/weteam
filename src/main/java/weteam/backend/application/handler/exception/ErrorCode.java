@@ -34,6 +34,7 @@ public enum ErrorCode {
   INVALID_DATA(HttpStatus.BAD_REQUEST, "잘못된 데이터입니다."),
   INVALID_USER(HttpStatus.BAD_REQUEST, "잘못된 사용자의 접근입니다."),
   INVALID_HOST(HttpStatus.BAD_REQUEST, "호스트가 아닙니다."),
+  INVALID_LIST(HttpStatus.BAD_REQUEST, "배열에 데이터가 없습니다."),
   NOT_EXIST_UNREAD_ALARM(HttpStatus.BAD_REQUEST, "미확인 알람이 없습니다."),
   IO_EXCEPTION(HttpStatus.BAD_REQUEST, "IOException!!"),
   NULL(HttpStatus.BAD_REQUEST, "Required value is null"),

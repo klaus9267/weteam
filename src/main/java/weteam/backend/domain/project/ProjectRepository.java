@@ -19,7 +19,7 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
       LEFT JOIN FETCH project_users pu ON pu.project.id = p.id
       WHERE p.id = :projectId
            AND pu.user.id = :userId
-           AND pu.isEnable = true
+           AND pu.isBlack = false
       """)
   Optional<Project> findByIdAndUserId(final Long projectId, final Long userId);
 
@@ -31,12 +31,11 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
            LEFT JOIN FETCH project_users pu ON pu.project.id = p.id
       WHERE pu.user.id = :userId
            AND p.isDone = :isDone
-           AND pu.isEnable = true
+           AND pu.isBlack = false
       """)
   Page<Project> findAllByUserIdAndIsDone(final Pageable pageable, final Long userId, final boolean isDone);
 
   Optional<Project> findByHostIdAndNameAndExplanation(final Long hostId, final String name, final String explanation);
-
 
   @Lock(LockModeType.PESSIMISTIC_WRITE)
   Optional<Project> findByHashedId(final String hashedId);
@@ -45,6 +44,4 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
   Optional<Project> findByProjectUserListIdIn(final List<Long> projectUserIdList);
 
   List<Project> findAllByIsDoneAndEndedAtBefore(final boolean isDone, final LocalDate endedAt);
-
-  List<Project> findAllByHostId(final Long hostId);
 }

@@ -3,7 +3,6 @@ package weteam.backend.domain.project.dto;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import weteam.backend.domain.project.entity.Project;
-import weteam.backend.domain.project_user.entity.ProjectUser;
 import weteam.backend.domain.user.dto.UserWithProfileImageDto;
 
 import java.time.LocalDate;
@@ -29,7 +28,7 @@ public class ProjectDto {
     this.name = project.getName();
     this.hashedId = project.getHashedId();
     this.explanation = project.getExplanation();
-    this.headCount = project.getProjectUserList().stream().filter(ProjectUser::isEnable).count();
+    this.headCount = project.getProjectUserList().stream().filter(projectUser -> !projectUser.isBlack()).count();
     this.done = project.isDone();
     this.host = UserWithProfileImageDto.from(project.getHost());
     this.startedAt = project.getStartedAt();

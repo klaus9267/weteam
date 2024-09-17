@@ -15,14 +15,12 @@ import java.util.stream.Collectors;
 public class ProjectUserDto {
   private Long id;
   private String role;
-  private boolean enable;
   private UserWithProfileImageDto user;
 
   private ProjectUserDto(ProjectUser projectUser) {
     this.id = projectUser.getId();
     this.role = projectUser.getRole();
     this.user = UserWithProfileImageDto.from(projectUser.getUser());
-    this.enable = projectUser.isEnable();
   }
 
   public static ProjectUserDto from(ProjectUser projectUser) {

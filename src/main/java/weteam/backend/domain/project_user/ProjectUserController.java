@@ -23,32 +23,34 @@ import java.util.List;
 @Tag(name = "PROJECT_USER")
 public class ProjectUserController {
   private final ProjectUserService projectUserService;
+  private final ProjectUserFacade projectUserFacade;
 
   @GetMapping("{projectId}/invite")
   @SwaggerOK(summary = "팀원 초대용 hashedId 조회")
   public ResponseEntity<String> readHashedId(@PathVariable("projectId") final Long projectId) {
-    final String hashedId = projectUserService.readHashedId(projectId);
+    final String hashedId = projectUserFacade.findProjectHashedId(projectId);
     return ResponseEntity.ok(hashedId);
   }
 
   @GetMapping("{projectId}")
   @SwaggerOK(summary = "팀원 목록 조회")
   public ResponseEntity<List<ProjectUserDto>> findProjectMemberList(@PathVariable("projectId") final Long projectId) {
-    return ResponseEntity.ok(projectUserService.findProjectUserListByProjectId(projectId));
+    final List<ProjectUserDto> projectUserDtos = projectUserFacade.findProjectUsers(projectId);
+    return ResponseEntity.ok(projectUserDtos);
   }
 
   @PatchMapping
   @Operation(summary = "담당 역할 변경", description = "응답 없음")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   public void updateProjectRole(@ParameterObject @Valid UpdateProjectRoleParam updateProjectRoleParam) {
-    projectUserService.updateProjectRole(updateProjectRoleParam);
+    projectUserFacade.updateProjectRole(updateProjectRoleParam);
   }
 
   @PatchMapping("{hashedProjectId}")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   @SwaggerNoContent(summary = "초대 수락", description = "응답 없음")
   public void acceptInvite(@PathVariable("hashedProjectId") final String hashedProjectId) {
-    projectUserService.acceptInvite(hashedProjectId);
+    projectUserFacade.acceptInvite(hashedProjectId);
   }
 
   @DeleteMapping
@@ -57,13 +59,13 @@ public class ProjectUserController {
   public void kickUser(
       @Parameter(description = "userId가 아닌 projectUserId")
       @NotNull @RequestParam("projectUserIdList") final List<Long> projectUserIdList) {
-    projectUserService.kickUsers(projectUserIdList);
+    projectUserFacade.kickUsers(projectUserIdList);
   }
 
   @DeleteMapping("{projectId}")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   @SwaggerNoContent(summary = "팀플 탈퇴", description = "응답 없음")
   public void exitProject(@PathVariable("projectId") final Long projectId) {
-    projectUserService.exitProject(projectId);
+    projectUserFacade.leaveProject(projectId);
   }
 }

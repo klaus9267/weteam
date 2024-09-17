@@ -16,6 +16,7 @@ import weteam.backend.domain.user.entity.User;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -23,7 +24,6 @@ import java.time.LocalDateTime;
 public class ProjectService {
   private final ProjectRepository projectRepository;
 
-  @Transactional
   public void addProject(final CreateProjectDto createProjectDto, final User user) {
     if (createProjectDto.startedAt().isAfter(createProjectDto.endedAt()) || createProjectDto.endedAt().isBefore(createProjectDto.startedAt())) {
       throw new CustomException(ErrorCode.INVALID_TIME);
@@ -42,43 +42,53 @@ public class ProjectService {
     return projectRepository.findByIdAndUserId(projectId, userId).orElseThrow(CustomException.raise(ErrorCode.PROJECT_NOT_FOUND));
   }
 
+  public Project findProject(final long projectId) {
+    return projectRepository.findById(projectId).orElseThrow(CustomException.raise(ErrorCode.PROJECT_NOT_FOUND));
+  }
+
+  public Project findProject(final String hashedProjectId) {
+    return projectRepository.findByHashedId(hashedProjectId).orElseThrow(CustomException.raise(ErrorCode.PROJECT_NOT_FOUND));
+  }
+
+  public Project findProject(final List<Long> projectUserIds) {
+    return projectRepository.findByProjectUserListIdIn(projectUserIds).orElseThrow(CustomException.raise(ErrorCode.PROJECT_NOT_FOUND));
+  }
+
   public Page<Project> pagingProjects(final ProjectPaginationParam paginationParam) {
     return projectRepository.findAllByUserIdAndIsDone(paginationParam.toPageable(), paginationParam.getUserId(), paginationParam.isDone());
   }
 
-  @Transactional
   public Project toggleIsDone(final long projectId, final long userId) {
-    final Project project = this.checkHost(projectId, userId);
+    final Project project = this.findProjectByIdAndUserId(projectId, userId);
+    checkHost(project, userId);
     project.updateDone();
     return project;
   }
 
-  @Transactional
   public Project updateProject(final UpdateProjectDto projectDto, final Long projectId, final long userId) {
-    final Project project = this.checkHost(projectId, userId);
+    final Project project = this.findProjectByIdAndUserId(projectId, userId);
+    checkHost(project, userId);
     project.updateProject(projectDto);
     return project;
   }
 
-  @Transactional
   public Project updateHost(final Long projectId, final long userId, final User newHost) {
-    final Project project = this.checkHost(projectId, userId);
+    final Project project = this.findProjectByIdAndUserId(projectId, userId);
+    checkHost(project, userId);
     project.updateHost(newHost);
     return project;
   }
 
-  @Transactional
   public void deleteProject(final Long projectId, final long userId) {
-    final Project project = this.checkHost(projectId, userId);
+    final Project project = this.findProjectByIdAndUserId(projectId, userId);
+    checkHost(project, userId);
     projectRepository.delete(project);
   }
 
-  private Project checkHost(final Long projectId, final long userId) {
-    final Project project = this.findProjectByIdAndUserId(projectId, userId);
+  public static void checkHost(final Project project, final long userId) {
     if (!project.getHost().getId().equals(userId)) {
       throw new CustomException(ErrorCode.INVALID_HOST);
     }
-    return project;
   }
 
   @Scheduled(fixedRate = 1000 * 60 * 60) // 1시간
