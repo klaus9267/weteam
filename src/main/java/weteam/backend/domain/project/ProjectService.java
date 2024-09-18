@@ -16,7 +16,7 @@ import weteam.backend.domain.user.entity.User;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -50,8 +50,8 @@ public class ProjectService {
     return projectRepository.findByHashedId(hashedProjectId).orElseThrow(CustomException.raise(ErrorCode.PROJECT_NOT_FOUND));
   }
 
-  public Project findProject(final List<Long> projectUserIds) {
-    return projectRepository.findByProjectUserListIdIn(projectUserIds).orElseThrow(CustomException.raise(ErrorCode.PROJECT_NOT_FOUND));
+  public Optional<Project> findOptionalProject(final long projectId) {
+    return projectRepository.findById(projectId);
   }
 
   public Page<Project> pagingProjects(final ProjectPaginationParam paginationParam) {

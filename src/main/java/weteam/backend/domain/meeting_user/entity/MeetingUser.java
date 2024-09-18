@@ -1,4 +1,4 @@
-package weteam.backend.domain.meeting.entity;
+package weteam.backend.domain.meeting_user.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -7,6 +7,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import weteam.backend.domain.meeting.dto.time_slot.RequestTimeSlotDto;
 import weteam.backend.domain.meeting.dto.time_slot.RequestTimeSlotDtoV2;
+import weteam.backend.domain.meeting.entity.Meeting;
+import weteam.backend.domain.meeting.entity.TimeSlot;
+import weteam.backend.domain.meeting.entity.TimeSlot2;
 import weteam.backend.domain.user.entity.User;
 
 import java.util.ArrayList;

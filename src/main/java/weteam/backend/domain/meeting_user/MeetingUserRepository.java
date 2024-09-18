@@ -1,9 +1,8 @@
-package weteam.backend.domain.meeting.repository;
+package weteam.backend.domain.meeting_user;
 
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import weteam.backend.domain.meeting.entity.MeetingUser;
+import weteam.backend.domain.meeting_user.entity.MeetingUser;
 
 import java.util.Optional;
 

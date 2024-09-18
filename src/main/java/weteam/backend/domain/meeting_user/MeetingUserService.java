@@ -1,4 +1,4 @@
-package weteam.backend.domain.meeting.service;
+package weteam.backend.domain.meeting_user;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -11,9 +11,9 @@ import weteam.backend.domain.alarm.entity.AlarmStatus;
 import weteam.backend.domain.meeting.dto.time_slot.RequestTimeSlotDto;
 import weteam.backend.domain.meeting.dto.time_slot.RequestTimeSlotDtoV2;
 import weteam.backend.domain.meeting.entity.Meeting;
-import weteam.backend.domain.meeting.entity.MeetingUser;
+import weteam.backend.domain.meeting_user.entity.MeetingUser;
 import weteam.backend.domain.meeting.repository.MeetingRepository;
-import weteam.backend.domain.meeting.repository.MeetingUserRepository;
+import weteam.backend.domain.meeting_user.MeetingUserRepository;
 
 import java.util.Comparator;
 import java.util.List;

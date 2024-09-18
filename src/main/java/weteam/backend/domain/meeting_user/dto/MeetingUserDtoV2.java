@@ -1,8 +1,8 @@
-package weteam.backend.domain.meeting.dto.meeting_user;
+package weteam.backend.domain.meeting_user.dto;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import weteam.backend.domain.meeting.entity.MeetingUser;
+import weteam.backend.domain.meeting_user.entity.MeetingUser;
 import weteam.backend.domain.user.dto.UserWithProfileImageDto;
 
 import java.util.List;

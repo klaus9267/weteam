@@ -9,9 +9,9 @@ import weteam.backend.common.DataInitializer;
 import weteam.backend.domain.common.pagination.param.MeetingPaginationParam;
 import weteam.backend.domain.meeting.dto.time_slot.RequestTimeSlotDtoV2;
 import weteam.backend.domain.meeting.entity.Meeting;
-import weteam.backend.domain.meeting.entity.MeetingUser;
+import weteam.backend.domain.meeting_user.entity.MeetingUser;
 import weteam.backend.domain.meeting.repository.MeetingRepository;
-import weteam.backend.domain.meeting.repository.MeetingUserRepository;
+import weteam.backend.domain.meeting_user.MeetingUserRepository;
 import weteam.backend.domain.user.entity.User;
 
 import java.time.LocalDateTime;
