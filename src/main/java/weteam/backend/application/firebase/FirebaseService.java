@@ -27,13 +27,13 @@ public class FirebaseService {
   private final SecurityUtil securityUtil;
 
   public String readDeviceToken() {
-    Optional<User> user = userRepository.findById(securityUtil.getId());
+    Optional<User> user = userRepository.findById(securityUtil.getCurrentUserId());
     return user.map(User::getDeviceToken).orElseThrow(CustomException.raise(ErrorCode.DEVICE_TOKEN_NOT_FOUND));
   }
 
   @Transactional
   public void updateDevice(final String token) {
-    User user = userRepository.findById(securityUtil.getId()).orElseThrow(CustomException.raise(ErrorCode.USER_NOT_FOUND));
+    User user = userRepository.findById(securityUtil.getCurrentUserId()).orElseThrow(CustomException.raise(ErrorCode.USER_NOT_FOUND));
     user.updateDevice(token);
   }
 

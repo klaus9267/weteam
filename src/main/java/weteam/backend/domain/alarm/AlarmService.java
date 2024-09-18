@@ -27,7 +27,7 @@ public class AlarmService {
   private final FirebaseService firebaseService;
 
   public AlarmPaginationDto readAlarmList(final AlarmPaginationParam paginationParam) {
-    final Page<Alarm> alarmPage = alarmRepository.findAllByUserId(paginationParam.toPageable(), securityUtil.getId());
+    final Page<Alarm> alarmPage = alarmRepository.findAllByUserId(paginationParam.toPageable(), securityUtil.getCurrentUserId());
     return AlarmPaginationDto.from(alarmPage);
   }
 
@@ -88,7 +88,7 @@ public class AlarmService {
 
   @Transactional
   public void updateAllIsRead() {
-    List<Alarm> alarmList = alarmRepository.findAllByUserId(securityUtil.getId()).stream().filter(alarm -> !alarm.isRead()).toList();
+    List<Alarm> alarmList = alarmRepository.findAllByUserId(securityUtil.getCurrentUserId()).stream().filter(alarm -> !alarm.isRead()).toList();
     if (alarmList.isEmpty()) {
       throw new CustomException(ErrorCode.NOT_EXIST_UNREAD_ALARM);
     } else {

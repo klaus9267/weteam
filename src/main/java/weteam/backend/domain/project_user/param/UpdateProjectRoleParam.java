@@ -1,4 +1,4 @@
-package weteam.backend.domain.project.param;
+package weteam.backend.domain.project_user.param;
 
 import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.validation.constraints.NotEmpty;

@@ -1,7 +1,7 @@
 package weteam.backend.domain.profile.dto;
 
 import lombok.Builder;
-import weteam.backend.domain.profile.ProfileImage;
+import weteam.backend.domain.profile.entity.ProfileImage;
 
 @Builder
 public record ProfileDto(

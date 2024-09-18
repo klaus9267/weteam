@@ -18,7 +18,7 @@ import weteam.backend.domain.meeting.entity.TimeSlot2;
 import weteam.backend.domain.meeting.param.MeetingDetailParam;
 import weteam.backend.domain.meeting.repository.MeetingRepository;
 import weteam.backend.domain.project.entity.Project;
-import weteam.backend.domain.project.repository.ProjectRepository;
+import weteam.backend.domain.project.ProjectRepository;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -32,12 +32,12 @@ public class MeetingService {
   private final SecurityUtil securityUtil;
 
   public MeetingDetailDto readMeetingDetailDto(final Long meetingId) {
-    final Meeting meeting = meetingRepository.findByIdAndUserId(meetingId, securityUtil.getId()).orElseThrow(CustomException.raise(ErrorCode.MEETING_NOT_FOUND));
+    final Meeting meeting = meetingRepository.findByIdAndUserId(meetingId, securityUtil.getCurrentUserId()).orElseThrow(CustomException.raise(ErrorCode.MEETING_NOT_FOUND));
     return MeetingDetailDto.from(meeting);
   }
 
   public MeetingDetailDtoV2 readMeetingDetailDtoV2(final MeetingDetailParam param) {
-    final Meeting meeting = meetingRepository.findByIdAndUserId(param.getMeetingId(), securityUtil.getId()).orElseThrow(CustomException.raise(ErrorCode.MEETING_NOT_FOUND));
+    final Meeting meeting = meetingRepository.findByIdAndUserId(param.getMeetingId(), securityUtil.getCurrentUserId()).orElseThrow(CustomException.raise(ErrorCode.MEETING_NOT_FOUND));
     Map<LocalDateTime, List<String>> timeMap = new HashMap<>();
 
     for (final MeetingUser meetingUser : meeting.getMeetingUserList()) {
@@ -52,7 +52,7 @@ public class MeetingService {
   }
 
   public MeetingPaginationDto readListWithPagination(final MeetingPaginationParam paginationParam) {
-    final Page<Meeting> meetingPage = meetingRepository.findAllByUserId(paginationParam.toPageable(), securityUtil.getId());
+    final Page<Meeting> meetingPage = meetingRepository.findAllByUserId(paginationParam.toPageable(), securityUtil.getCurrentUserId());
     return MeetingPaginationDto.from(meetingPage);
   }
 
@@ -74,7 +74,7 @@ public class MeetingService {
   @Transactional
   public void updateMeeting(final UpdateMeetingDto meetingDto, final Long meetingId) {
     Meeting meeting = meetingRepository.findById(meetingId).orElseThrow(CustomException.raise(ErrorCode.MEETING_NOT_FOUND));
-    if (!meeting.getHost().getId().equals(securityUtil.getId())) {
+    if (!meeting.getHost().getId().equals(securityUtil.getCurrentUserId())) {
       throw new CustomException(ErrorCode.INVALID_HOST);
     }
     meeting.updateMeeting(meetingDto);
@@ -89,7 +89,7 @@ public class MeetingService {
   @Transactional
   public void deleteMeeting(final Long meetingId) {
     final Meeting meeting = meetingRepository.findById(meetingId).orElseThrow(CustomException.raise(ErrorCode.MEETING_NOT_FOUND));
-    if (!meeting.getHost().getId().equals(securityUtil.getId())) {
+    if (!meeting.getHost().getId().equals(securityUtil.getCurrentUserId())) {
       throw new CustomException(ErrorCode.INVALID_HOST);
     }
     meetingRepository.delete(meeting);

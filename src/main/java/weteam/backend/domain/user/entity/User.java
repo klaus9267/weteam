@@ -9,9 +9,9 @@ import weteam.backend.application.BaseEntity;
 import weteam.backend.domain.alarm.entity.Alarm;
 import weteam.backend.domain.meeting.entity.Meeting;
 import weteam.backend.domain.meeting.entity.MeetingUser;
-import weteam.backend.domain.profile.ProfileImage;
+import weteam.backend.domain.profile.entity.ProfileImage;
 import weteam.backend.domain.project.entity.Project;
-import weteam.backend.domain.project.entity.ProjectUser;
+import weteam.backend.domain.project_user.entity.ProjectUser;
 import weteam.backend.domain.user.dto.RequestUserDto;
 import weteam.backend.domain.user.dto.UserDto;
 
@@ -52,10 +52,10 @@ public class User extends BaseEntity {
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
   private final List<MeetingUser> meetingUserList = new ArrayList<>();
 
-  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
   private final List<Alarm> alarms1 = new ArrayList<>();
 
-  @OneToMany(mappedBy = "targetUser", cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "targetUser", cascade = CascadeType.ALL, orphanRemoval = true)
   private final List<Alarm> alarms2 = new ArrayList<>();
 
   public static User from(final UserDto userDto) {
@@ -77,7 +77,11 @@ public class User extends BaseEntity {
     this.deviceToken = deviceToken;
   }
 
-  public void updateReceivePermission() {
+  public void updateProfileImage(final long imageIdx) {
+    this.profileImage.updateImage(imageIdx);
+  }
+
+  public void toggleReceivePermission() {
     this.receivePermission = !receivePermission;
   }
 

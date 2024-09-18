@@ -62,7 +62,7 @@ public class Alarm {
         .stream()
         .filter(projectUser -> {
               final User user = projectUser.getUser();
-              return user.isLogin() && user.isReceivePermission() && projectUser.isEnable() && !user.getId().equals(targetUser.getId());
+              return user.isReceivePermission() && !projectUser.isBlack() && !user.getId().equals(targetUser.getId());
             }
         ).map(projectUser -> new Alarm(project, status, projectUser.getUser(), targetUser))
         .toList();
@@ -73,7 +73,7 @@ public class Alarm {
         .stream()
         .filter(projectUser -> {
               final User user = projectUser.getUser();
-              return user.isLogin() && user.isReceivePermission() && projectUser.isEnable();
+              return user.isReceivePermission() && !projectUser.isBlack();
             }
         ).map(projectUser -> new Alarm(project, status, projectUser.getUser()))
         .toList();
@@ -84,7 +84,7 @@ public class Alarm {
         .stream()
         .filter(meetingUser -> {
               final User user = meetingUser.getUser();
-              return user.isLogin() && user.isReceivePermission() && meetingUser.isDisplayed();
+              return user.isReceivePermission() && meetingUser.isDisplayed();
             }
         ).map(meetingUser -> new Alarm(meeting, status, meetingUser.getUser()))
         .toList();

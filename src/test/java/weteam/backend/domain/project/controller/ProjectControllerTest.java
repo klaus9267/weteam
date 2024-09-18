@@ -11,8 +11,8 @@ import weteam.backend.domain.common.pagination.param.ProjectPaginationParam;
 import weteam.backend.domain.project.dto.CreateProjectDto;
 import weteam.backend.domain.project.dto.UpdateProjectDto;
 import weteam.backend.domain.project.entity.Project;
-import weteam.backend.domain.project.entity.ProjectUser;
-import weteam.backend.domain.project.repository.ProjectRepository;
+import weteam.backend.domain.project_user.entity.ProjectUser;
+import weteam.backend.domain.project.ProjectRepository;
 
 import java.time.LocalDate;
 import java.util.ArrayList;

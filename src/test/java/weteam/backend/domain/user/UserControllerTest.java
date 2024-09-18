@@ -10,7 +10,7 @@ import weteam.backend.common.BaseIntegrationTest;
 import weteam.backend.common.DataInitializer;
 import weteam.backend.domain.project.dto.CreateProjectDto;
 import weteam.backend.domain.project.entity.Project;
-import weteam.backend.domain.project.repository.ProjectRepository;
+import weteam.backend.domain.project.ProjectRepository;
 import weteam.backend.domain.user.dto.RequestUserDto;
 import weteam.backend.domain.user.entity.User;
 
