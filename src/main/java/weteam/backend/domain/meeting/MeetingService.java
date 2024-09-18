@@ -37,6 +37,10 @@ public class MeetingService {
     return meetingRepository.findByIdAndUserId(meetingId, userId).orElseThrow(CustomException.raise(ErrorCode.MEETING_NOT_FOUND));
   }
 
+  public Meeting findMeeting(final String hashedMeetingId) {
+    return meetingRepository.findByHashedId(hashedMeetingId).orElseThrow(CustomException.raise(ErrorCode.MEETING_NOT_FOUND));
+  }
+
   public Page<Meeting> pagingMeetings(final MeetingPaginationParam paginationParam, final long userId) {
     return meetingRepository.findAllByUserId(paginationParam.toPageable(), userId);
   }

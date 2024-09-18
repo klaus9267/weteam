@@ -80,7 +80,6 @@ public class Meeting extends BaseEntity {
     return new Meeting(meetingDto, user);
   }
 
-
   public static Meeting from(final Long meetingId) {
     return new Meeting(meetingId);
   }
@@ -107,12 +106,5 @@ public class Meeting extends BaseEntity {
 
   public void done() {
     this.isDone = true;
-  }
-
-  public void quit(final Long userId) {
-    final Optional<MeetingUser> optionalMeetingUser = this.meetingUserList.stream()
-        .filter(meetingUser -> meetingUser.getUser().getId().equals(userId))
-        .findFirst();
-    optionalMeetingUser.ifPresent(this.meetingUserList::remove);
   }
 }
