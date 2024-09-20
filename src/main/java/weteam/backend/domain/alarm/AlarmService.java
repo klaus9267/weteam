@@ -4,11 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import weteam.backend.application.auth.SecurityUtil;
 import weteam.backend.application.firebase.FirebaseService;
 import weteam.backend.application.handler.exception.CustomException;
 import weteam.backend.application.handler.exception.ErrorCode;
-import weteam.backend.domain.alarm.dto.AlarmPaginationDto;
 import weteam.backend.domain.alarm.entity.Alarm;
 import weteam.backend.domain.alarm.entity.AlarmStatus;
 import weteam.backend.domain.common.pagination.param.AlarmPaginationParam;
@@ -23,12 +21,10 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AlarmService {
   private final AlarmRepository alarmRepository;
-  private final SecurityUtil securityUtil;
   private final FirebaseService firebaseService;
 
-  public AlarmPaginationDto readAlarmList(final AlarmPaginationParam paginationParam) {
-    final Page<Alarm> alarmPage = alarmRepository.findAllByUserId(paginationParam.toPageable(), securityUtil.getCurrentUserId());
-    return AlarmPaginationDto.from(alarmPage);
+  public Page<Alarm> readAlarmList(final AlarmPaginationParam paginationParam, final long userId) {
+    return alarmRepository.findAllByUserId(paginationParam.toPageable(), userId);
   }
 
   @Transactional
@@ -78,21 +74,16 @@ public class AlarmService {
     firebaseService.sendNotification(alarmList);
   }
 
-  @Transactional
-  public void updateIsRead(final Long alarmId, final Long userId) {
+  public void updateAlarmRead(final long alarmId, final long userId) {
     Alarm alarm = alarmRepository.findByIdAndUserId(alarmId, userId).orElseThrow(CustomException.raise(ErrorCode.NOT_FOUND));
-    if (alarm.isRead()) {
+    if (!alarm.isRead()) {
       alarm.markAsRead();
     }
   }
 
-  @Transactional
-  public void updateAllIsRead() {
-    List<Alarm> alarmList = alarmRepository.findAllByUserId(securityUtil.getCurrentUserId()).stream().filter(alarm -> !alarm.isRead()).toList();
-    if (alarmList.isEmpty()) {
-      throw new CustomException(ErrorCode.NOT_EXIST_UNREAD_ALARM);
-    } else {
-      alarmList.forEach(Alarm::markAsRead);
-    }
+  public void updateAllRead(final long userId) {
+    alarmRepository.findAllByUserId(userId).stream()
+        .filter(alarm -> !alarm.isRead())
+        .forEach(Alarm::markAsRead);
   }
 }
