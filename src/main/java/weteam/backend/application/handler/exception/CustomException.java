@@ -20,8 +20,4 @@ public class CustomException extends RuntimeException {
     this.errorCode = errorCode;
     this.message = errorCode.getMessage();
   }
-
-  public static Supplier<CustomException> raise(final ErrorCode errorCode) {
-    return () -> new CustomException(errorCode);
-  }
 }

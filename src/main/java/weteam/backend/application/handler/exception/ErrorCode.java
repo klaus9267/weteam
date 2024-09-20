@@ -4,9 +4,11 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 
+import java.util.function.Supplier;
+
 @Getter
 @RequiredArgsConstructor
-public enum ErrorCode {
+public enum ErrorCode implements Supplier<CustomException> {
   NOT_FOUND(HttpStatus.NOT_FOUND, "조회할 대상을 찾을 수 없습니다."),
   USER_NOT_FOUND(HttpStatus.NOT_FOUND, "조회할 사용자를 찾을 수 없습니다."),
   PROJECT_NOT_FOUND(HttpStatus.NOT_FOUND, "조회할 프로젝트를 찾을 수 없습니다."),
@@ -44,4 +46,9 @@ public enum ErrorCode {
 
   private final HttpStatus httpStatus;
   private final String message;
+
+  @Override
+  public CustomException get() {
+    return new CustomException(this);
+  }
 }

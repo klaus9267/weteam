@@ -3,9 +3,7 @@ package weteam.backend.domain.user;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import weteam.backend.application.handler.exception.CustomException;
 import weteam.backend.application.handler.exception.ErrorCode;
-import weteam.backend.domain.user.dto.UserWithProfileImageDto;
 import weteam.backend.domain.user.entity.User;
 
 @Service
@@ -14,7 +12,7 @@ public class UserService {
   private final UserRepository userRepository;
 
   public User findUser(final Long id) {
-    return userRepository.findById(id).orElseThrow(CustomException.raise(ErrorCode.NOT_FOUND));
+    return userRepository.findById(id).orElseThrow(ErrorCode.NOT_FOUND);
   }
 
   @Transactional

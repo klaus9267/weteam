@@ -34,11 +34,11 @@ public class MeetingService {
   }
 
   public Meeting findMeeting(final long meetingId, final long userId) {
-    return meetingRepository.findByIdAndUserId(meetingId, userId).orElseThrow(CustomException.raise(ErrorCode.MEETING_NOT_FOUND));
+    return meetingRepository.findByIdAndUserId(meetingId, userId).orElseThrow(ErrorCode.MEETING_NOT_FOUND);
   }
 
   public Meeting findMeeting(final String hashedMeetingId) {
-    return meetingRepository.findByHashedId(hashedMeetingId).orElseThrow(CustomException.raise(ErrorCode.MEETING_NOT_FOUND));
+    return meetingRepository.findByHashedId(hashedMeetingId).orElseThrow(ErrorCode.MEETING_NOT_FOUND);
   }
 
   public Page<Meeting> pagingMeetings(final MeetingPaginationParam paginationParam, final long userId) {
@@ -47,7 +47,7 @@ public class MeetingService {
 
   @Transactional
   public void updateMeeting(final UpdateMeetingDto meetingDto, final long meetingId, final long userId) {
-    final Meeting meeting = meetingRepository.findById(meetingId).orElseThrow(CustomException.raise(ErrorCode.MEETING_NOT_FOUND));
+    final Meeting meeting = meetingRepository.findById(meetingId).orElseThrow(ErrorCode.MEETING_NOT_FOUND);
     if (!meeting.getHost().getId().equals(userId)) {
       throw new CustomException(ErrorCode.INVALID_HOST);
     }
@@ -56,13 +56,13 @@ public class MeetingService {
 
   @Transactional
   public void acceptInvite(final String hashedMeetingId, final User user) {
-    final Meeting meeting = meetingRepository.findByHashedId(hashedMeetingId).orElseThrow(CustomException.raise(ErrorCode.MEETING_NOT_FOUND));
+    final Meeting meeting = meetingRepository.findByHashedId(hashedMeetingId).orElseThrow(ErrorCode.MEETING_NOT_FOUND);
     meeting.addMeetingUser(user);
   }
 
   @Transactional
   public void deleteMeeting(final Long meetingId, final long userId) {
-    final Meeting meeting = meetingRepository.findById(meetingId).orElseThrow(CustomException.raise(ErrorCode.MEETING_NOT_FOUND));
+    final Meeting meeting = meetingRepository.findById(meetingId).orElseThrow(ErrorCode.MEETING_NOT_FOUND);
     if (!meeting.getHost().getId().equals(userId)) {
       throw new CustomException(ErrorCode.INVALID_HOST);
     }

@@ -75,7 +75,7 @@ public class AlarmService {
   }
 
   public void updateAlarmRead(final long alarmId, final long userId) {
-    Alarm alarm = alarmRepository.findByIdAndUserId(alarmId, userId).orElseThrow(CustomException.raise(ErrorCode.NOT_FOUND));
+    Alarm alarm = alarmRepository.findByIdAndUserId(alarmId, userId).orElseThrow(ErrorCode.NOT_FOUND);
     if (!alarm.isRead()) {
       alarm.markAsRead();
     }

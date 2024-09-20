@@ -39,15 +39,15 @@ public class ProjectService {
   }
 
   public Project findProjectByIdAndUserId(final long projectId, final long userId) {
-    return projectRepository.findByIdAndUserId(projectId, userId).orElseThrow(CustomException.raise(ErrorCode.PROJECT_NOT_FOUND));
+    return projectRepository.findByIdAndUserId(projectId, userId).orElseThrow(ErrorCode.PROJECT_NOT_FOUND);
   }
 
   public Project findProject(final long projectId) {
-    return projectRepository.findById(projectId).orElseThrow(CustomException.raise(ErrorCode.PROJECT_NOT_FOUND));
+    return projectRepository.findById(projectId).orElseThrow(ErrorCode.PROJECT_NOT_FOUND);
   }
 
   public Project findProject(final String hashedProjectId) {
-    return projectRepository.findByHashedId(hashedProjectId).orElseThrow(CustomException.raise(ErrorCode.PROJECT_NOT_FOUND));
+    return projectRepository.findByHashedId(hashedProjectId).orElseThrow(ErrorCode.PROJECT_NOT_FOUND);
   }
 
   public Optional<Project> findOptionalProject(final long projectId) {

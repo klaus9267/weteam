@@ -23,19 +23,19 @@ public class MeetingUserService {
 
   public Meeting updateTimeSlot(final List<RequestTimeSlotDto> timeSlotDtoList, final long meetingId, final long userId) {
     this.validateTimeSlot(timeSlotDtoList);
-    final MeetingUser meetingUser = meetingUserRepository.findByMeetingIdAndUserId(meetingId, userId).orElseThrow(CustomException.raise(ErrorCode.MEETING_NOT_FOUND));
+    final MeetingUser meetingUser = meetingUserRepository.findByMeetingIdAndUserId(meetingId, userId).orElseThrow(ErrorCode.MEETING_NOT_FOUND);
     meetingUser.updateTimeSlots(timeSlotDtoList);
     return meetingUser.getMeeting();
   }
 
   public void toggleDisplayed(final Long meetingId, final long userId) {
-    final MeetingUser meetingUser = meetingUserRepository.findByMeetingIdAndUserId(meetingId, userId).orElseThrow(CustomException.raise(ErrorCode.MEETING_NOT_FOUND));
+    final MeetingUser meetingUser = meetingUserRepository.findByMeetingIdAndUserId(meetingId, userId).orElseThrow(ErrorCode.MEETING_NOT_FOUND);
     meetingUser.updateDisplayed();
   }
 
   public void quitMeeting(final long meetingId, final long userId) {
     final MeetingUser meetingUser = meetingUserRepository.findByMeetingIdAndUserId(meetingId, userId)
-        .orElseThrow(CustomException.raise(ErrorCode.NOT_FOUND));
+        .orElseThrow(ErrorCode.NOT_FOUND);
     meetingUserRepository.delete(meetingUser);
   }
 
