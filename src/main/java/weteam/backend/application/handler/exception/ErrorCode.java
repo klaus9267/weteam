@@ -34,6 +34,7 @@ public enum ErrorCode implements Supplier<CustomException> {
   ALREADY_EXIT_PROJECT(HttpStatus.BAD_REQUEST, "이미 탈퇴한 프로젝트입니다."),
   USER_IS_HOST(HttpStatus.BAD_REQUEST, "호스트로 진행중인 팀플이 존재합니다."),
   INVALID_DATA(HttpStatus.BAD_REQUEST, "잘못된 데이터입니다."),
+  INVALID_TYPE(HttpStatus.BAD_REQUEST, "잘못된 알람 타입입니다."),
   INVALID_USER(HttpStatus.BAD_REQUEST, "잘못된 사용자의 접근입니다."),
   INVALID_HOST(HttpStatus.BAD_REQUEST, "호스트가 아닙니다."),
   INVALID_LIST(HttpStatus.BAD_REQUEST, "배열에 데이터가 없습니다."),

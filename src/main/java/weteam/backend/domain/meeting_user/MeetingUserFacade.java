@@ -44,7 +44,7 @@ public class MeetingUserFacade {
 
     final long count = meetingUserService.verifyAllChecked(meeting);
     final AlarmStatus status = count == 0 && meeting.isDone() ? AlarmStatus.ALL_CHECKED : AlarmStatus.TIME_UPDATE;
-    alarmService.addAlarmList(meeting, status);
+    alarmService.addAlarms(meeting, status);
   }
 
   @Transactional

@@ -45,20 +45,20 @@ public class ProjectFacade {
   public void toggleIsDone(final long projectId) {
     final long currentUserId = securityUtil.getCurrentUserId();
     final Project project = projectService.toggleIsDone(projectId, currentUserId);
-    alarmService.addAlarmList(project, AlarmStatus.DONE);
+    alarmService.addAlarms(project, AlarmStatus.DONE);
   }
 
   public void updateProject(final UpdateProjectDto updateProjectDto, final long projectId) {
     final long currentUserId = securityUtil.getCurrentUserId();
     final Project project = projectService.updateProject(updateProjectDto, projectId, currentUserId);
-    alarmService.addAlarmList(project, AlarmStatus.UPDATE_PROJECT);
+    alarmService.addAlarms(project, AlarmStatus.UPDATE_PROJECT);
   }
 
   public void updateHost(final long projectId, final long useId) {
     final long currentUserId = securityUtil.getCurrentUserId();
     final User newHost = userService.findUser(useId);
     final Project project = projectService.updateHost(projectId, currentUserId, newHost);
-    alarmService.addAlarmListWithTargetUser(project, AlarmStatus.CHANGE_HOST, newHost);
+    alarmService.addAlarms(project, AlarmStatus.CHANGE_HOST, newHost);
   }
 
   public void deleteProject(final long projectId) {

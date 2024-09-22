@@ -48,7 +48,7 @@ public class ProjectUserFacade {
     final Project project = projectService.findProject(hashedProjectId);
 
     projectUserService.acceptInvite(project, user);
-    alarmService.addAlarmListWithTargetUser(project, AlarmStatus.JOIN, user);
+    alarmService.addAlarms(project, AlarmStatus.JOIN, user);
   }
 
   @Transactional
@@ -58,7 +58,7 @@ public class ProjectUserFacade {
     final List<User> users = project.getProjectUserList().stream()
         .map(ProjectUser::getUser)
         .toList();
-    alarmService.addAlarmListWithTargetUserList(project, AlarmStatus.KICK, users);
+    alarmService.addAlarms(project, AlarmStatus.KICK, users);
   }
 
   @Transactional
@@ -67,6 +67,6 @@ public class ProjectUserFacade {
     final User user = userService.findUser(currentUserId);
     final Project project = projectService.findProject(projectId);
     final Project leftProject = projectUserService.leaveProject(project, user);
-    alarmService.addAlarmListWithTargetUser(leftProject, AlarmStatus.EXIT, user);
+    alarmService.addAlarms(leftProject, AlarmStatus.EXIT, user);
   }
 }

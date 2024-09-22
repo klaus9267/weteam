@@ -32,7 +32,7 @@ public class MeetingFacade {
     final Meeting meeting = meetingService.addMeeting(createMeetingDto, currentUser, project);
 
     if (project != null) {
-      alarmService.addAlarmList(project, AlarmStatus.NEW_MEETING);
+      alarmService.addAlarms(project, AlarmStatus.NEW_MEETING);
     }
 
     return MeetingDto.from(meeting);
