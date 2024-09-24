@@ -1,9 +1,7 @@
-package weteam.backend.domain.alarm.factory;
+package weteam.backend.domain.alarm.strategy;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import weteam.backend.application.handler.exception.CustomException;
-import weteam.backend.application.handler.exception.ErrorCode;
 import weteam.backend.domain.meeting.entity.Meeting;
 import weteam.backend.domain.project.entity.Project;
 

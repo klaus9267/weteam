@@ -7,8 +7,8 @@ import weteam.backend.application.firebase.FirebaseService;
 import weteam.backend.application.handler.exception.ErrorCode;
 import weteam.backend.domain.alarm.entity.Alarm;
 import weteam.backend.domain.alarm.entity.AlarmStatus;
-import weteam.backend.domain.alarm.factory.AlarmStrategy;
-import weteam.backend.domain.alarm.factory.AlarmFactory;
+import weteam.backend.domain.alarm.strategy.AlarmStrategy;
+import weteam.backend.domain.alarm.strategy.AlarmContext;
 import weteam.backend.domain.common.pagination.param.AlarmPaginationParam;
 import weteam.backend.domain.user.entity.User;
 
@@ -18,7 +18,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AlarmService {
   private final AlarmRepository alarmRepository;
-  private final AlarmFactory alarmFactory;
+  private final AlarmContext alarmContext;
   private final FirebaseService firebaseService;
 
   public Page<Alarm> readAlarmList(final AlarmPaginationParam paginationParam, final long userId) {
@@ -26,19 +26,19 @@ public class AlarmService {
   }
 
   public <T> void addAlarms(final T entity, final AlarmStatus status) {
-    final AlarmStrategy<T> alarmStrategy = alarmFactory.getCreator(entity.getClass().getName());
+    final AlarmStrategy<T> alarmStrategy = alarmContext.getCreator(entity.getClass().getName());
     final List<Alarm> alarms = alarmStrategy.createAlarms(entity, status);
     sendAlarmList(alarms);
   }
 
   public <T> void addAlarms(final T entity, final AlarmStatus status, final User targetUser) {
-    final AlarmStrategy<T> alarmStrategy = alarmFactory.getCreator(entity.getClass().getName());
+    final AlarmStrategy<T> alarmStrategy = alarmContext.getCreator(entity.getClass().getName());
     final List<Alarm> alarms = alarmStrategy.createAlarms(entity, status, targetUser);
     sendAlarmList(alarms);
   }
 
   public <T> void addAlarms(final T entity, final AlarmStatus status, final List<User> targetUsers) {
-    final AlarmStrategy<T> alarmStrategy = alarmFactory.getCreator(entity.getClass().getName());
+    final AlarmStrategy<T> alarmStrategy = alarmContext.getCreator(entity.getClass().getName());
     final List<Alarm> alarms = alarmStrategy.createAlarms(entity, status, targetUsers);
     sendAlarmList(alarms);
   }

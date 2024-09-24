@@ -1,4 +1,4 @@
-package weteam.backend.domain.alarm.factory;
+package weteam.backend.domain.alarm.strategy;
 
 import weteam.backend.domain.alarm.entity.Alarm;
 import weteam.backend.domain.alarm.entity.AlarmStatus;
