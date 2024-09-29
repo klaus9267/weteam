@@ -91,7 +91,7 @@ public class ProjectService {
     }
   }
 
-  @Scheduled(fixedRate = 1000 * 60 * 60) // 1시간
+  @Scheduled(cron = "0 0 0/1 * * *") // 1시간
   @Transactional
   public void checkProject() {
     final LocalDate now = LocalDate.now();
