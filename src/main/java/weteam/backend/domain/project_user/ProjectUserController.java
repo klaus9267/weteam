@@ -27,7 +27,7 @@ public class ProjectUserController {
 
   @GetMapping("{projectId}/invite")
   @SwaggerOK(summary = "팀원 초대용 hashedId 조회")
-  public ResponseEntity<String> readHashedId(@PathVariable("projectId") final Long projectId) {
+  public ResponseEntity<String> findProjectHashedId(@PathVariable("projectId") final Long projectId) {
     final String hashedId = projectUserFacade.findProjectHashedId(projectId);
     return ResponseEntity.ok(hashedId);
   }

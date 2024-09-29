@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 import weteam.backend.application.BaseEntity;
 import weteam.backend.domain.alarm.entity.Alarm;
 import weteam.backend.domain.meeting.entity.Meeting;
-import weteam.backend.domain.meeting.entity.MeetingUser;
+import weteam.backend.domain.meeting_user.entity.MeetingUser;
 import weteam.backend.domain.profile.entity.ProfileImage;
 import weteam.backend.domain.project.entity.Project;
 import weteam.backend.domain.project_user.entity.ProjectUser;

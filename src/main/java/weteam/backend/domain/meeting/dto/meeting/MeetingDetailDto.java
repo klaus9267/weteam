@@ -3,7 +3,7 @@ package weteam.backend.domain.meeting.dto.meeting;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import weteam.backend.domain.meeting.dto.meeting_user.MeetingUserDto;
+import weteam.backend.domain.meeting_user.dto.MeetingUserDto;
 import weteam.backend.domain.meeting.entity.Meeting;
 import weteam.backend.domain.project.dto.ProjectDto;
 

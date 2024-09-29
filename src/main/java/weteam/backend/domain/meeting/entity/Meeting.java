@@ -7,6 +7,7 @@ import weteam.backend.application.handler.exception.CustomException;
 import weteam.backend.application.handler.exception.ErrorCode;
 import weteam.backend.domain.meeting.dto.meeting.CreateMeetingDto;
 import weteam.backend.domain.meeting.dto.meeting.UpdateMeetingDto;
+import weteam.backend.domain.meeting_user.entity.MeetingUser;
 import weteam.backend.domain.project.entity.Project;
 import weteam.backend.domain.project_user.entity.ProjectUser;
 import weteam.backend.domain.user.entity.User;
@@ -79,7 +80,6 @@ public class Meeting extends BaseEntity {
     return new Meeting(meetingDto, user);
   }
 
-
   public static Meeting from(final Long meetingId) {
     return new Meeting(meetingId);
   }
@@ -106,12 +106,5 @@ public class Meeting extends BaseEntity {
 
   public void done() {
     this.isDone = true;
-  }
-
-  public void quit(final Long userId) {
-    final Optional<MeetingUser> optionalMeetingUser = this.meetingUserList.stream()
-        .filter(meetingUser -> meetingUser.getUser().getId().equals(userId))
-        .findFirst();
-    optionalMeetingUser.ifPresent(meetingUser -> this.meetingUserList.remove(meetingUser));
   }
 }

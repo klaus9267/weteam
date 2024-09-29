@@ -27,7 +27,7 @@ public class ProjectUserService {
   }
 
   public ProjectUser findProjectUser(final long projectId, final long userId) {
-    return projectUserRepository.findByProjectIdAndUserId(projectId, userId).orElseThrow(CustomException.raise(ErrorCode.PROJECT_USER_NOT_FOUND));
+    return projectUserRepository.findByProjectIdAndUserId(projectId, userId).orElseThrow(ErrorCode.PROJECT_USER_NOT_FOUND);
   }
 
   @Transactional
@@ -43,7 +43,7 @@ public class ProjectUserService {
 
   @Transactional
   public void updateProjectRole(final UpdateProjectRoleParam updateProjectRoleParam, final long userId) {
-    final ProjectUser projectUser = projectUserRepository.findByProjectIdAndUserId(updateProjectRoleParam.getProjectId(), userId).orElseThrow(CustomException.raise(ErrorCode.PROJECT_USER_NOT_FOUND));
+    final ProjectUser projectUser = projectUserRepository.findByProjectIdAndUserId(updateProjectRoleParam.getProjectId(), userId).orElseThrow(ErrorCode.PROJECT_USER_NOT_FOUND);
     projectUser.updateRole(updateProjectRoleParam.getRole());
   }
 
@@ -65,7 +65,7 @@ public class ProjectUserService {
     if (project.getHost().getId().equals(user.getId())) {
       throw new CustomException(ErrorCode.USER_IS_HOST);
     }
-    final ProjectUser projectUser = projectUserRepository.findByProjectIdAndUserId(project.getId(), user.getId()).orElseThrow(CustomException.raise(ErrorCode.PROJECT_NOT_FOUND));
+    final ProjectUser projectUser = projectUserRepository.findByProjectIdAndUserId(project.getId(), user.getId()).orElseThrow(ErrorCode.PROJECT_NOT_FOUND);
     project.leaveProject(projectUser);
     return project;
   }

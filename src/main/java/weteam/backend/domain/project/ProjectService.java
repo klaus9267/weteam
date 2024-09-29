@@ -16,7 +16,7 @@ import weteam.backend.domain.user.entity.User;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -39,19 +39,19 @@ public class ProjectService {
   }
 
   public Project findProjectByIdAndUserId(final long projectId, final long userId) {
-    return projectRepository.findByIdAndUserId(projectId, userId).orElseThrow(CustomException.raise(ErrorCode.PROJECT_NOT_FOUND));
+    return projectRepository.findByIdAndUserId(projectId, userId).orElseThrow(ErrorCode.PROJECT_NOT_FOUND);
   }
 
   public Project findProject(final long projectId) {
-    return projectRepository.findById(projectId).orElseThrow(CustomException.raise(ErrorCode.PROJECT_NOT_FOUND));
+    return projectRepository.findById(projectId).orElseThrow(ErrorCode.PROJECT_NOT_FOUND);
   }
 
   public Project findProject(final String hashedProjectId) {
-    return projectRepository.findByHashedId(hashedProjectId).orElseThrow(CustomException.raise(ErrorCode.PROJECT_NOT_FOUND));
+    return projectRepository.findByHashedId(hashedProjectId).orElseThrow(ErrorCode.PROJECT_NOT_FOUND);
   }
 
-  public Project findProject(final List<Long> projectUserIds) {
-    return projectRepository.findByProjectUserListIdIn(projectUserIds).orElseThrow(CustomException.raise(ErrorCode.PROJECT_NOT_FOUND));
+  public Optional<Project> findOptionalProject(final long projectId) {
+    return projectRepository.findById(projectId);
   }
 
   public Page<Project> pagingProjects(final ProjectPaginationParam paginationParam) {
@@ -91,7 +91,7 @@ public class ProjectService {
     }
   }
 
-  @Scheduled(fixedRate = 1000 * 60 * 60) // 1시간
+  @Scheduled(cron = "0 0 0/1 * * *") // 1시간
   @Transactional
   public void checkProject() {
     final LocalDate now = LocalDate.now();
