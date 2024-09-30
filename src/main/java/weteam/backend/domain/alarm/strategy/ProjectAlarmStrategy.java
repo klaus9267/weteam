@@ -1,5 +1,6 @@
 package weteam.backend.domain.alarm.strategy;
 
+import org.springframework.stereotype.Component;
 import weteam.backend.domain.alarm.entity.Alarm;
 import weteam.backend.domain.alarm.entity.AlarmStatus;
 import weteam.backend.domain.project.entity.Project;
@@ -7,6 +8,7 @@ import weteam.backend.domain.user.entity.User;
 
 import java.util.List;
 
+@Component
 public class ProjectAlarmStrategy implements AlarmStrategy<Project> {
   @Override
   public AlarmType alarmType() {
