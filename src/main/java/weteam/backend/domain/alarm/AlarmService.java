@@ -26,19 +26,19 @@ public class AlarmService {
   }
 
   public <T> void addAlarms(final T entity, final AlarmStatus status) {
-    final AlarmStrategy<T> alarmStrategy = alarmContext.getCreator(entity.getClass().getName());
+    final AlarmStrategy<T> alarmStrategy = alarmContext.getCreator(entity.getClass().getSimpleName());
     final List<Alarm> alarms = alarmStrategy.createAlarms(entity, status);
     sendAlarmList(alarms);
   }
 
   public <T> void addAlarms(final T entity, final AlarmStatus status, final User targetUser) {
-    final AlarmStrategy<T> alarmStrategy = alarmContext.getCreator(entity.getClass().getName());
+    final AlarmStrategy<T> alarmStrategy = alarmContext.getCreator(entity.getClass().getSimpleName());
     final List<Alarm> alarms = alarmStrategy.createAlarms(entity, status, targetUser);
     sendAlarmList(alarms);
   }
 
   public <T> void addAlarms(final T entity, final AlarmStatus status, final List<User> targetUsers) {
-    final AlarmStrategy<T> alarmStrategy = alarmContext.getCreator(entity.getClass().getName());
+    final AlarmStrategy<T> alarmStrategy = alarmContext.getCreator(entity.getClass().getSimpleName());
     final List<Alarm> alarms = alarmStrategy.createAlarms(entity, status, targetUsers);
     sendAlarmList(alarms);
   }

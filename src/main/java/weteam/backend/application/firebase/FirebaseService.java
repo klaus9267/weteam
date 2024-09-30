@@ -43,7 +43,7 @@ public class FirebaseService {
       final List<Message> messageList = PushMessage.makeMessageList(alarmList);
       if (!messageList.isEmpty()) {
         try {
-          firebaseMessaging.sendAll(messageList);
+          firebaseMessaging.sendEach(messageList);
         } catch (FirebaseMessagingException e) {
           throw new CustomException(ErrorCode.FIREBASE_MESSAGE_ERROR);
         }
