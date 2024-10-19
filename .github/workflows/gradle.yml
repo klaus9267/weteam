@@ -1,88 +1,88 @@
-name: Java CI with Gradle
-
-on:
-  push:
-    branches: [ "main" ]
-  workflow_dispatch:
-    inputs:
-      logLevel:
-        description: 'Log level'
-        required: true
-        default: 'warning'
-      tags:
-        description: 'Test scenario tags'
-
-permissions:
-  contents: read
-
-jobs:
-  build:
-
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v3
-      - name: Set up JDK 17
-        uses: actions/setup-java@v3
-        with:
-          java-version: '17'
-          distribution: 'temurin'
-
-      - name: make application-db.yml
-        run: |
-          cd ./src/main/resources
-          touch ./application-db.yml
-          echo "${{ secrets.DATABASE }}" >> ./application-db.yml
-        shell: bash
-
-      - name: make application-slack.yml
-        run: |
-          cd ./src/main/resources
-          touch ./application-slack.yml
-          echo "${{ secrets.SLACK }}" >> ./application-slack.yml
-        shell: bash
-
-      - name: make application-server.yml
-        run: |
-          cd ./src/main/resources
-          touch ./application-server.yml
-          echo "${{ secrets.SERVER }}" >> ./application-server.yml
-        shell: bash
-
-      - name: make application-firebase.yml
-        run: |
-          cd ./src/main/resources
-          touch ./application-firebase.yml
-          echo "${{ secrets.FIREBASE }}" >> ./application-firebase.yml
-        shell: bash
-
-      - name: make application-monitor.yml
-        run: |
-          cd ./src/main/resources
-          touch ./application-monitor.yml
-          echo "${{ secrets.MONITOR }}" >> ./application-monitor.yml
-        shell: bash
-
-      - name: chmod
-        run: sudo chmod +x ./gradlew
-
-      - name: Build with Gradle
-        run: ./gradlew bootJar
-
-      - name: web docker build and push
-        run: |
-          docker login -u ${{ secrets.DOCKER_EMAIL }} -p ${{ secrets.DOCKER_PASSWORD }}
-          docker build -t ${{ secrets.DOCKER_ID }}/weteam .
-          docker push ${{ secrets.DOCKER_ID }}/weteam
-
-      - name: executing remote ssh commands using password
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.HOST }}
-          username: ubuntu
-          key: ${{ secrets.KEY }}
-          script: |
-            sudo docker pull ${{ secrets.DOCKER_ID }}/weteam
-            docker-compose down
-            docker-compose up -d
-            docker image prune -a
+#name: Java CI with Gradle
+#
+#on:
+#  push:
+#    branches: [ "main" ]
+#  workflow_dispatch:
+#    inputs:
+#      logLevel:
+#        description: 'Log level'
+#        required: true
+#        default: 'warning'
+#      tags:
+#        description: 'Test scenario tags'
+#
+#permissions:
+#  contents: read
+#
+#jobs:
+#  build:
+#
+#    runs-on: ubuntu-latest
+#
+#    steps:
+#      - uses: actions/checkout@v3
+#      - name: Set up JDK 17
+#        uses: actions/setup-java@v3
+#        with:
+#          java-version: '17'
+#          distribution: 'temurin'
+#
+#      - name: make application-db.yml
+#        run: |
+#          cd ./src/main/resources
+#          touch ./application-db.yml
+#          echo "${{ secrets.DATABASE }}" >> ./application-db.yml
+#        shell: bash
+#
+#      - name: make application-slack.yml
+#        run: |
+#          cd ./src/main/resources
+#          touch ./application-slack.yml
+#          echo "${{ secrets.SLACK }}" >> ./application-slack.yml
+#        shell: bash
+#
+#      - name: make application-server.yml
+#        run: |
+#          cd ./src/main/resources
+#          touch ./application-server.yml
+#          echo "${{ secrets.SERVER }}" >> ./application-server.yml
+#        shell: bash
+#
+#      - name: make application-firebase.yml
+#        run: |
+#          cd ./src/main/resources
+#          touch ./application-firebase.yml
+#          echo "${{ secrets.FIREBASE }}" >> ./application-firebase.yml
+#        shell: bash
+#
+#      - name: make application-monitor.yml
+#        run: |
+#          cd ./src/main/resources
+#          touch ./application-monitor.yml
+#          echo "${{ secrets.MONITOR }}" >> ./application-monitor.yml
+#        shell: bash
+#
+#      - name: chmod
+#        run: sudo chmod +x ./gradlew
+#
+#      - name: Build with Gradle
+#        run: ./gradlew bootJar
+#
+#      - name: web docker build and push
+#        run: |
+#          docker login -u ${{ secrets.DOCKER_EMAIL }} -p ${{ secrets.DOCKER_PASSWORD }}
+#          docker build -t ${{ secrets.DOCKER_ID }}/weteam .
+#          docker push ${{ secrets.DOCKER_ID }}/weteam
+#
+#      - name: executing remote ssh commands using password
+#        uses: appleboy/ssh-action@master
+#        with:
+#          host: ${{ secrets.HOST }}
+#          username: ubuntu
+#          key: ${{ secrets.KEY }}
+#          script: |
+#            sudo docker pull ${{ secrets.DOCKER_ID }}/weteam
+#            docker-compose down
+#            docker-compose up -d
+#            docker image prune -a
