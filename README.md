@@ -1,31 +1,28 @@
+<h2>🎈 Weteam</h2>
 
-<h1>Weteam  Back-end</h1>
-  프로젝트 일정 관리에 편의성을 제공하는 앱 프로젝트입니다 :)
+<center><img src = "https://github.com/user-attachments/assets/96c3be44-1f1e-46be-ae19-297df24167da" ></center>
+<center><b>We are Team!</b></center>
+<center>  프로젝트 일정 관리에 편의성을 제공하는 앱 프로젝트입니다 :)</center>
   
-  <h1>📚 TECH STACKS</h1>
-      <h3>Back-end</h3>
-      <ul>
-        <img src="https://img.shields.io/badge/Java 17-007396?style=flat-square&logo=java&logoColor=white"/>
-        <img src="https://img.shields.io/badge/Spring Boot 3.2-6DB33F?style=flat-square&logo=SpringBoot&logoColor=white" alt="spring-boot"/>
-        <img src="https://img.shields.io/badge/Spring Security-6DB33F?style=flat-square&logo=SpringSecurity&logoColor=white" alt="spring-boot"/>
-        <img src="https://img.shields.io/badge/Spring Data JPA-6DB33F?style=flat-square&logo=&logoColor=white"/>
-        <img src="https://img.shields.io/badge/Firebase-FFCA28?style=flat-square&logo=Firebase&logoColor=white"/>
-        <img src="https://img.shields.io/badge/MariaDB-003545?style=flat-square&logo=MariaDB&logoColor=white"/>
-</ul>
+<h2>🎈사용 기술</h2>
 
-   <h3>Cloud</h3>
-   <ul>
-      <img src="https://img.shields.io/badge/AmazonEC2-FF9900?style=flat-square&logo=AmazonEC2&logoColor=white"/>
-      <img src="https://img.shields.io/badge/AmazonRDS-527FFF?style=flat-square&logo=AmazonRDS&logoColor=white"/>
-  </ul>
+- Java 17 (LTS)
+- **Spring**
+    - Spring Boot 3.0.12
+    - Spring Data JPA 3.0.11
+    - Spring Security 3.0.12
+- QueryDSL 5.0.0
+- **Database**
+    - MariaDB 11.2
+    - Redis 7.4.0(latest)
+- **Test**
+    - H2 2.1.214
+    - Mockito 4.8.1
+- Swagger 2.2.15
+- Slack
 
 
-   <h3>CI/CD</h3>
-   <ul>
-      <img src="https://img.shields.io/badge/Docker-2496ED?style=flat-square&logo=docker&logoColor=white"/>
-      <img src="https://img.shields.io/badge/GitHub%20Actions-2088FF?style=flat-square&logo=GitHubActions&logoColor=white"/>
-</ul>
-      <h3>ERD</h3>
+<h2>🎈 ERD</h2>
       
   ![erd](https://github.com/klaus9267/weteam/assets/90795904/00b603d8-ed88-4951-bc5e-6a7fb73c7878)
 
@@ -33,3 +30,17 @@
   
   ![weteam drawio](https://github.com/user-attachments/assets/8d60d79e-db32-4be7-b5c2-0b7104caa08d)
 
+<h2>🎈 개발 과정 </h2>
+
+[개인블로그](https://klaus9267.tistory.com/category?page=1)에 기술적 고민 과정 및 [회고](https://klaus9267.tistory.com/39)를 담았습니다.
+
+- [인증 / 인가에대한 고민](https://klaus9267.tistory.com/10)
+  - OAuth2사용 JWT 사용에 대한 고민
+  - Firebase IdToken을 사용한 인증, 인가 과정 기록
+- [Redis 사용 코드는 어떻게 테스트할까?](https://klaus9267.tistory.com/33)
+  - Redis 사용 코드의 테스트를 위한 Redis Test Container 사용법 작성
+- [Flyway를 사용한 Entity 변경 기록](https://klaus9267.tistory.com/22)
+  - Entity 변경 기록을 위한 Flyway 사용법 작성
+- [연관관계 정리를 위한 리팩터링](https://klaus9267.tistory.com/26)
+  - Entity의 주요 필드와 연관관계를 분리해 가독성 상승
+  - Embededded사용법 작성
