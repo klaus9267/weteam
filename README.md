@@ -1,9 +1,10 @@
 <h2>🎈 Weteam</h2>
+<div align="center">
+  <p><img src = "https://github.com/user-attachments/assets/96c3be44-1f1e-46be-ae19-297df24167da" ></p>
+  <p><b>We are Team!</b></p>
+  <p>  프로젝트 일정 관리에 편의성을 제공하는 앱 프로젝트입니다 :)</p>
+</div>
 
-<center><img src = "https://github.com/user-attachments/assets/96c3be44-1f1e-46be-ae19-297df24167da" ></center>
-<center><b>We are Team!</b></center>
-<center>  프로젝트 일정 관리에 편의성을 제공하는 앱 프로젝트입니다 :)</center>
-  
 <h2>🎈사용 기술</h2>
 
 - Java 17 (LTS)
@@ -25,7 +26,7 @@
       
   ![erd](https://github.com/klaus9267/weteam/assets/90795904/00b603d8-ed88-4951-bc5e-6a7fb73c7878)
 
-  <h3> Architecture</h3>
+<h2>🎈 Architecture</h2>
   
   ![weteam drawio](https://github.com/user-attachments/assets/8d60d79e-db32-4be7-b5c2-0b7104caa08d)
 
