@@ -14,7 +14,6 @@
 - QueryDSL 5.0.0
 - **Database**
     - MariaDB 11.2
-    - Redis 7.4.0(latest)
 - **Test**
     - H2 2.1.214
     - Mockito 4.8.1
@@ -37,8 +36,6 @@
 - [인증 / 인가에대한 고민](https://klaus9267.tistory.com/10)
   - OAuth2사용 JWT 사용에 대한 고민
   - Firebase IdToken을 사용한 인증, 인가 과정 기록
-- [Redis 사용 코드는 어떻게 테스트할까?](https://klaus9267.tistory.com/33)
-  - Redis 사용 코드의 테스트를 위한 Redis Test Container 사용법 작성
 - [Flyway를 사용한 Entity 변경 기록](https://klaus9267.tistory.com/22)
   - Entity 변경 기록을 위한 Flyway 사용법 작성
 - [연관관계 정리를 위한 리팩터링](https://klaus9267.tistory.com/26)
