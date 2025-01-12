@@ -1,8 +1,8 @@
 package weteam.backend.application.firebase;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.UserRecord;
 import lombok.RequiredArgsConstructor;
 import org.apache.hc.client5.http.classic.methods.HttpPost;
@@ -11,30 +11,31 @@ import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
 import org.apache.hc.core5.http.io.entity.EntityUtils;
 import org.apache.hc.core5.http.io.entity.StringEntity;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
+import weteam.backend.application.handler.exception.CustomException;
+import weteam.backend.application.handler.exception.ErrorCode;
 
 import java.util.HashMap;
 import java.util.Map;
 
 @Component
 @RequiredArgsConstructor
+@ConfigurationProperties(prefix = "firebase")
 public class FirebaseUtil {
   private final FirebaseAuth firebaseAuth;
+  private final ObjectMapper objectMapper;
 
-  @Value("${firebase.key}")
-  private String apiKey;
-
-  @Value("${firebase.email}")
+  private String key;
   private String email;
 
-  public String createIdToken() throws FirebaseAuthException {
-    String requestUrl = "https://identitytoolkit.googleapis.com/v1/accounts:signInWithCustomToken?key=" + apiKey;
-
-    UserRecord userRecord = firebaseAuth.getUserByEmail(email);
-    String customToken = firebaseAuth.createCustomToken(userRecord.getUid());
-
+  public String createIdToken() {
     try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
+      String requestUrl = "https://identitytoolkit.googleapis.com/v1/accounts:signInWithCustomToken?key=" + key;
+      UserRecord userRecord = firebaseAuth.getUserByEmail(email);
+      String customToken = firebaseAuth.createCustomToken(userRecord.getUid());
+
+
       HttpPost httpPost = new HttpPost(requestUrl);
       Map<String, String> requestBody = new HashMap<>();
       requestBody.put("token", customToken);
@@ -46,11 +47,10 @@ public class FirebaseUtil {
 
       CloseableHttpResponse response = httpClient.execute(httpPost);
       String responseBody = EntityUtils.toString(response.getEntity());
-      Map<String, Object> responseMap = new ObjectMapper().readValue(responseBody, HashMap.class);
-
-      return (String) responseMap.get("idToken");
+      JsonNode responseNode = objectMapper.readTree(responseBody);
+      return responseNode.get("idToken").asText();
     } catch (Exception e) {
-      throw new RuntimeException(e);
+      throw new CustomException(ErrorCode.WRONG_TOKEN);
     }
   }
 }
