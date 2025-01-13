@@ -86,6 +86,7 @@ public class ProjectService {
   }
 
   public static void checkHost(final Project project, final long userId) {
+    if (project.getProjectUserList().size() == 1) return;
     if (!project.getHost().getId().equals(userId)) {
       throw new CustomException(ErrorCode.INVALID_HOST);
     }
