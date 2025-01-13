@@ -54,7 +54,7 @@ public class UserFacade {
     }
 
     for (Project project : currentUser.getProjectList()) {
-      if (!project.getHost().getId().equals(currentUser.getId())) {
+      if (project.getProjectUserList().size() > 1 && project.getHost().getId().equals(currentUser.getId())) {
         throw new CustomException(ErrorCode.USER_IS_HOST);
       }
     }

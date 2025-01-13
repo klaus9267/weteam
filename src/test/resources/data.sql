@@ -1,6 +1,6 @@
 -- Users
 INSERT INTO users (username, organization, uid, email, device_token, role, receive_permission) VALUES
-('test user1', 'test org1', 'kakao:3475616527', 'test1@test.com', 'test_token1' ,'USER', true),
+('test user1', 'test org1', 'hIGOWUmXSugwCftVJ2HsF9kiqfh1', 'test1@test.com', 'test_token1' ,'USER', true),
 ('test_user2', 'test_org2', 'test_uid2', 'test2@test.com', 'test_token2', 'USER', true),
 ('test_user3', 'test_org3', 'test_uid3', 'test3@test.com', 'test_token3', 'USER', true),
 ('test_user4', 'test_org4', 'test_uid4', 'test4@test.com', 'test_token4', 'USER', true),
@@ -40,15 +40,15 @@ INSERT INTO projects (name, explanation, hashed_id, started_at, ended_at, host_i
 -- Project Users
 INSERT INTO project_users (role, user_id, project_id, is_black) VALUES
 ('MEMBER', 1, 1, false),
-('MEMBER', 2, 1, false),
-('MEMBER', 3, 2, false),
-('MEMBER', 4, 2, false),
-('MEMBER', 5, 3, false),
-('MEMBER', 6, 3, false),
-('MEMBER', 7, 4, false),
-('MEMBER', 8, 4, false),
-('MEMBER', 9, 5, false),
-('MEMBER', 10, 5, false);
+('MEMBER', 2, 2, false),
+('MEMBER', 3, 3, false),
+('MEMBER', 4, 4, false),
+('MEMBER', 5, 5, false),
+('MEMBER', 6, 6, false),
+('MEMBER', 7, 7, false),
+('MEMBER', 8, 8, false),
+('MEMBER', 9, 9, false),
+('MEMBER', 10, 10, false);
 
 -- Meetings
 INSERT INTO meetings (title, hashed_id, started_at, ended_at, host_id, project_id) VALUES
