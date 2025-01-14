@@ -12,17 +12,17 @@ INSERT INTO users (username, organization, uid, email, device_token, role, recei
 ('test_user10', 'test_org10', 'test_uid10', 'test10@test.com', 'test_token10', 'USER', true);
 
 -- Profile Images
---INSERT INTO profile_images (image_idx, user_id) VALUES
---(1,default),
---(2,default),
---(3,default),
---(4,default),
---(5,default),
---(6,default),
---(7,default),
---(8,default),
---(9,default),
---(10,default);
+INSERT INTO profile_images (image_idx, user_id) VALUES
+(1,1),
+(2,2),
+(3,3),
+(4,4),
+(5,5),
+(6,6),
+(7,7),
+(8,8),
+(9,9),
+(10,10);
 
 -- Projects
 INSERT INTO projects (name, explanation, hashed_id, started_at, ended_at, host_id,is_done) VALUES
