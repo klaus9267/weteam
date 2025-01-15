@@ -1,49 +1,67 @@
 package weteam.backend.domain.project.controller;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.test.util.ReflectionTestUtils;
-import weteam.backend.common.BaseIntegrationTest;
+import org.springframework.test.web.servlet.MockMvc;
+import weteam.backend.application.firebase.FirebaseUtil;
+import weteam.backend.common.IntegrationTest;
 import weteam.backend.domain.common.pagination.param.ProjectPaginationParam;
+import weteam.backend.domain.project.ProjectRepository;
 import weteam.backend.domain.project.dto.CreateProjectDto;
 import weteam.backend.domain.project.dto.UpdateProjectDto;
 import weteam.backend.domain.project.entity.Project;
-import weteam.backend.domain.project_user.entity.ProjectUser;
-import weteam.backend.domain.project.ProjectRepository;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.NoSuchElementException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-class ProjectControllerTest extends BaseIntegrationTest {
+@IntegrationTest
+class ProjectControllerTest {
+  private String token;
   private final String END_POINT = "/api/projects";
-
+  protected ObjectMapper mapper = new ObjectMapper();
+  @Autowired
+  FirebaseUtil firebaseUtil;
+  @Autowired
+  MockMvc mockMvc;
   @Autowired
   ProjectRepository projectRepository;
 
+  @BeforeEach
+  void setUp() {
+    token = "Bearer " + firebaseUtil.createIdToken();
+    this.mapper.registerModule(new JavaTimeModule());
+  }
+
   @Nested
-  class 성공 {
+  @DisplayName("성공")
+  class Success {
     @Test
-    void 팀플_생성() throws Exception {
+    @DisplayName("팀플_생성")
+    void createProject() throws Exception {
       CreateProjectDto projectDto = new CreateProjectDto("test name", LocalDate.now(), 1L, LocalDate.now(), "test explanation");
       String body = mapper.writeValueAsString(projectDto);
 
       mockMvc.perform(post(END_POINT)
-          .header("Authorization", idToken)
+          .header("Authorization", token)
           .contentType(MediaType.APPLICATION_JSON)
           .content(body)
       ).andExpect(status().isCreated());
     }
 
     @Test
-    void 팀플_목록_조회() throws Exception {
+    @DisplayName("팀플_목록_조회")
+    void findProjects() throws Exception {
       ProjectPaginationParam paginationParam = new ProjectPaginationParam(0, 10, false, 1L, null, null);
 
       mockMvc.perform(get(END_POINT)
@@ -53,40 +71,26 @@ class ProjectControllerTest extends BaseIntegrationTest {
           .param("userId", String.valueOf(paginationParam.getUserId()))
           .param("field", paginationParam.getField().name())
           .param("direction", paginationParam.getDirection().name())
-          .header("Authorization", idToken)
+          .header("Authorization", token)
       ).andExpect(status().isOk());
     }
 
     @Test
-    void 팀플_단건_조회() throws Exception {
-      List<Project> projectList = projectRepository.findAll();
-      List<Long> list = new ArrayList<>();
-      A:
-      for (long i = 0; i < projectList.size(); i++) {
-        List<ProjectUser> projectUserList = projectList.get((int) i).getProjectUserList();
-        for (ProjectUser projectUser : projectUserList) {
-          if (projectUser.getUser().getId().equals(1L)) {
-            list.add(projectList.get((int) i).getId());
-            break A;
-          }
-        }
-      }
-      if (!list.isEmpty()) {
-        mockMvc.perform(get(END_POINT + "/" + list.get(0))
-            .header("Authorization", idToken)
-        ).andExpect(status().isOk());
-      }
+    @DisplayName("팀플_단건_조회")
+    void findProject() throws Exception {
+      mockMvc.perform(get(END_POINT + "/1")
+          .header("Authorization", token)
+      ).andExpect(status().isOk());
     }
 
     @Test
-    void 팀플_진행_상황_변경() throws Exception {
-      Project savedProject = testRepository.saveProject();
-
-      mockMvc.perform(patch(END_POINT + "/" + savedProject.getId() + "/done")
-          .header("Authorization", idToken)
+    @DisplayName("팀플_진행_상황_변경")
+    void updateProjectProgress() throws Exception {
+      mockMvc.perform(patch(END_POINT + "/1/done")
+          .header("Authorization", token)
       ).andExpect(status().isNoContent());
 
-      Project foundProject = projectRepository.findById(savedProject.getId()).orElseThrow(RuntimeException::new);
+      Project foundProject = projectRepository.findById(1L).orElseThrow(RuntimeException::new);
       assertThat(foundProject.isDone()).isTrue();
     }
 
@@ -96,7 +100,7 @@ class ProjectControllerTest extends BaseIntegrationTest {
         String body = mapper.writeValueAsString(projectDto);
 
         mockMvc.perform(patch(END_POINT + "/" + project.getId())
-            .header("Authorization", idToken)
+            .header("Authorization", token)
             .contentType(MediaType.APPLICATION_JSON)
             .content(body)
         ).andExpect(status().isNoContent());
@@ -116,44 +120,50 @@ class ProjectControllerTest extends BaseIntegrationTest {
       }
 
       @Test
-      void name_only() throws Exception {
-        Project savedProject = testRepository.saveProject();
+      @DisplayName("이름만_입력")
+      void name() throws Exception {
+        Project project = projectRepository.findById(1L).orElseThrow(NoSuchElementException::new);
         UpdateProjectDto projectDto = new UpdateProjectDto("test name1", null, null, null);
 
-        callApiRequestForUpdate(projectDto, savedProject);
+        callApiRequestForUpdate(projectDto, project);
       }
 
       @Test
-      void startedAt_only() throws Exception {
-        Project savedProject = testRepository.saveProject();
+      @DisplayName("시작일만_입력")
+      void startedAt() throws Exception {
+        Project project = projectRepository.findById(1L).orElseThrow(NoSuchElementException::new);
         UpdateProjectDto projectDto = new UpdateProjectDto(null, LocalDate.now(), null, null);
 
-        callApiRequestForUpdate(projectDto, savedProject);
+        callApiRequestForUpdate(projectDto, project);
       }
 
       @Test
-      void endedAt_only() throws Exception {
-        Project savedProject = testRepository.saveProject();
+      @DisplayName("종료일만_입력")
+      void endedAt() throws Exception {
+        Project project = projectRepository.findById(1L).orElseThrow(NoSuchElementException::new);
         UpdateProjectDto projectDto = new UpdateProjectDto(null, null, LocalDate.now(), null);
 
-        callApiRequestForUpdate(projectDto, savedProject);
+        callApiRequestForUpdate(projectDto, project);
       }
 
       @Test
-      void explanation_only() throws Exception {
-        Project savedProject = testRepository.saveProject();
+      @DisplayName("설명만_입력")
+      void explanation() throws Exception {
+        Project project = projectRepository.findById(1L).orElseThrow(NoSuchElementException::new);
         UpdateProjectDto projectDto = new UpdateProjectDto(null, null, null, "test explanation1");
 
-        callApiRequestForUpdate(projectDto, savedProject);
+        callApiRequestForUpdate(projectDto, project);
       }
     }
 
     @Test
-    void 팀플_호스트_넘기기() throws Exception {
-      Project project = testRepository.saveProject();
-      long userId = 32L;
+    @DisplayName("팀플_호스트_넘기기")
+    void updateHost() throws Exception {
+      Project project = projectRepository.findById(1L).orElseThrow(NoSuchElementException::new);
+      long userId = 2L;
+
       mockMvc.perform(patch(END_POINT + "/" + project.getId() + "/" + userId)
-          .header("Authorization", idToken)
+          .header("Authorization", token)
       ).andExpect(status().isNoContent());
 
       Project foundProject = projectRepository.findById(project.getId()).orElseThrow(RuntimeException::new);
@@ -173,180 +183,188 @@ class ProjectControllerTest extends BaseIntegrationTest {
     }
 
     @Test
-    void 팀플_삭제() throws Exception {
-      Project project = testRepository.saveProject();
-
-      mockMvc.perform(delete(END_POINT + "/" + project.getId())
-          .header("Authorization", idToken)
+    @DisplayName("팀플_삭제")
+    void deleteProject() throws Exception {
+      mockMvc.perform(delete(END_POINT + "/1")
+          .header("Authorization", token)
       ).andExpect(status().isNoContent());
     }
   }
 
   @Nested
-  class 실패 {
+  @DisplayName("실패")
+  class Fail {
     @Nested
-    class 팀플_생성 {
+    @DisplayName("팀플_생성")
+    class CreateProject {
       private void callApiForBadRequestWhenCreate(final FailProjectDtoForCreate failProjectDtoForCreate) throws Exception {
         String body = mapper.writeValueAsString(failProjectDtoForCreate);
 
         mockMvc.perform(post(END_POINT)
-                .header("Authorization", idToken)
+                .header("Authorization", token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(body))
             .andExpect(status().isBadRequest());
       }
 
       @Test
-      void name_NULL() throws Exception {
-        final FailProjectDtoForCreate projectDto = new FailProjectDtoForCreate("name", LocalDate.now(), 1L, LocalDate.now(), "explanation");
-        ReflectionTestUtils.setField(projectDto, "name", null);
-
+      @DisplayName("이름_누락")
+      void nameNull() throws Exception {
+        final FailProjectDtoForCreate projectDto = new FailProjectDtoForCreate(null, LocalDate.now(), 1L, LocalDate.now(), "explanation");
         this.callApiForBadRequestWhenCreate(projectDto);
       }
 
       @Test
-      void startedAt_NULL() throws Exception {
-        final FailProjectDtoForCreate projectDto = new FailProjectDtoForCreate("name", LocalDate.now(), 1L, LocalDate.now(), "explanation");
-        ReflectionTestUtils.setField(projectDto, "startedAt", null);
-
+      @DisplayName("시작일_누락")
+      void startedAtNull() throws Exception {
+        final FailProjectDtoForCreate projectDto = new FailProjectDtoForCreate("name", null, 1L, LocalDate.now(), "explanation");
         this.callApiForBadRequestWhenCreate(projectDto);
       }
 
       @Test
-      void imageId_NULL() throws Exception {
-        final FailProjectDtoForCreate projectDto = new FailProjectDtoForCreate("name", LocalDate.now(), 1L, LocalDate.now(), "explanation");
-        ReflectionTestUtils.setField(projectDto, "imageId", null);
-
+      @DisplayName("사진_누락")
+      void imageIdNull() throws Exception {
+        final FailProjectDtoForCreate projectDto = new FailProjectDtoForCreate("name", LocalDate.now(), null, LocalDate.now(), "explanation");
         this.callApiForBadRequestWhenCreate(projectDto);
       }
 
       @Test
-      void endedAt_NULL() throws Exception {
-        final FailProjectDtoForCreate projectDto = new FailProjectDtoForCreate("name", LocalDate.now(), 1L, LocalDate.now(), "explanation");
-        ReflectionTestUtils.setField(projectDto, "endedAt", null);
-
+      @DisplayName("종료일_누락")
+      void endedAtNull() throws Exception {
+        final FailProjectDtoForCreate projectDto = new FailProjectDtoForCreate("name", LocalDate.now(), 1L, null, "explanation");
         this.callApiForBadRequestWhenCreate(projectDto);
       }
 
       @Test
-      void explanation_NULL() throws Exception {
-        final FailProjectDtoForCreate projectDto = new FailProjectDtoForCreate("name", LocalDate.now(), 1L, LocalDate.now(), "explanation");
-        ReflectionTestUtils.setField(projectDto, "explanation", null);
-
+      @DisplayName("설명_누락")
+      void explanationNull() throws Exception {
+        final FailProjectDtoForCreate projectDto = new FailProjectDtoForCreate("name", LocalDate.now(), 1L, LocalDate.now(), null);
         this.callApiForBadRequestWhenCreate(projectDto);
       }
 
       @Test
-      void all_NULL() throws Exception {
+      @DisplayName("전부_누락")
+      void allNull() throws Exception {
         final FailProjectDtoForCreate projectDto = new FailProjectDtoForCreate(null, null, null, null, null);
-
         this.callApiForBadRequestWhenCreate(projectDto);
       }
     }
 
     @Nested
-    class 목록_조회 {
+    @DisplayName("목록_조회")
+    class findProjects {
       private void callApiForBadRequestWhenRead(final Integer page, final Integer size, final Boolean isDone, Long userId) throws Exception {
         mockMvc.perform(get(END_POINT)
             .param("page", page != null ? String.valueOf(page) : null)
             .param("size", size != null ? String.valueOf(size) : null)
             .param("done", isDone != null ? String.valueOf(isDone) : null)
             .param("userId", userId != null ? String.valueOf(userId) : null)
-            .header("Authorization", idToken)
+            .header("Authorization", token)
         ).andExpect(status().isInternalServerError());
       }
 
       @Test
-      public void page_null() throws Exception {
+      @DisplayName("페이지_번호_누락")
+      void pageNull() throws Exception {
         this.callApiForBadRequestWhenRead(null, 10, false, 1L);
       }
 
       @Test
-      public void size_null() throws Exception {
+      @DisplayName("페이지_크기_누락")
+      void sizeNull() throws Exception {
         this.callApiForBadRequestWhenRead(0, null, false, 1L);
       }
     }
 
     @Nested
-    class 팀플_단건_조회 {
+    @DisplayName("팀플_단건_조회")
+    class FindProject {
       @Test
-      public void 없는_아이디() throws Exception {
+      @DisplayName("없는_아이디")
+      void notFoundProject() throws Exception {
         mockMvc.perform(get(END_POINT + "/11111")
-                .header("Authorization", idToken))
+                .header("Authorization", token))
             .andExpect(status().isNotFound());
       }
     }
 
     @Nested
-    class 팀플_진행_상황_변경 {
+    @DisplayName("팀플_진행_상황_변경")
+    class UpdateProgress {
       @Test
-      public void 없는_아이디() throws Exception {
+      @DisplayName("없는_프로젝트")
+      void notFoundProject() throws Exception {
         mockMvc.perform(patch(END_POINT + "/11111/done")
-                .header("Authorization", idToken))
+                .header("Authorization", token))
             .andExpect(status().isNotFound());
       }
     }
 
     @Nested
-    class 팀플_수정 {
-      private void callApiForBadRequestWhenUpdate(final FailProjectDtoForUpdate failProjectDtoForUpdate, final Long projectId) throws Exception {
+    @DisplayName("팀플_수정")
+    class UpdateProject {
+      private void callApiForBadRequestWhenUpdate(final FailProjectDtoForUpdate failProjectDtoForUpdate) throws Exception {
         String body = mapper.writeValueAsString(failProjectDtoForUpdate);
 
-        mockMvc.perform(patch(END_POINT + "/" + projectId)
-            .header("Authorization", idToken)
+        mockMvc.perform(patch(END_POINT + "/1")
+            .header("Authorization", token)
             .contentType(MediaType.APPLICATION_JSON)
             .content(body)
         ).andExpect(status().isBadRequest());
       }
 
       @Test
-      void all_NULL() throws Exception {
-        Project project = testRepository.saveProject();
+      @DisplayName("요청_null")
+      void allNull() throws Exception {
         final FailProjectDtoForUpdate projectDto = new FailProjectDtoForUpdate(null, null, null, null);
-        ReflectionTestUtils.setField(projectDto, "name", null);
-
-        this.callApiForBadRequestWhenUpdate(projectDto, project.getId());
+        this.callApiForBadRequestWhenUpdate(projectDto);
       }
     }
 
     @Nested
-    class 호스트_넘기기 {
+    @DisplayName("호스트_넘기기")
+    class ChangeHost {
       @Test
-      void projectId_NOT_FOUNT() throws Exception {
-        mockMvc.perform(patch(END_POINT + "/" + 1111111 + "/" + 32)
-                .header("Authorization", idToken))
+      @DisplayName("프로젝트를_찾을_수_없음")
+      void projectIdNotFound() throws Exception {
+        mockMvc.perform(patch(END_POINT + "/1111111/32")
+                .header("Authorization", token))
             .andExpect(status().isNotFound());
       }
 
       @Test
-      void userId_NOT_FOUNT() throws Exception {
-        Project project = testRepository.saveProject();
-        mockMvc.perform(patch(END_POINT + "/" + project.getId() + "/" + 320)
-                .header("Authorization", idToken))
+      @DisplayName("사용자를_찾을_수_없음")
+      void userIdNotFound() throws Exception {
+        mockMvc.perform(patch(END_POINT + "/1/111111")
+                .header("Authorization", token))
             .andExpect(status().isNotFound());
       }
 
       @Test
-      void 호스트_아님() throws Exception {
-        mockMvc.perform(patch(END_POINT + "/" + 1 + "/" + 32)
-                .header("Authorization", idToken))
+      @DisplayName("호스트_아님")
+      void notHost() throws Exception {
+        mockMvc.perform(patch(END_POINT + "/2/2")
+                .header("Authorization", token))
             .andExpect(status().isBadRequest());
       }
     }
 
     @Nested
-    class 팀플_삭제 {
+    @DisplayName("팀플_삭제")
+    class DeleteProject {
       @Test
-      void 호스트_아님() throws Exception {
-        mockMvc.perform(delete(END_POINT + "/1")
-                .header("Authorization", idToken))
+      @DisplayName("호스트_아님")
+      void notHost() throws Exception {
+        mockMvc.perform(delete(END_POINT + "/2")
+                .header("Authorization", token))
             .andExpect(status().isBadRequest());
       }
 
       @Test
-      void not_found() throws Exception {
+      @DisplayName("없는 프로젝트")
+      void notFoundProject() throws Exception {
         mockMvc.perform(delete(END_POINT + "/333")
-                .header("Authorization", idToken))
+                .header("Authorization", token))
             .andExpect(status().isNotFound());
       }
     }
@@ -360,7 +378,7 @@ class ProjectControllerTest extends BaseIntegrationTest {
     private final Object endedAt;
     private final Object explanation;
 
-    public FailProjectDtoForCreate(final String name, final LocalDate startedAt, final Long imageId, final LocalDate endedAt, final String explanation) {
+    FailProjectDtoForCreate(final String name, final LocalDate startedAt, final Long imageId, final LocalDate endedAt, final String explanation) {
       this.name = name;
       this.startedAt = startedAt;
       this.imageId = imageId;
@@ -376,7 +394,7 @@ class ProjectControllerTest extends BaseIntegrationTest {
     private final Object endedAt;
     private final Object explanation;
 
-    public FailProjectDtoForUpdate(final String name, final LocalDate startedAt, final LocalDate endedAt, final String explanation) {
+    FailProjectDtoForUpdate(final String name, final LocalDate startedAt, final LocalDate endedAt, final String explanation) {
       this.name = name;
       this.startedAt = startedAt;
       this.endedAt = endedAt;
