@@ -48,8 +48,7 @@ INSERT INTO project_users (role, user_id, project_id, is_black) VALUES
 ('MEMBER', 7, 7, false),
 ('MEMBER', 8, 8, false),
 ('MEMBER', 9, 9, false),
-('MEMBER', 10, 10, false),
-('MEMBER', 1, 2, false);
+('MEMBER', 10, 10, false);
 
 -- Meetings
 INSERT INTO meetings (title, hashed_id, started_at, ended_at, host_id, project_id) VALUES

@@ -3,11 +3,13 @@ package weteam.backend.domain.project.controller;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import weteam.backend.application.firebase.FirebaseUtil;
@@ -17,6 +19,8 @@ import weteam.backend.domain.project.ProjectRepository;
 import weteam.backend.domain.project.dto.CreateProjectDto;
 import weteam.backend.domain.project.dto.UpdateProjectDto;
 import weteam.backend.domain.project.entity.Project;
+import weteam.backend.domain.project_user.ProjectUserRepository;
+import weteam.backend.domain.user.UserRepository;
 
 import java.time.LocalDate;
 import java.util.NoSuchElementException;
@@ -26,6 +30,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @IntegrationTest
+@Import(ProjectFixture.class)
 class ProjectControllerTest {
   private String token;
   private final String END_POINT = "/api/projects";
@@ -36,6 +41,8 @@ class ProjectControllerTest {
   MockMvc mockMvc;
   @Autowired
   ProjectRepository projectRepository;
+  @Autowired
+  ProjectFixture projectFixture;
 
   @BeforeEach
   void setUp() {
@@ -159,8 +166,8 @@ class ProjectControllerTest {
     @Test
     @DisplayName("팀플_호스트_넘기기")
     void updateHost() throws Exception {
-      Project project = projectRepository.findById(1L).orElseThrow(NoSuchElementException::new);
       long userId = 2L;
+      Project project = projectFixture.joinProject(userId, 1L);
 
       mockMvc.perform(patch(END_POINT + "/" + project.getId() + "/" + userId)
           .header("Authorization", token)
@@ -343,6 +350,8 @@ class ProjectControllerTest {
       @Test
       @DisplayName("호스트_아님")
       void notHost() throws Exception {
+        Project project = projectFixture.joinProject(1L, 2L);
+
         mockMvc.perform(patch(END_POINT + "/2/2")
                 .header("Authorization", token))
             .andExpect(status().isBadRequest());
@@ -355,6 +364,8 @@ class ProjectControllerTest {
       @Test
       @DisplayName("호스트_아님")
       void notHost() throws Exception {
+        Project project = projectFixture.joinProject(1L, 2L);
+
         mockMvc.perform(delete(END_POINT + "/2")
                 .header("Authorization", token))
             .andExpect(status().isBadRequest());
