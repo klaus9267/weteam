@@ -53,28 +53,28 @@ INSERT INTO project_users (role, user_id, project_id, is_black) VALUES
 -- Meetings
 INSERT INTO meetings (title, hashed_id, started_at, ended_at, host_id, project_id) VALUES
 ('test_meeting1', 'test_hash1', '2024-01-01 10:00:00', '2024-01-01 11:00:00', 1, 1),
-('test_meeting2', 'test_hash2', '2024-01-02 10:00:00', '2024-01-02 11:00:00', 2, 1),
-('test_meeting3', 'test_hash3', '2024-01-03 10:00:00', '2024-01-03 11:00:00', 3, 2),
-('test_meeting4', 'test_hash4', '2024-01-04 10:00:00', '2024-01-04 11:00:00', 4, 2),
-('test_meeting5', 'test_hash5', '2024-01-05 10:00:00', '2024-01-05 11:00:00', 5, 3),
-('test_meeting6', 'test_hash6', '2024-01-06 10:00:00', '2024-01-06 11:00:00', 6, 3),
-('test_meeting7', 'test_hash7', '2024-01-07 10:00:00', '2024-01-07 11:00:00', 7, 4),
-('test_meeting8', 'test_hash8', '2024-01-08 10:00:00', '2024-01-08 11:00:00', 8, 4),
-('test_meeting9', 'test_hash9', '2024-01-09 10:00:00', '2024-01-09 11:00:00', 9, 5),
-('test_meeting10', 'test_hash10', '2024-01-10 10:00:00', '2024-01-10 11:00:00', 10, 5);
+('test_meeting2', 'test_hash2', '2024-01-02 10:00:00', '2024-01-02 11:00:00', 2, 2),
+('test_meeting3', 'test_hash3', '2024-01-03 10:00:00', '2024-01-03 11:00:00', 3, 3),
+('test_meeting4', 'test_hash4', '2024-01-04 10:00:00', '2024-01-04 11:00:00', 4, 4),
+('test_meeting5', 'test_hash5', '2024-01-05 10:00:00', '2024-01-05 11:00:00', 5, 5),
+('test_meeting6', 'test_hash6', '2024-01-06 10:00:00', '2024-01-06 11:00:00', 6, 6),
+('test_meeting7', 'test_hash7', '2024-01-07 10:00:00', '2024-01-07 11:00:00', 7, 7),
+('test_meeting8', 'test_hash8', '2024-01-08 10:00:00', '2024-01-08 11:00:00', 8, 8),
+('test_meeting9', 'test_hash9', '2024-01-09 10:00:00', '2024-01-09 11:00:00', 9, 9),
+('test_meeting10', 'test_hash10', '2024-01-10 10:00:00', '2024-01-10 11:00:00', 10, 10);
 
 -- Meeting Users
 INSERT INTO meeting_users (is_displayed, meeting_id, user_id) VALUES
 (true, 1, 1),
-(true, 1, 2),
-(true, 2, 3),
-(true, 2, 4),
-(true, 3, 5),
-(true, 3, 6),
-(true, 4, 7),
-(true, 4, 8),
-(true, 5, 9),
-(true, 5, 10);
+(true, 2, 2),
+(true, 3, 3),
+(true, 4, 4),
+(true, 5, 5),
+(true, 6, 6),
+(true, 7, 7),
+(true, 8, 8),
+(true, 9, 9),
+(true, 10, 10);
 
 -- Timeslots
 INSERT INTO timeslots (started_at, ended_at, meeting_user_id) VALUES
