@@ -1,33 +1,19 @@
 spring:
-  output:
-    ansi:
-      enabled: always
   config:
+    import: application-etc.yml
     activate:
       on-profile: test
   jpa:
+    defer-datasource-initialization: true
     database: h2
     hibernate:
       ddl-auto: create-drop
-    show-sql: false
     properties:
       hibernate:
         format_sql: true
         use_sql_comments: true
-        dialect: org.hibernate.dialect.H2Dialect
   datasource:
-    url: jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
-    username: root
-    password:
     driver-class-name: org.h2.Driver
-
-server:
-  tomcat:
-    mbeanregistry:
-      enabled: true
-
-firebase:
-  database-url: "https://weteam-1968a-default-rtdb.firebaseio.com"
-webhook:
-  slack:
-    url: https://hooks.slack.com/services/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
+    url: jdbc:h2:mem:test;mode=mysql
+    username: sa
+    password:

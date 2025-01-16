@@ -17,7 +17,6 @@ import java.io.InputStream;
 public class FirebaseConfig {
   private final String databaseUrl;
   private final ClassPathResource resource;
-
   private static FirebaseApp firebaseApp;
 
   public FirebaseConfig(@Value("${firebase.database-url}") final String databaseUrl) {

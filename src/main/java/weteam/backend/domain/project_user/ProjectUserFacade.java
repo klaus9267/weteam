@@ -26,8 +26,7 @@ public class ProjectUserFacade {
   private final SecurityUtil securityUtil;
 
   public String findProjectHashedId(final long projectId) {
-    final Project project = projectService.findProject(projectId);
-    return project.getHashedId();
+    return projectService.findProject(projectId).getHashedId();
   }
 
   public List<ProjectUserDto> findProjectUsers(final long projectId) {
@@ -43,6 +42,7 @@ public class ProjectUserFacade {
 
   @Transactional
   public void acceptInvite(final String hashedProjectId) {
+    //todo securityUtil 참조 위치 확인
     final long currentUserId = securityUtil.getCurrentUserId();
     final User user = userService.findUser(currentUserId);
     final Project project = projectService.findProject(hashedProjectId);

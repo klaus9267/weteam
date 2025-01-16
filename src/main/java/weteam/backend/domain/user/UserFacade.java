@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import weteam.backend.application.auth.SecurityUtil;
 import weteam.backend.application.handler.exception.CustomException;
 import weteam.backend.application.handler.exception.ErrorCode;
+import weteam.backend.domain.project.entity.Project;
 import weteam.backend.domain.user.dto.RequestUserDto;
 import weteam.backend.domain.user.dto.UserWithProfileImageDto;
 import weteam.backend.domain.user.entity.User;
@@ -46,9 +47,18 @@ public class UserFacade {
   @Transactional
   public void removeAccount() {
     final User currentUser = this.findCurrentUser();
-    if (!currentUser.getProjectList().isEmpty()) {
-      throw new CustomException(ErrorCode.USER_IS_HOST);
+
+    if (currentUser.getProjectList().isEmpty()) {
+      userService.deleteUser(currentUser.getId());
+      return;
     }
+
+    for (Project project : currentUser.getProjectList()) {
+      if (project.getProjectUserList().size() > 1 && project.getHost().getId().equals(currentUser.getId())) {
+        throw new CustomException(ErrorCode.USER_IS_HOST);
+      }
+    }
+
     userService.deleteUser(currentUser.getId());
   }
 

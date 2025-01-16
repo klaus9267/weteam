@@ -1,6 +1,7 @@
 package weteam.backend.domain.alarm;
 
 import lombok.RequiredArgsConstructor;
+import org.hibernate.Hibernate;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import weteam.backend.application.firebase.FirebaseService;
@@ -26,19 +27,22 @@ public class AlarmService {
   }
 
   public <T> void addAlarms(final T entity, final AlarmStatus status) {
-    final AlarmStrategy<T> alarmStrategy = alarmContext.getCreator(entity.getClass().getSimpleName());
+    String className = Hibernate.getClass(entity).getSimpleName();
+    final AlarmStrategy<T> alarmStrategy = alarmContext.getCreator(className);
     final List<Alarm> alarms = alarmStrategy.createAlarms(entity, status);
     sendAlarmList(alarms);
   }
 
   public <T> void addAlarms(final T entity, final AlarmStatus status, final User targetUser) {
-    final AlarmStrategy<T> alarmStrategy = alarmContext.getCreator(entity.getClass().getSimpleName());
+    String className = Hibernate.getClass(entity).getSimpleName();
+    final AlarmStrategy<T> alarmStrategy = alarmContext.getCreator(className);
     final List<Alarm> alarms = alarmStrategy.createAlarms(entity, status, targetUser);
     sendAlarmList(alarms);
   }
 
   public <T> void addAlarms(final T entity, final AlarmStatus status, final List<User> targetUsers) {
-    final AlarmStrategy<T> alarmStrategy = alarmContext.getCreator(entity.getClass().getSimpleName());
+    String className = Hibernate.getClass(entity).getSimpleName();
+    final AlarmStrategy<T> alarmStrategy = alarmContext.getCreator(className);
     final List<Alarm> alarms = alarmStrategy.createAlarms(entity, status, targetUsers);
     sendAlarmList(alarms);
   }

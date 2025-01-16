@@ -28,7 +28,7 @@ public class MeetingFacade {
   public MeetingDto addMeeting(final CreateMeetingDto createMeetingDto) {
     final long currentUserId = securityUtil.getCurrentUserId();
     final User currentUser = userService.findUser(currentUserId);
-    final Project project = projectService.findOptionalProject(createMeetingDto.projectId()).orElseGet(() -> null);
+    final Project project = createMeetingDto.projectId() == null ? null : projectService.findProject(createMeetingDto.projectId());
     final Meeting meeting = meetingService.addMeeting(createMeetingDto, currentUser, project);
 
     if (project != null) {
