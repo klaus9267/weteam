@@ -1,5 +1,6 @@
 spring:
   config:
+    import: application-etc.yml
     activate:
       on-profile: test
   jpa:
