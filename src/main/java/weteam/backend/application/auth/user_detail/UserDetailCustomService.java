@@ -2,6 +2,7 @@ package weteam.backend.application.auth.user_detail;
 
 import com.google.firebase.auth.FirebaseToken;
 import lombok.AllArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import weteam.backend.domain.user.UserRepository;
@@ -14,6 +15,7 @@ public class UserDetailCustomService {
   private final UserRepository userRepository;
 
   @Transactional
+  @Cacheable(cacheNames = "user", key = "#uid", value = "user")
   public User loadUser(FirebaseToken token) {
     final User user = userRepository.findByUid(token.getUid()).orElseGet(() -> userRepository.save(
         User.builder()
