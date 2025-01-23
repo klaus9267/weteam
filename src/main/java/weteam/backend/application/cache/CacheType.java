@@ -6,7 +6,8 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum CacheType {
-  USER("user", 12, 10000);
+  USER("user", 12, 10000),
+  TOKEN("token", 12, 10000);
 
   private final String cacheName;
   private final int expiredAfterWrite;

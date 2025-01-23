@@ -15,7 +15,7 @@ public class UserDetailCustomService {
   private final UserRepository userRepository;
 
   @Transactional
-  @Cacheable(cacheNames = "user", key = "#uid", value = "user")
+  @Cacheable(cacheNames = "token", key = "#token.uid")
   public User loadUser(FirebaseToken token) {
     final User user = userRepository.findByUid(token.getUid()).orElseGet(() -> userRepository.save(
         User.builder()
