@@ -3,6 +3,7 @@
   <p><img src = "https://github.com/user-attachments/assets/96c3be44-1f1e-46be-ae19-297df24167da" ></p>
   <p><b>We are Team!</b></p>
   <p>  프로젝트 일정 관리에 편의성을 제공하는 앱 프로젝트입니다 :)</p>
+  <p> <a href="https://apps.apple.com/kr/app/%EC%9C%84%ED%8C%80/id6502180238?platform=iphone">App Store</a> </p>
 </div>
 
 ## 🎈 기술 스택
